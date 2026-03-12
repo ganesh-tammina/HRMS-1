@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 // Create Transporter (e.g., using Gmail)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER, // Your email
     pass: process.env.EMAIL_PASS, // App Password
@@ -9,9 +9,10 @@ const transporter = nodemailer.createTransport({
 });
 
 // Exported sendMail function
+
 const sendMail = async (options) => {
   return await transporter.sendMail({
-    from: '"My App" <' + process.env.EMAIL_USER + '>',
+    from: '"My App" <' + process.env.EMAIL_USER + ">",
     ...options,
   });
 };
