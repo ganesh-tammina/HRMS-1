@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Exported sendMail function for test email porpuse ganesh
+// Exported sendMail function for test email porpuse ganesh new change
 
 const sendMail = async (options) => {
     return await transporter.sendMail({
