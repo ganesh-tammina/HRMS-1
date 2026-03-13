@@ -70,7 +70,7 @@ const app = express();
 const upload = multer({ dest: "uploads/" });
 
 // CORS Configuration for Production
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:4201')
     .split(',')
     .map(o => o.trim())
     .filter(Boolean);
