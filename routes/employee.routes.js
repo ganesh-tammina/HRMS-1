@@ -324,14 +324,15 @@ router.get("/:id/details", auth, async (req, res) => {
 router.put("/:id", auth, hr, async (req, res) => {
   // Only allow valid columns to be updated
   const allowedFields = [
-    "reporting_manager_id",
-    "leave_plan_id",
-    "shift_policy_id",
-    "attendance_policy_id",
-    "weekly_off_policy_id",
-    "PayGradeId",
-    "DepartmentId",
-    "lpa",
+     "reporting_manager_id",
+     "leave_plan_id",
+     "shift_policy_id",
+     "attendance_policy_id",
+     "weekly_off_policy_id",
+     "PayGradeId",
+     "DepartmentId",
+     "lpa",
+     "DateOfBirth",
   ];
   const updateData = {};
   for (const key of allowedFields) {

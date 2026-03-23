@@ -6,7 +6,7 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../config/database");
-const { auth, admin, hr } = require("../middleware/auth");
+const { auth, admin, hr, finance } = require("../middleware/auth");
 const { findEmployeeByUserId } = require("../utils/helpers");
 const payrollCtrl = require('../controllers/payroll.controller');
 const payrollService = require('../services/payroll.service');
@@ -15,7 +15,7 @@ const payrollAdmin = require('../controllers/payroll.admin.controller');
 /* ============ PAYROLL SETTINGS ============ */
 
 // Create payroll defaults
-router.post("/defaults", auth, admin, async (req, res) => {
+router.post("/defaults", auth, finance, async (req, res) => {
     let c = null;
     try {
         const { pf_percent, esi_percent, professional_tax, variable_pay_percent } = req.body;
@@ -32,7 +32,7 @@ router.post("/defaults", auth, admin, async (req, res) => {
 });
 
 // Get payroll defaults
-router.get("/defaults", auth, hr, async (req, res) => {
+router.get("/defaults", auth, finance, async (req, res) => {
     let c = null;
     try {
         c = await db();
@@ -78,7 +78,7 @@ const canViewPayrollData = async (req, res, next) => {
 
 // Modern v2 API endpoints to avoid clashing with legacy routes
 // POST /api/payroll/v2/run  { year: 2026, month: 2 }
-router.post('/v2/run', auth, admin, payrollCtrl.runPayroll);
+router.post('/v2/run', auth, finance, payrollCtrl.runPayroll);
 
 // GET /api/payroll/v2/payslips/:employeeId
 router.get('/v2/payslips/:employeeId', auth, canViewPayrollData, payrollCtrl.listPayslips);
@@ -93,7 +93,7 @@ router.get('/v2/structure/:employeeId', auth, canViewPayrollData, payrollCtrl.ge
 router.get('/v2/attendance-impact/:employeeId', auth, canViewPayrollData, payrollCtrl.getAttendanceImpact);
 
 // GET /api/payroll/v2/run?month=YYYY-MM  -> summary for a month (admin/hr)
-router.get('/v2/run', auth, hr, async (req, res) => {
+router.get('/v2/run', auth, finance, async (req, res) => {
     const { month } = req.query; // expect YYYY-MM
     if (!month) return res.status(400).json({ error: 'month query required (YYYY-MM)' });
     const parts = month.split('-');
@@ -121,7 +121,7 @@ router.get('/v2/run', auth, hr, async (req, res) => {
 });
 
 // GET /api/payroll/v2/run/:employeeId?month=YYYY-MM -> employee-level payroll breakup
-router.get('/v2/run/:employeeId', auth, hr, async (req, res) => {
+router.get('/v2/run/:employeeId', auth, finance, async (req, res) => {
     const { month } = req.query;
     const employeeId = Number(req.params.employeeId);
     if (!month) return res.status(400).json({ error: 'month query required (YYYY-MM)' });
@@ -254,30 +254,30 @@ router.get('/v2/payslips/:employeeId/:month', auth, canViewPayrollData, async (r
 
 // -------- Admin/HR stubs (scaffolded) --------
 // POST /api/payroll/v2/runs/preview
-router.post('/v2/runs/preview', auth, hr, payrollAdmin.previewRun);
+router.post('/v2/runs/preview', auth, finance, payrollAdmin.previewRun);
 
 // POST /api/payroll/v2/runs/:runId/lock
-router.post('/v2/runs/:runId/lock', auth, hr, payrollAdmin.lockRun);
+router.post('/v2/runs/:runId/lock', auth, finance, payrollAdmin.lockRun);
 
 // PUT /api/payroll/v2/cycles/:cycleId/lock
-router.put('/v2/cycles/:cycleId/lock', auth, hr, payrollAdmin.lockCycle);
+router.put('/v2/cycles/:cycleId/lock', auth, finance, payrollAdmin.lockCycle);
 
 // Tax profile (employee-level)
-router.get('/v2/employees/:employeeId/tax-profile', auth, hr, payrollAdmin.getTaxProfile);
-router.put('/v2/employees/:employeeId/tax-profile', auth, hr, payrollAdmin.putTaxProfile);
+router.get('/v2/employees/:employeeId/tax-profile', auth, finance, payrollAdmin.getTaxProfile);
+router.put('/v2/employees/:employeeId/tax-profile', auth, finance, payrollAdmin.putTaxProfile);
 
 // Bank account (employee-level)
-router.get('/v2/employees/:employeeId/bank-account', auth, hr, payrollAdmin.getBankAccount);
-router.put('/v2/employees/:employeeId/bank-account', auth, hr, payrollAdmin.putBankAccount);
+router.get('/v2/employees/:employeeId/bank-account', auth, finance, payrollAdmin.getBankAccount);
+router.put('/v2/employees/:employeeId/bank-account', auth, finance, payrollAdmin.putBankAccount);
 
 // Payouts
-router.post('/v2/payouts/initiate', auth, hr, payrollAdmin.initiatePayout);
-router.get('/v2/payouts/:runId', auth, hr, payrollAdmin.getPayout);
-router.put('/v2/payouts/:payoutId/status', auth, hr, payrollAdmin.updatePayoutStatus);
+router.post('/v2/payouts/initiate', auth, finance, payrollAdmin.initiatePayout);
+router.get('/v2/payouts/:runId', auth, finance, payrollAdmin.getPayout);
+router.put('/v2/payouts/:payoutId/status', auth, finance, payrollAdmin.updatePayoutStatus);
 
 
 // Update payroll defaults
-router.put("/defaults/:id", auth, admin, async (req, res) => {
+router.put("/defaults/:id", auth, finance, async (req, res) => {
     let c = null;
     try {
         c = await db();
@@ -293,7 +293,7 @@ router.put("/defaults/:id", auth, admin, async (req, res) => {
 /* ============ SALARY STRUCTURE ============ */
 
 // Create/Update salary structure
-router.post("/salary/structure/:empId", auth, hr, async (req, res) => {
+router.post("/salary/structure/:empId", auth, finance, async (req, res) => {
     const { empId } = req.params;
     const components = [
         { name: "basic", value: req.body.basic },
@@ -357,7 +357,7 @@ router.get("/salary/structure/:empId", auth, async (req, res) => {
 /* ============ PAYROLL GENERATION ============ */
 
 // Generate payroll for a month
-router.post("/generate", auth, admin, async (req, res) => {
+router.post("/generate", auth, finance, async (req, res) => {
     const { month, year } = req.body;
     let c = null;
     
@@ -431,7 +431,7 @@ router.post("/generate", auth, admin, async (req, res) => {
 });
 
 // List payroll runs
-router.get("/runs", auth, hr, async (req, res) => {
+router.get("/runs", auth, finance, async (req, res) => {
     let c = null;
     try {
         c = await db();
@@ -451,7 +451,7 @@ router.get("/runs", auth, hr, async (req, res) => {
 });
 
 // Get payroll by run (legacy endpoint)
-router.get("/:run", auth, hr, async (req, res) => {
+router.get("/:run", auth, finance, async (req, res) => {
     let c = null;
     try {
         c = await db();
@@ -468,7 +468,7 @@ router.get("/:run", auth, hr, async (req, res) => {
 });
 
 // Recalculate payroll for employee
-router.post("/recalculate/:empId", auth, admin, async (req, res) => {
+router.post("/recalculate/:empId", auth, finance, async (req, res) => {
     const { empId } = req.params;
     const { month, year } = req.body;
     
@@ -519,7 +519,7 @@ router.post("/recalculate/:empId", auth, admin, async (req, res) => {
 /* ============ PAYSLIPS ============ */
 
 // Get all payslips (HR)
-router.get("/slips/all", auth, hr, async (req, res) => {
+router.get("/slips/all", auth, finance, async (req, res) => {
     let c = null;
     try {
         c = await db();

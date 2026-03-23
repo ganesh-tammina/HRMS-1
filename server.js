@@ -225,7 +225,7 @@ async function ensureAdminUser() {
 /* ============ ACCESS MATRIX ============ */
 
 const ACCESS_MATRIX = {
-    description: "Role access (allowed = true). Roles: admin, hr, manager, employee",
+    description: "Role access (allowed = true). Roles: admin, hr, manager, finance, employee",
     matrix: {
         "/api/login": { admin: true, hr: true, manager: true, employee: true, method: "POST", note: "public auth" },
         "/api/onboarding/set-password": { admin: true, hr: true, manager: true, employee: true, method: "POST" },
@@ -235,7 +235,7 @@ const ACCESS_MATRIX = {
         "/api/payslips/{employee_id}": { admin: true, hr: true, manager: true, employee: true, note: "employee can view own only" },
         "/api/payslips/{employee_id}/{slip_id}": { admin: true, hr: true, manager: true, employee: true, note: "employee can view own only" },
         "/api/upload/employees": { admin: true, hr: true, manager: false, employee: false, method: "POST" },
-        "/api/upload/payroll": { admin: true, hr: true, manager: false, employee: false, method: "POST" },
+        "/api/upload/payroll": { admin: true, hr: true, finance: true, manager: false, employee: false, method: "POST" },
         "/api/upload/holidays": { admin: true, hr: true, manager: false, employee: false, method: "POST" },
         "/api/attendance": { "POST": { admin: true, hr: true, manager: true, employee: true }, "GET /api/attendance/{date}": { admin: true, hr: true, manager: true, employee: false } },
         "/api/attendance-report": { admin: true, hr: true, manager: true, employee: false, method: "GET" },

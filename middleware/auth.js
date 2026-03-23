@@ -198,6 +198,32 @@ const manager = (req, res, next) => {
 };
 
 /**
+ * Finance role authorization middleware
+ * Allows Finance, HR, and Admin roles
+ */
+const finance = (req, res, next) => {
+    try {
+        // Ensure user is authenticated
+        if (!req.user || !req.user.role) {
+            return res.status(401).json({ error: "Authentication required" });
+        }
+
+        const role = req.user.role.toLowerCase().trim();
+        const allowedRoles = ['admin', 'hr', 'finance'];
+
+        if (!allowedRoles.includes(role)) {
+            console.warn(`[AUTH] Finance access denied for user ${req.user.id} with role: ${req.user.role}`);
+            return res.status(403).json({ error: "Finance/HR/Admin only" });
+        }
+
+        next();
+    } catch (error) {
+        console.error("[AUTH] Finance middleware error:", error.message);
+        return res.status(500).json({ error: "Authorization check failed" });
+    }
+};
+
+/**
  * Composite auth middleware - combines authentication and admin authorization
  * Used for endpoints requiring both authentication and admin access
  */
@@ -247,7 +273,8 @@ module.exports = {
     admin, 
     roleAuth, 
     hr, 
-    manager, 
+    manager,
+    finance,
     authMiddleware, 
     adminAuthMiddleware,
     // Utility exports

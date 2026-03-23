@@ -59,7 +59,8 @@ const EMPLOYEE_UPDATE_FIELDS_SELF = [
     'permanent_address_line1', 'permanent_address_line2',
     'permanent_city', 'permanent_state', 'permanent_zip', 'permanent_country',
     'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
-    'profile_image', 'spouse_name', 'children_names'
+    'profile_image', 'spouse_name', 'children_names',
+        'DateOfBirth'
 ];
 
 /**
@@ -74,7 +75,7 @@ const EMPLOYEE_UPDATE_FIELDS_HR = [
     'attendance_policy_id', 'attendance_capture_scheme_id',
     'holiday_list_id', 'expense_policy_id',
     'BandId', 'PayGradeId', 'CostCenterId',
-    'time_type', 'worker_type', 'EmploymentStatus', 'notice_period'
+    'time_type', 'worker_type', 'EmploymentStatus', 'notice_period'        
 ];
 
 /**
