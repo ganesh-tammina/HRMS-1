@@ -7,7 +7,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { db } = require("../config/database");
-const { auth, admin, hr } = require("../middleware/auth");
+const { auth, admin, hr, roleAuth } = require("../middleware/auth");
 const { getOrCreateMaster } = require("../utils/helpers");
 const { excel } = require("../utils/excelReader");
 
@@ -15,7 +15,7 @@ const upload = multer({ dest: "uploads/" });
 
 /* ============ BULK EMPLOYEE UPLOAD ============ */
 
-router.post("/employees", auth, admin, hr, upload.single("file"), async (req, res) => {
+router.post("/employees", auth, roleAuth(["admin", "hr"]), upload.single("file"), async (req, res) => {
     const rows = excel(req.file.path);
     const c = await db();
 
@@ -493,7 +493,7 @@ router.post("/employees", auth, admin, hr, upload.single("file"), async (req, re
 
 /* ============ BULK HOLIDAY UPLOAD ============ */
 
-router.post("/holidays", auth, admin, upload.single("file"), async (req, res) => {
+router.post("/holidays", auth, roleAuth(["admin", "hr"]), upload.single("file"), async (req, res) => {
     const rows = excel(req.file.path);
     const c = await db();
 
@@ -595,7 +595,7 @@ router.get("/test-master-creation", auth, admin, async (req, res) => {
 
 /* ============ BULK PAYROLL UPLOAD ============ */
 
-router.post("/payroll", auth, admin, upload.single("file"), async (req, res) => {
+router.post("/payroll", auth, roleAuth(["admin", "hr"]), upload.single("file"), async (req, res) => {
     const rows = excel(req.file.path);
     const c = await db();
 
