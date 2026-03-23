@@ -24,7 +24,7 @@ router.delete("/shift-policies/:id", auth, hr, async (req, res) => {
 
 // Generic master creation helper
 const createMasterRoutes = (route, table, col) => {
-  router.get(`/${route}`, auth, async (req, res) => {
+  router.get(`/${route}`, auth, hr, async (req, res) => {
     const c = await db();
     const [r] = await c.query(
       `SELECT id, ${col} as name, created_at FROM ${table}`
@@ -91,7 +91,7 @@ createMasterRoutes("holiday-lists", "holiday_lists", "name");
 createMasterRoutes("expense-policies", "expense_policies", "name");
 
 // Enhanced Shift Policies Route
-router.get("/shift-policies", auth, async (req, res) => {
+router.get("/shift-policies", auth, hr, async (req, res) => {
   try {
     const c = await db();
     const [rows] = await c.query(`
@@ -220,7 +220,7 @@ router.put("/shift-policies/:id", auth, hr, async (req, res) => {
 });
 
 // ============ ENHANCED WEEKLY OFF POLICIES ROUTES ============
-router.get("/weekly-off-policies", auth, async (req, res) => {
+router.get("/weekly-off-policies", auth, hr, async (req, res) => {
   let c;
   try {
     c = await db();
