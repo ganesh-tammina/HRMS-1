@@ -60,7 +60,8 @@ const EMPLOYEE_UPDATE_FIELDS_SELF = [
     'permanent_city', 'permanent_state', 'permanent_zip', 'permanent_country',
     'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
     'profile_image', 'spouse_name', 'children_names',
-        'DateOfBirth'
+    'DateOfBirth', 'Gender', 'BloodGroup', 'MaritalStatus',
+    'father_name', 'mother_name'
 ];
 
 /**
@@ -393,7 +394,7 @@ function filterEmployeeUpdateData(data, role, isSelfUpdate = false) {
         // Regular employees can only update their own records
         allowedFields = [];
     }
-
+    
     // Filter data to only include allowed fields
     for (const field of allowedFields) {
         if (sanitized.hasOwnProperty(field) && !EMPLOYEE_READONLY_FIELDS.includes(field)) {

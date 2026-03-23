@@ -49,19 +49,40 @@ const uploadProfileImage = multer({
 
 // Get all employees with pagination & filters
 router.get("/", auth, async (req, res) => {
-  const c = await db();
-  const [r] = await c.query(`
-    SELECT 
-        e.*, 
-        d.name as department_name, 
-        des.name as designation_name 
-    FROM employees e
-    LEFT JOIN departments d ON e.DepartmentId = d.id
-    LEFT JOIN designations des ON e.DesignationId = des.id
-    ORDER BY e.id DESC
-  `);
-  c.end();
-  res.json(r);
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
+    const c = await db();
+    const [r] = await c.query(`
+      SELECT 
+          e.*, 
+          d.name as department_name, 
+          des.name as designation_name 
+      FROM employees e
+      LEFT JOIN departments d ON e.DepartmentId = d.id
+      LEFT JOIN designations des ON e.DesignationId = des.id
+      ORDER BY e.id DESC
+      LIMIT ? OFFSET ?
+    `, [limit, offset]);
+
+    const [countResult] = await c.query("SELECT COUNT(*) as total FROM employees");
+    c.end();
+
+    res.json({
+      data: r,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch employees" });
+  }
 });
 
 // Get my team (reporting team if manager, co-team if employee)
@@ -184,11 +205,38 @@ router.get("/my-team/list", auth, async (req, res) => {
 
 // Create new employee
 router.post("/", auth, admin, async (req, res) => {
-  const c = await db();
-  const data = { ...req.body, created_at: new Date() };
-  const [result] = await c.query("INSERT INTO employees SET ?", data);
-  c.end();
-  res.json({ id: result.insertId, ...data });
+  try {
+    // Validate required fields
+    const requiredFields = ['FirstName', 'LastName', 'WorkEmail', 'EmploymentStatus'];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ error: `Missing required field: ${field}` });
+      }
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(req.body.WorkEmail)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    // Validate DateOfBirth format if provided
+    if (req.body.DateOfBirth) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(req.body.DateOfBirth)) {
+        return res.status(400).json({ error: "DateOfBirth must be in YYYY-MM-DD format" });
+      }
+    }
+
+    const c = await db();
+    const data = { ...req.body, created_at: new Date() };
+    const [result] = await c.query("INSERT INTO employees SET ?", data);
+    c.end();
+    res.json({ id: result.insertId, ...data });
+  } catch (error) {
+    console.error("Error creating employee:", error);
+    res.status(500).json({ error: error.message || "Failed to create employee" });
+  }
 });
 
 // Get single employee
@@ -322,56 +370,82 @@ router.get("/:id/details", auth, async (req, res) => {
 
 // Update employee
 router.put("/:id", auth, hr, async (req, res) => {
-  // Only allow valid columns to be updated
-  const allowedFields = [
-     "reporting_manager_id",
-     "leave_plan_id",
-     "shift_policy_id",
-     "attendance_policy_id",
-     "weekly_off_policy_id",
-     "PayGradeId",
-     "DepartmentId",
-     "lpa",
-     "DateOfBirth",
-  ];
-  const updateData = {};
-  for (const key of allowedFields) {
-    if (req.body[key] !== undefined) {
-      updateData[key] = req.body[key];
-    }
-  }
-
-  console.log(`[PUT /employees/${req.params.id}] Body received:`, JSON.stringify(req.body));
-  console.log(`[PUT /employees/${req.params.id}] Filtered updateData:`, JSON.stringify(updateData));
-
-  if (Object.keys(updateData).length === 0) {
-    return res.status(400).json({ error: "No valid fields to update" });
-  }
-
   try {
+    const employeeId = parseInt(req.params.id);
+    if (isNaN(employeeId)) {
+      return res.status(400).json({ error: "Invalid employee ID" });
+    }
+
+    // Only allow valid columns to be updated
+    const allowedFields = [
+       "reporting_manager_id",
+       "leave_plan_id",
+       "shift_policy_id",
+       "attendance_policy_id",
+       "weekly_off_policy_id",
+       "PayGradeId",
+       "DepartmentId",
+       "lpa",
+       "DateOfBirth",
+    ];
+    const updateData = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        updateData[key] = req.body[key];
+      }
+    }
+
+    // Validate DateOfBirth format if provided
+    if (updateData.DateOfBirth) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(updateData.DateOfBirth)) {
+        return res.status(400).json({ error: "DateOfBirth must be in YYYY-MM-DD format" });
+      }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "No valid fields to update" });
+    }
+
     const c = await db();
     const [result] = await c.query("UPDATE employees SET ? WHERE id = ?", [
       updateData,
-      req.params.id,
+      employeeId,
     ]);
     c.end();
-    console.log(`[PUT /employees/${req.params.id}] Rows affected: ${result.affectedRows}`);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Employee not found" });
     }
     res.json({ success: true, updated: updateData });
   } catch (err) {
-    console.error(`[PUT /employees/${req.params.id}] Error:`, err.message);
+    console.error("Error updating employee:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
 // Delete employee
 router.delete("/:id", auth, admin, async (req, res) => {
-  const c = await db();
-  await c.query("DELETE FROM employees WHERE id = ?", [req.params.id]);
-  c.end();
-  res.json({ success: true });
+  try {
+    const employeeId = parseInt(req.params.id);
+    if (isNaN(employeeId)) {
+      return res.status(400).json({ error: "Invalid employee ID" });
+    }
+
+    const c = await db();
+    // Verify employee exists before deleting
+    const [employee] = await c.query("SELECT id FROM employees WHERE id = ?", [employeeId]);
+    if (employee.length === 0) {
+      c.end();
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    const [result] = await c.query("DELETE FROM employees WHERE id = ?", [employeeId]);
+    c.end();
+    res.json({ success: true, message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    res.status(500).json({ error: error.message || "Failed to delete employee" });
+  }
 });
 
 // Deactivate employee
@@ -386,25 +460,87 @@ router.put("/:id/deactivate", auth, hr, async (req, res) => {
 
 // Get reporting manager's team
 router.get("/reporting/:managerId", auth, async (req, res) => {
-  const c = await db();
-  const [r] = await c.query(
-    "SELECT * FROM employees WHERE reporting_manager_id = ?",
-    [req.params.managerId],
-  );
-  c.end();
-  res.json(r);
+  try {
+    const managerId = parseInt(req.params.managerId);
+    if (isNaN(managerId)) {
+      return res.status(400).json({ error: "Invalid manager ID" });
+    }
+
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
+    const c = await db();
+    const [r] = await c.query(
+      `SELECT e.*, d.name as department_name, des.name as designation_name 
+       FROM employees e
+       LEFT JOIN departments d ON e.DepartmentId = d.id
+       LEFT JOIN designations des ON e.DesignationId = des.id
+       WHERE e.reporting_manager_id = ?
+       ORDER BY e.FirstName, e.LastName
+       LIMIT ? OFFSET ?`,
+      [managerId, limit, offset],
+    );
+
+    const [countResult] = await c.query(
+      "SELECT COUNT(*) as total FROM employees WHERE reporting_manager_id = ?",
+      [managerId]
+    );
+    c.end();
+
+    // Apply data masking
+    const maskedData = r.map(emp => maskSensitiveData(emp, req.user.role, false));
+
+    res.json({
+      data: maskedData,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching reporting team:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch reporting team" });
+  }
 });
 
 // Employee search
 router.get("/search/query", auth, async (req, res) => {
-  const q = req.query.q || "";
-  const c = await db();
-  const [r] = await c.query(
-    "SELECT * FROM employees WHERE FirstName LIKE ? OR LastName LIKE ? OR WorkEmail LIKE ? LIMIT 20",
-    [`%${q}%`, `%${q}%`, `%${q}%`],
-  );
-  c.end();
-  res.json(r);
+  try {
+    const q = (req.query.q || "").trim();
+    
+    // Validate search query
+    if (q.length === 0) {
+      return res.status(400).json({ error: "Search query cannot be empty" });
+    }
+    if (q.length > 100) {
+      return res.status(400).json({ error: "Search query too long (max 100 characters)" });
+    }
+
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+
+    const c = await db();
+    const [r] = await c.query(
+      `SELECT e.*, d.name as department_name, des.name as designation_name 
+       FROM employees e
+       LEFT JOIN departments d ON e.DepartmentId = d.id
+       LEFT JOIN designations des ON e.DesignationId = des.id
+       WHERE FirstName LIKE ? OR LastName LIKE ? OR WorkEmail LIKE ? 
+       LIMIT ?`,
+      [`%${q}%`, `%${q}%`, `%${q}%`, limit],
+    );
+    c.end();
+
+    // Apply data masking
+    const maskedData = r.map(emp => maskSensitiveData(emp, req.user.role, false));
+
+    res.json({ data: maskedData, count: maskedData.length });
+  } catch (error) {
+    console.error("Error searching employees:", error);
+    res.status(500).json({ error: error.message || "Failed to search employees" });
+  }
 });
 
 /* ============ EMPLOYEE PROFILE ============ */
@@ -458,14 +594,40 @@ router.put("/profile/me", auth, async (req, res) => {
     const emp = await findEmployeeByUserId(req.user.id);
     if (!emp) return res.status(404).json({ error: "Employee not found" });
 
-    // SECURITY: Filter update data to only allow safe fields for self-update
-    const updateData = filterEmployeeUpdateData(req.body, req.user.role, true);
+    // Manually define allowed fields for self-update
+    const allowedFields = [
+      'PersonalEmail', 'PhoneNumber',
+      'current_address_line1', 'current_address_line2',
+      'current_city', 'current_state', 'current_zip', 'current_country',
+      'permanent_address_line1', 'permanent_address_line2',
+      'permanent_city', 'permanent_state', 'permanent_zip', 'permanent_country',
+      'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
+      'profile_image', 'spouse_name', 'children_names',
+      'DateOfBirth', 'Gender', 'BloodGroup', 'MaritalStatus',
+      'father_name', 'mother_name'
+    ];
+
+    // Build update object from request body - only include allowed fields
+    const updateData = {};
+    for (const field of allowedFields) {
+      if (req.body.hasOwnProperty(field)) {
+        let value = req.body[field];
+        // Sanitize string values
+        if (typeof value === 'string') {
+          value = value.replace(/<[^>]*>/g, '').trim();
+          if (value.length > 5000) {
+            value = value.substring(0, 5000);
+          }
+        }
+        updateData[field] = value;
+      }
+    }
 
     // If no valid fields to update, return error
     if (Object.keys(updateData).length === 0) {
       return res.status(400).json({
         error: "No valid fields to update",
-        hint: "You can only update: PhoneNumber, PersonalEmail, current_address fields, MaritalStatus, BloodGroup"
+        hint: "You can only update: PhoneNumber, PersonalEmail, current_address fields, MaritalStatus, BloodGroup, Gender, DateOfBirth, father_name, mother_name"
       });
     }
 
@@ -553,6 +715,11 @@ router.get("/my-team/reporting", auth, async (req, res) => {
   try {
     const emp = await findEmployeeByUserId(req.user.id);
     if (!emp) return res.status(404).json({ error: "Employee not found" });
+
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
     const c = await db();
     const [reportingTeam] = await c.query(
       `SELECT 
@@ -562,11 +729,30 @@ router.get("/my-team/reporting", auth, async (req, res) => {
              LEFT JOIN designations des ON e.DesignationId = des.id
              LEFT JOIN locations l ON e.LocationId = l.id
              WHERE e.reporting_manager_id = ? AND e.EmploymentStatus = 'Working'
-             ORDER BY e.FirstName, e.LastName`,
-      [emp.id],
+             ORDER BY e.FirstName, e.LastName
+             LIMIT ? OFFSET ?`,
+      [emp.id, limit, offset],
+    );
+
+    const [countResult] = await c.query(
+      "SELECT COUNT(*) as total FROM employees WHERE reporting_manager_id = ? AND EmploymentStatus = 'Working'",
+      [emp.id]
     );
     c.end();
-    res.json({ team: reportingTeam, message: "Your reporting team" });
+
+    // Apply data masking
+    const maskedData = reportingTeam.map(e => maskSensitiveData(e, req.user.role, false));
+
+    res.json({
+      team: maskedData,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      },
+      message: "Your reporting team"
+    });
   } catch (error) {
     console.error("Error fetching reporting team:", error);
     res
@@ -582,6 +768,11 @@ router.get("/my-team/co-team", auth, async (req, res) => {
     if (!emp) return res.status(404).json({ error: "Employee not found" });
     if (!emp.reporting_manager_id)
       return res.json({ team: [], message: "No co-team members found" });
+
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
     const c = await db();
     const [coTeam] = await c.query(
       `SELECT 
@@ -591,11 +782,30 @@ router.get("/my-team/co-team", auth, async (req, res) => {
              LEFT JOIN designations des ON e.DesignationId = des.id
              LEFT JOIN locations l ON e.LocationId = l.id
              WHERE e.reporting_manager_id = ? AND e.id != ? AND e.EmploymentStatus = 'Working'
-             ORDER BY e.FirstName, e.LastName`,
-      [emp.reporting_manager_id, emp.id],
+             ORDER BY e.FirstName, e.LastName
+             LIMIT ? OFFSET ?`,
+      [emp.reporting_manager_id, emp.id, limit, offset],
+    );
+
+    const [countResult] = await c.query(
+      "SELECT COUNT(*) as total FROM employees WHERE reporting_manager_id = ? AND id != ? AND EmploymentStatus = 'Working'",
+      [emp.reporting_manager_id, emp.id]
     );
     c.end();
-    res.json({ team: coTeam, message: "Your co-team members" });
+
+    // Apply data masking
+    const maskedData = coTeam.map(e => maskSensitiveData(e, req.user.role, false));
+
+    res.json({
+      team: maskedData,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      },
+      message: "Your co-team members"
+    });
   } catch (error) {
     console.error("Error fetching co-team:", error);
     res.status(500).json({ error: error.message || "Failed to fetch co-team" });
@@ -605,7 +815,23 @@ router.get("/my-team/co-team", auth, async (req, res) => {
 // Get reporting team (employees who report to the given employee ID)
 router.get("/my-team/reporting/:employeeId", auth, async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
+    const requestedEmployeeId = parseInt(req.params.employeeId);
+    if (isNaN(requestedEmployeeId)) {
+      return res.status(400).json({ error: "Invalid employee ID" });
+    }
+
+    // SECURITY: Check if user is authorized to view this employee's reporting team
+    const canView = await canViewEmployee(req.user.id, requestedEmployeeId, req.user.role);
+    if (!canView) {
+      return res.status(403).json({
+        error: "Unauthorized to view this employee's reporting team"
+      });
+    }
+
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
     const c = await db();
     const [reportingTeam] = await c.query(
       `SELECT 
@@ -615,13 +841,29 @@ router.get("/my-team/reporting/:employeeId", auth, async (req, res) => {
              LEFT JOIN designations des ON e.DesignationId = des.id
              LEFT JOIN locations l ON e.LocationId = l.id
              WHERE e.reporting_manager_id = ? AND e.EmploymentStatus = 'Working'
-             ORDER BY e.FirstName, e.LastName`,
-      [employeeId],
+             ORDER BY e.FirstName, e.LastName
+             LIMIT ? OFFSET ?`,
+      [requestedEmployeeId, limit, offset],
+    );
+
+    const [countResult] = await c.query(
+      "SELECT COUNT(*) as total FROM employees WHERE reporting_manager_id = ? AND EmploymentStatus = 'Working'",
+      [requestedEmployeeId]
     );
     c.end();
+
+    // Apply data masking
+    const maskedData = reportingTeam.map(e => maskSensitiveData(e, req.user.role, false));
+
     res.json({
-      team: reportingTeam,
-      message: "Reporting team for employee " + employeeId,
+      team: maskedData,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      },
+      message: "Reporting team for employee " + requestedEmployeeId,
     });
   } catch (error) {
     console.error("Error fetching reporting team by employeeId:", error);
@@ -634,12 +876,28 @@ router.get("/my-team/reporting/:employeeId", auth, async (req, res) => {
 // Get co-team (employees who share the same reporting manager as the given employee ID)
 router.get("/my-team/co-team/:employeeId", auth, async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
+    const requestedEmployeeId = parseInt(req.params.employeeId);
+    if (isNaN(requestedEmployeeId)) {
+      return res.status(400).json({ error: "Invalid employee ID" });
+    }
+
+    // SECURITY: Check if user is authorized to view this employee's co-team
+    const canView = await canViewEmployee(req.user.id, requestedEmployeeId, req.user.role);
+    if (!canView) {
+      return res.status(403).json({
+        error: "Unauthorized to view this employee's co-team"
+      });
+    }
+
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
     const c = await db();
     // Get the reporting manager id for the given employee
     const [empRows] = await c.query(
       "SELECT reporting_manager_id FROM employees WHERE id = ?",
-      [employeeId],
+      [requestedEmployeeId],
     );
     if (!empRows.length || !empRows[0].reporting_manager_id) {
       c.end();
@@ -654,13 +912,29 @@ router.get("/my-team/co-team/:employeeId", auth, async (req, res) => {
              LEFT JOIN designations des ON e.DesignationId = des.id
              LEFT JOIN locations l ON e.LocationId = l.id
              WHERE e.reporting_manager_id = ? AND e.id != ? AND e.EmploymentStatus = 'Working'
-             ORDER BY e.FirstName, e.LastName`,
-      [reportingManagerId, employeeId],
+             ORDER BY e.FirstName, e.LastName
+             LIMIT ? OFFSET ?`,
+      [reportingManagerId, requestedEmployeeId, limit, offset],
+    );
+
+    const [countResult] = await c.query(
+      "SELECT COUNT(*) as total FROM employees WHERE reporting_manager_id = ? AND id != ? AND EmploymentStatus = 'Working'",
+      [reportingManagerId, requestedEmployeeId]
     );
     c.end();
+
+    // Apply data masking
+    const maskedData = coTeam.map(e => maskSensitiveData(e, req.user.role, false));
+
     res.json({
-      team: coTeam,
-      message: "Co-team members for employee " + employeeId,
+      team: maskedData,
+      pagination: {
+        page,
+        limit,
+        total: countResult[0].total,
+        pages: Math.ceil(countResult[0].total / limit)
+      },
+      message: "Co-team members for employee " + requestedEmployeeId,
     });
   } catch (error) {
     console.error("Error fetching co-team by employeeId:", error);

@@ -59,7 +59,9 @@ const EMPLOYEE_UPDATE_FIELDS_SELF = [
     'permanent_address_line1', 'permanent_address_line2',
     'permanent_city', 'permanent_state', 'permanent_zip', 'permanent_country',
     'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
-    'profile_image', 'spouse_name', 'children_names'
+    'profile_image', 'spouse_name', 'children_names',
+    'DateOfBirth', 'Gender', 'BloodGroup', 'MaritalStatus',
+    'father_name', 'mother_name'
 ];
 
 /**
