@@ -15,7 +15,7 @@ const upload = multer({ dest: "uploads/" });
 
 /* ============ BULK EMPLOYEE UPLOAD ============ */
 
-router.post("/employees", auth, admin, upload.single("file"), async (req, res) => {
+router.post("/employees", auth, admin, hr, upload.single("file"), async (req, res) => {
     const rows = excel(req.file.path);
     const c = await db();
 
