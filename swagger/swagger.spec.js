@@ -1169,16 +1169,46 @@ Skips employees who already have user accounts.
     "/api/employees": {
       get: {
         summary: "Get All Employees",
-        description: "Retrieve list of all employees",
+        description: "Retrieve list of all employees with pagination support",
         tags: ["👥 Employees"],
+        parameters: [
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            description: "Page number (default: 1)",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            description: "Records per page (default: 20, max: 100)",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+          },
+        ],
         responses: {
           200: {
             description: "List of employees",
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/Employee" },
+                  type: "object",
+                  properties: {
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Employee" },
+                    },
+                    pagination: {
+                      type: "object",
+                      properties: {
+                        page: { type: "integer" },
+                        limit: { type: "integer" },
+                        total: { type: "integer" },
+                        totalPages: { type: "integer" },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -1286,16 +1316,32 @@ Skips employees who already have user accounts.
       get: {
         summary: "Get Reporting Team",
         description:
-          "Returns a list of employees who report directly to the logged-in user.",
+          "Returns a list of employees who report directly to the logged-in user with pagination support.",
         tags: ["👥 Employees"],
         security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            description: "Page number (default: 1)",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            description: "Records per page (default: 20, max: 100)",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+          },
+        ],
         responses: {
           200: {
             description: "List of direct reports",
             content: {
               "application/json": {
                 example: {
-                  team: [
+                  data: [
                     {
                       id: 10,
                       FirstName: "John",
@@ -1305,6 +1351,12 @@ Skips employees who already have user accounts.
                       location_name: "Site 1",
                     },
                   ],
+                  pagination: {
+                    page: 1,
+                    limit: 20,
+                    total: 5,
+                    totalPages: 1,
+                  },
                   message: "Your reporting team",
                 },
               },
@@ -1319,16 +1371,32 @@ Skips employees who already have user accounts.
       get: {
         summary: "Get Co-Team Members",
         description:
-          "Returns a list of colleagues who share the same reporting manager as the logged-in user.",
+          "Returns a list of colleagues who share the same reporting manager as the logged-in user with pagination support.",
         tags: ["👥 Employees"],
         security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            description: "Page number (default: 1)",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            description: "Records per page (default: 20, max: 100)",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+          },
+        ],
         responses: {
           200: {
             description: "List of co-team members",
             content: {
               "application/json": {
                 example: {
-                  team: [
+                  data: [
                     {
                       id: 11,
                       FirstName: "Jane",
@@ -1338,6 +1406,12 @@ Skips employees who already have user accounts.
                       location_name: "Site 1",
                     },
                   ],
+                  pagination: {
+                    page: 1,
+                    limit: 20,
+                    total: 8,
+                    totalPages: 1,
+                  },
                   message: "Your co-team members",
                 },
               },
@@ -1573,10 +1647,48 @@ Skips employees who already have user accounts.
             required: true,
             schema: { type: "string" },
             example: "John",
+            description: "Search query (searches name, email, department, etc.)",
+          },
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            description: "Page number (default: 1)",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            description: "Records per page (default: 20, max: 100)",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
           },
         ],
         responses: {
-          200: { description: "Search results" },
+          200: {
+            description: "Search results with pagination",
+            content: {
+              "application/json": {
+                example: {
+                  data: [
+                    {
+                      id: 1,
+                      EmployeeNumber: "EMP001",
+                      FullName: "John Doe",
+                      WorkEmail: "john@company.com",
+                      Department: "Engineering",
+                    },
+                  ],
+                  pagination: {
+                    page: 1,
+                    limit: 20,
+                    total: 3,
+                    totalPages: 1,
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -3775,7 +3887,7 @@ Skips employees who already have user accounts.
     "/api/employees/reporting/{managerId}": {
       get: {
         summary: "Get Team Members (Manager)",
-        description: "Get list of employees reporting to a specific manager",
+        description: "Get list of employees reporting to a specific manager with pagination support",
         tags: ["👔 Manager Actions"],
         parameters: [
           {
@@ -3783,6 +3895,21 @@ Skips employees who already have user accounts.
             in: "path",
             required: true,
             schema: { type: "integer" },
+            description: "Manager ID",
+          },
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            description: "Page number (default: 1)",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            required: false,
+            description: "Records per page (default: 20, max: 100)",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
           },
         ],
         responses: {
@@ -3790,18 +3917,26 @@ Skips employees who already have user accounts.
             description: "List of team members",
             content: {
               "application/json": {
-                example: [
-                  {
-                    id: 885,
-                    EmployeeNumber: "EMP001",
-                    FirstName: "John",
-                    LastName: "Doe",
-                    WorkEmail: "john@company.com",
-                    Department: "Engineering",
-                    Designation: "Senior Developer",
-                    reporting_manager_id: 100,
+                example: {
+                  data: [
+                    {
+                      id: 885,
+                      EmployeeNumber: "EMP001",
+                      FirstName: "John",
+                      LastName: "Doe",
+                      WorkEmail: "john@company.com",
+                      Department: "Engineering",
+                      Designation: "Senior Developer",
+                      reporting_manager_id: 100,
+                    },
+                  ],
+                  pagination: {
+                    page: 1,
+                    limit: 20,
+                    total: 12,
+                    totalPages: 1,
                   },
-                ],
+                },
               },
             },
           },

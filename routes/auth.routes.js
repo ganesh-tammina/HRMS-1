@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { db } = require("../config/database");
 const { JWT_SECRET } = require("../config/constants");
-const { auth } = require("../middleware/auth");
+const { auth, hr } = require("../middleware/auth");
 
 // LOGIN
 router.post("/login", async (req, res) => {
@@ -958,7 +958,7 @@ router.get("/users/:id", auth, async (req, res) => {
 });
 
 // Update user role
-router.put("/users/:id/role", auth, async (req, res) => {
+router.put("/users/:id/role", auth, hr, async (req, res) => {
   if (req.user.role !== "admin") {
     return res
       .status(403)

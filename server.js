@@ -61,6 +61,7 @@ const projectRoutes = require("./routes/projects.routes");
 const assetRoutes = require("./routes/assets.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const emailRoutes = require("./routes/email.routes");
+const financeConfigRoutes = require("./routes/finance-master-config.routes"); // Finance Master Configuration Engine
 
 // Import notification service
 const timesheetNotificationService = require("./utils/timesheet-notification.service");
@@ -76,6 +77,7 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:4201')
     .filter(Boolean);
 
 console.log('🌐 Allowed CORS origins:', allowedOrigins);
+console.log('✅ Finance Master Configuration Engine integrated'); // Integration confirmation
 
 // Middleware
 app.use(bodyParser.json());
@@ -289,7 +291,8 @@ app.use("/api/payslips", payrollRoutes); // Also mount for payslips endpoints
 // Payroll Master CRUD Routes
 const payrollMasterRoutes = require("./routes/payroll.master.routes");
 app.use("/api/payroll-master", payrollMasterRoutes);
-
+// Finance Master Configuration Engine
+app.use("/api/finance-config", financeConfigRoutes);
 // Upload Routes
 app.use("/api/upload", uploadRoutes);
 
