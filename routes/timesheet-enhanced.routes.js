@@ -1280,4 +1280,70 @@ router.get("/team-report", auth, async (req, res) => {
   }
 });
 
+/**
+ * Get Client Timesheet Report (HR/Manager)
+ */
+router.get("/client-timesheet-report", auth, async (req, res) => {
+  try {
+    const currentEmp = await findEmployeeByUserId(req.user.id);
+    if (!currentEmp)
+      return res.status(404).json({ error: "Employee not found" });
+
+    const { month, year } = req.query;
+    if (!month || !year) {
+      return res.status(400).json({ error: "Month and Year are required" });
+    }
+
+    const c = await db();
+
+    // HR/Admin see all, Managers see only their team
+    const isHR = ["admin", "hr"].includes(req.user.role);
+
+    let query = `
+            SELECT 
+                e.id as employee_id,
+                e.EmployeeNumber,
+                e.FirstName,
+                e.LastName,
+                e.FullName,
+                t.project_id,
+                p.project_name,
+                p.project_code,
+                p.client_name,
+                COUNT(t.id) as total_days,
+                SUM(t.total_hours) as internal_total_hours,
+                MAX(t.client_timesheet_file) as client_file,
+                MAX(t.client_timesheet_upload_date) as upload_date,
+                MAX(t.client_timesheet_status) as validation_status
+            FROM timesheets t
+            INNER JOIN employees e ON t.employee_id = e.id
+            INNER JOIN projects p ON t.project_id = p.id
+            WHERE t.timesheet_type = 'project'
+            AND MONTH(t.date) = ? AND YEAR(t.date) = ?
+    `;
+
+    const params = [parseInt(month), parseInt(year)];
+
+    if (!isHR) {
+      query += ` AND e.reporting_manager_id = ?`;
+      params.push(currentEmp.id);
+    }
+
+    query += `
+      GROUP BY 
+        e.id, e.EmployeeNumber, e.FirstName, e.LastName, e.FullName, 
+        t.project_id, p.project_name, p.project_code, p.client_name 
+      ORDER BY e.FirstName ASC, p.project_name ASC`;
+
+    const [report] = await c.query(query, params);
+    c.end();
+
+    res.json(report);
+  } catch (error) {
+    console.error("Error fetching client timesheet report:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
+

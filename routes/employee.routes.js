@@ -330,8 +330,8 @@ router.put("/:id", auth, hr, async (req, res) => {
     "attendance_policy_id",
     "weekly_off_policy_id",
     "PayGradeId",
+    "DepartmentId",
     "lpa",
-    // add more allowed fields as needed
   ];
   const updateData = {};
   for (const key of allowedFields) {
@@ -339,13 +339,30 @@ router.put("/:id", auth, hr, async (req, res) => {
       updateData[key] = req.body[key];
     }
   }
-  const c = await db();
-  await c.query("UPDATE employees SET ? WHERE id = ?", [
-    updateData,
-    req.params.id,
-  ]);
-  c.end();
-  res.json({ success: true });
+
+  console.log(`[PUT /employees/${req.params.id}] Body received:`, JSON.stringify(req.body));
+  console.log(`[PUT /employees/${req.params.id}] Filtered updateData:`, JSON.stringify(updateData));
+
+  if (Object.keys(updateData).length === 0) {
+    return res.status(400).json({ error: "No valid fields to update" });
+  }
+
+  try {
+    const c = await db();
+    const [result] = await c.query("UPDATE employees SET ? WHERE id = ?", [
+      updateData,
+      req.params.id,
+    ]);
+    c.end();
+    console.log(`[PUT /employees/${req.params.id}] Rows affected: ${result.affectedRows}`);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+    res.json({ success: true, updated: updateData });
+  } catch (err) {
+    console.error(`[PUT /employees/${req.params.id}] Error:`, err.message);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Delete employee
