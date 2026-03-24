@@ -96,13 +96,26 @@ ion-item {
 }
 
 ion-item a {
-  display: grid !important;
-  place-content: center;
+  display: flex !important;
+  width: 100%;
+}
+
+/* Fix for production builds where Ionic pages sometimes remain invisible due to animation state being stuck */
+.ion-page-invisible,
+[ion-page-invisible] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure ion-split-pane behaves correctly and doesn't collapse incorrectly in production */
+ion-split-pane {
+  display: flex !important;
 }
 
 @media (min-width: 1200px) {
   .grid-fixed {
-    width: 100vw;
+    width: 100%;
   }
 }
 
