@@ -1,257 +1,381 @@
-// ...existing code...
+import { OrgTreeComponent } from './Administration/org-tree.component';
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
-
+import { AdminComponent } from './Administration/admin/admin.component';
+import { OrganisationInfoComponent } from './Administration/organisation-info/organisation-info.component';
+import { LeavesComponent } from './Attendance/me/leaves/leaves.component';
+import { MePage } from './Attendance/me/me.page';
+import { CandidateOfferLetterComponent } from './candidate-offer-letter/candidate-offer-letter.component';
+import { CandidateStatusComponent } from './candidate-status/candidate-status.component';
+import { HomePage } from './home/home.page';
+import { LoginPage } from './login/login.page';
+import { MyTeamPage } from './my-team/my-team.page';
+import { ManagerTimesheetApprovalsPage } from './manager-timesheet-approvals/manager-timesheet-approvals.page';
+import { ManagerLeaveApprovalsPage } from './manager-leave-approvals/manager-leave-approvals.page';
+import { ManagerWfhApprovalsPage } from './manager-wfh-approvals/manager-wfh-approvals.page';
+import { CandiateCreateComponent } from './onboarding/candiate-create/candiate-create.component';
+import { CompensationComponent } from './onboarding/compensation/compensation.component';
+import { CreateOfferComponent } from './onboarding/create-offer/create-offer.component';
+import { NewJoinerComponent } from './onboarding/new-joiner/new-joiner.component';
+import { OfferDetailsComponent } from './onboarding/offer-details/offer-details.component';
+import { OnboardingTasksComponent } from './onboarding/onboarding-tasks/onboarding-tasks.component';
+import { PastOffersComponent } from './onboarding/past-offers/past-offers.component';
+import { PreOnboardingCardsComponent } from './onboarding/pre-onboarding-cards/pre-onboarding-cards.component';
+import { PostPage } from './onboarding/pre.page';
+import { PreonboardingComponent } from './onboarding/preonboarding/preonboarding.component';
+import { PreviewSendComponent } from './onboarding/preview-send/preview-send.component';
+import { SetupComponent } from './onboarding/setup/setup.component';
+import { StartOnboardingComponent } from './onboarding/start-onboarding/start-onboarding.component';
+import { TaskTemplatesComponent } from './onboarding/task-templates/task-templates.component';
+import { OnboardingPage } from './post-onboarding/post-onboarding.page';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { salaryStaructureComponent } from './salary-staructure/salary-staructure.component';
+import { AuthGuard } from './services/route-guard/auth/single-guard.guard';
+import { roleHandlerGuard } from './services/route-guard/role-handler.ts/role-handler.guard';
+import { adminFunctionalityComponent } from './Administration/admin-functionality/admin-functionality.component';
+import { LeaveRequestsComponent } from './leave-requests/leave-requests.component';
+import { LeavesAdminDashboardComponent } from './Administration/leaves-admin-dashboard/leaves-admin-dashboard.component';
+import { LeavetypesComponent } from './Administration/leaves-admin-dashboard/leavetypes/leavetypes.component';
+import { LeaveplansComponent } from './Administration/leaves-admin-dashboard/leaveplans/leaveplans.component';
+import { LeavesAllocationComponent } from './Administration/leaves-admin-dashboard/leaves-allocation/leaves-allocation.component';
+import { EmployeeLeaveAllocationComponent } from './Administration/leaves-admin-dashboard/employee-leave-allocation/employee-leave-allocation.component';
+import { MasterAdminSetupComponent } from './Administration/master-admin-setup/master-admin-setup.component';
+import { PreonboardSubItemsComponent } from './onboarding/preonboard-sub-items/preonboard-sub-items.component';
+import { CreateProjectComponent } from './Administration/organisation-info/create-project/create-project.component';
+import { ProjectAssignComponent } from './Administration/organisation-info/project-assign/project-assign.component';
+import { RouteGuardService } from './services/route-guard/route-service/route-guard.service';
+import { ClientWorkTrackComponent } from './Today_@_Work/client-work-track/client-work-track.component';
+import { PayslipsComponent } from './My_Finance/payslips/payslips.component';
+import { WorkTrackComponent } from './Today_@_Work/work-track/work-track.component';
+import { h } from 'ionicons/dist/types/stencil-public-runtime';
+import { EmployeeListComponent } from './Administration/admin/employee-list/employee-list.component';
+import { FinanceAdminComponent } from './My_Finance/finance-admin/finance-admin.component';
+import { PayrollSetupComponent } from './My_Finance/payroll-setup/payroll-setup.component';
+import { PayrollTemplatesComponent } from './My_Finance/payroll-setup/payroll-templates/payroll-templates.component';
+import { PayrollCompoentsComponent } from './My_Finance/payroll-setup/payroll-compoents/payroll-compoents.component';
+import { TemplateCompositionComponent } from './My_Finance/template-composition/template-composition.component';
+import { PayrollStructureComponent } from './My_Finance/payroll-structure/payroll-structure.component';
+import { StructureCompoentsComponent } from './My_Finance/payroll-structure/structure-compoents/structure-compoents.component';
+import { TeamReportsPage } from './team-reports/team-reports.page';
 export const routes: Routes = [
-    {
-      path: 'payroll-admin',
-      loadComponent: () => import('./pages/payroll-admin/payroll-admin.page').then(m => m.PayrollAdminPage),
-      canActivate: [adminGuard]
-    },
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    path: 'org-tree',
+    component: OrgTreeComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['employee', 'manager', 'hr'] }
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'Home',
+    component: HomePage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['employee', 'manager', 'hr'] },
   },
   {
-    path: 'login',
-    loadComponent: () => import('./pages/auth/login/login.page').then(m => m.LoginPage)
+    path: 'Me',
+    component: MePage,
+    canActivate: [AuthGuard],
   },
   {
-    path: 'register',
-    loadComponent: () => import('./pages/auth/register/register.page').then(m => m.RegisterPage)
+    path: 'MyTeam',
+    component: MyTeamPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['manager', 'hr', 'employee'] },
   },
   {
-    path: 'tabs',
-    loadComponent: () => import('./pages/tabs/tabs.page').then(m => m.TabsPage),
-    canActivate: [authGuard],
-    children: [
-      {
-        path: 'home',
-        loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage)
-      },
-      {
-        path: 'attendance',
-        loadComponent: () => import('./pages/attendance/attendance.page').then(m => m.AttendancePage)
-      },
-      {
-        path: 'leaves',
-        loadComponent: () => import('./pages/leaves/leaves.page').then(m => m.LeavesPage)
-      },
-      {
-        path: 'timesheets',
-        loadComponent: () => import('./pages/timesheets/timesheets.page').then(m => m.TimesheetsPage)
-      },
-      {
-        path: 'team-compliance',
-        loadComponent: () => import('./pages/team-compliance/team-compliance.page').then(m => m.TeamCompliancePage)
-      },
-      {
-        path: 'manager-approvals',
-        loadComponent: () => import('./pages/manager-approvals/manager-approvals.page').then(m => m.ManagerApprovalsPage)
-      },
-      {
-        path: 'verification-queue',
-        loadComponent: () => import('./pages/verification-queue/verification-queue.page').then(m => m.VerificationQueuePage)
-      },
-      {
-        path: 'team',
-        loadComponent: () => import('./pages/team/team.page').then(m => m.TeamPage)
-      },
-      {
-        path: 'onboarding',
-        loadComponent: () => import('./pages/onboarding/onboarding.page').then(m => m.OnboardingPage)
-      },
-      {
-        path: 'payroll',
-        loadComponent: () => import('./pages/admin-payroll-management/admin-payroll-management.page').then(m => m.AdminPayrollManagementPage)
-      },
-      {
-        path: 'profile',
-        loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePage)
-      },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
-      }
-    ]
+    path: 'ManagerTimesheetApprovals',
+    component: ManagerTimesheetApprovalsPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['manager', 'admin', 'hr'] },
   },
   {
-    path: 'employees',
-    loadComponent: () => import('./pages/employees/employees.page').then(m => m.EmployeesPage),
-    canActivate: [authGuard]
+    path: 'ManagerLeaveApprovals',
+    component: ManagerLeaveApprovalsPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['manager', 'admin', 'hr'] },
   },
   {
-    path: 'employee/:id',
-    loadComponent: () => import('./pages/employee-detail/employee-detail.page').then(m => m.EmployeeDetailPage),
-    canActivate: [authGuard]
+    path: 'ManagerWfhApprovals',
+    component: ManagerWfhApprovalsPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['manager', 'admin', 'hr'] },
+  },
+  { path: 'login', component: LoginPage },
+  {
+    path: 'settings',
+    component: PostPage,
+    canActivate: [AuthGuard],
   },
   {
-    path: 'leave-request',
-    loadComponent: () => import('./pages/leave-request/leave-request.page').then(m => m.LeaveRequestPage),
-    canActivate: [authGuard]
+    path: 'preOnboarding',
+    component: PreonboardingComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'notifications',
-    loadComponent: () => import('./pages/notifications/notifications.page').then(m => m.NotificationsPage),
-    canActivate: [authGuard]
+    path: 'NewJoiner',
+    component: NewJoinerComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'work-updates',
-    loadComponent: () => import('./pages/work-updates/work-updates.page').then(m => m.WorkUpdatesPage),
-    canActivate: [authGuard]
+    path: 'pastOffers',
+    component: PastOffersComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/timesheet/dashboard',
-    loadComponent: () => import('./pages/admin-timesheet-dashboard/admin-timesheet-dashboard.page').then(m => m.AdminTimesheetDashboardPage),
-    canActivate: [authGuard]
+    path: 'onboarding_Tasks',
+    component: OnboardingTasksComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/timesheet/verification-queue',
-    loadComponent: () => import('./pages/verification-queue/verification-queue.page').then(m => m.VerificationQueuePage),
-    canActivate: [authGuard]
+    path: 'CandiateCreate',
+    component: CandiateCreateComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/timesheet/client-timesheet/:id',
-    loadComponent: () => import('./pages/client-timesheet-verification/client-timesheet-verification.page').then(m => m.ClientTimesheetVerificationPage),
-    canActivate: [authGuard]
+    path: 'Startonboardingitem',
+    component: StartOnboardingComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/timesheet/verification-comparison/:id',
-    loadComponent: () => import('./pages/verification-comparison/verification-comparison.page').then(m => m.VerificationComparisonPage),
-    canActivate: [authGuard]
+    path: 'CreateOffer/:id',
+    component: CreateOfferComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'payroll',
-    loadComponent: () => import('./pages/payroll/payroll.page').then(m => m.PayrollPage),
-    canActivate: [authGuard]
+    path: 'leaves',
+    component: LeavesComponent,
+    canActivate: [AuthGuard],
   },
   {
-    path: 'admin/payroll',
-    loadComponent: () => import('./pages/admin-payroll/admin-payroll.page').then(m => m.AdminPayrollPage),
-    canActivate: [authGuard]
+    path: 'pre-onboarding-cards',
+    component: PreOnboardingCardsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'timesheets',
-    loadComponent: () => import('./pages/timesheets/timesheets.page').then(m => m.TimesheetsPage),
-    canActivate: [authGuard]
+    path: 'pre_onboarding',
+    component: PostPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'reports',
-    loadComponent: () => import('./pages/reports/reports.page').then(m => m.ReportsPage),
-    canActivate: [authGuard]
+    path: 'post-onboarding',
+    component: OnboardingPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'holidays',
-    loadComponent: () => import('./pages/holidays/holidays.page').then(m => m.HolidaysPage),
-    canActivate: [authGuard]
+    path: 'Task_Template',
+    component: TaskTemplatesComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'announcements',
-    loadComponent: () => import('./pages/announcements/announcements.page').then(m => m.AnnouncementsPage),
-    canActivate: [authGuard]
+    path: 'setup',
+    component: SetupComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'support',
-    loadComponent: () => import('./pages/support/support.page').then(m => m.SupportPage),
-    canActivate: [authGuard]
+    path: 'Compensation/:id/:',
+    component: CompensationComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'candidates',
-    loadComponent: () => import('./pages/candidates/candidates.page').then(m => m.CandidatesPage),
-    canActivate: [authGuard]
-  },
-  // Admin-only routes
-  {
-    path: 'admin/dashboard',
-    loadComponent: () => import('./pages/admin-dashboard/admin-dashboard.page').then(m => m.AdminDashboardPage),
-    canActivate: [adminGuard]
+    path: 'salaryStaructure/:id/:FirstName',
+    component: salaryStaructureComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/compliance-dashboard',
-    loadComponent: () => import('./pages/admin-compliance-dashboard/admin-compliance-dashboard.page').then(m => m.AdminComplianceDashboardPage),
-    canActivate: [adminGuard]
+    path: 'OfferDetailsComponent/:id/:FirstName',
+    component: OfferDetailsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/bulk-upload',
-    loadComponent: () => import('./pages/bulk-upload/bulk-upload.page').then(m => m.BulkUploadPage),
-    canActivate: [adminGuard]
+    path: 'preview_send/:id/:FirstName',
+    component: PreviewSendComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/master-data',
-    loadComponent: () => import('./pages/master-data/master-data.page').then(m => m.MasterDataPage),
-    canActivate: [adminGuard]
+    path: 'candidate_status/:id',
+    component: CandidateStatusComponent
   },
   {
-    path: 'admin/users',
-    loadComponent: () => import('./pages/users/users.page').then(m => m.UsersPage),
-    canActivate: [adminGuard]
+    path: 'candidate-offer-letter/:id',
+    component: CandidateOfferLetterComponent
   },
   {
-    path: 'admin/leave-plans',
-    loadComponent: () => import('./pages/leave-plans/leave-plans.page').then(m => m.LeavePlansPage),
-    canActivate: [adminGuard]
+    path: 'profile-page',
+    component: ProfilePageComponent,
+    canActivate: [AuthGuard],
   },
   {
-    path: 'admin/leave-plans/:id',
-    loadComponent: () => import('./pages/leave-plan-detail/leave-plan-detail.page').then(m => m.LeavePlanDetailPage),
-    canActivate: [adminGuard]
+    path: 'workTrack',
+    component: WorkTrackComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['employee', 'manager', 'hr'] },
   },
   {
-    path: 'admin/leave-types',
-    loadComponent: () => import('./pages/leave-types/leave-types.page').then(m => m.LeaveTypesPage),
-    canActivate: [adminGuard]
+    path: 'ClientWorkTrack',
+    component: ClientWorkTrackComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['employee', 'manager', 'hr'] },
+  },
+
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/leaves',
-    loadComponent: () => import('./pages/manager-approvals/manager-approvals.page').then(m => m.ManagerApprovalsPage),
-    canActivate: [adminGuard]
-  },
-  // Projects Management Routes
-  {
-    path: 'admin/projects',
-    loadComponent: () => import('./pages/admin/projects/projects.page').then(m => m.ProjectsPage),
-    canActivate: [adminGuard]
+    path: 'employee-list',
+    component: EmployeeListComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/projects/:id',
-    loadComponent: () => import('./pages/admin/projects/project-detail/project-detail.page').then(m => m.ProjectDetailPage),
-    canActivate: [adminGuard]
-  },
-  // Assets Management Routes
-  {
-    path: 'admin/assets',
-    loadComponent: () => import('./pages/admin/assets/assets.page').then(m => m.AssetsPage),
-    canActivate: [adminGuard]
+    path: 'organisation_info',
+    component: OrganisationInfoComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['hr', 'admin'] },
   },
   {
-    path: 'admin/assets/allocate',
-    loadComponent: () => import('./pages/admin/assets/asset-allocation/asset-allocation.page').then(m => m.AssetAllocationPage),
-    canActivate: [adminGuard]
+    path: 'admin-department',
+    component: adminFunctionalityComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
   {
-    path: 'admin/assets/reports',
-    loadComponent: () => import('./pages/admin/assets/asset-reports/asset-reports.page').then(m => m.AssetReportsPage),
-    canActivate: [adminGuard]
+    path: 'MyPay',
+    component: PayslipsComponent,
+    canActivate: [AuthGuard],
   },
   {
-    path: 'admin/assets/:id',
-    loadComponent: () => import('./pages/admin/assets/asset-detail/asset-detail.page').then(m => m.AssetDetailPage),
-    canActivate: [adminGuard]
+    path: 'finance-admin',
+    component: FinanceAdminComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
   },
-  // Analytics Dashboard
   {
-    path: 'admin/analytics',
-    loadComponent: () => import('./pages/admin/analytics/analytics-dashboard.page').then(m => m.AnalyticsDashboardPage),
-    canActivate: [adminGuard]
+    path: 'approve-reject-leave',
+    component: LeaveRequestsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr', 'manager'] },
   },
-  // Verification Queue (shorter path)
   {
-    path: 'verification-queue',
-    loadComponent: () => import('./pages/verification-queue/verification-queue.page').then(m => m.VerificationQueuePage),
-    canActivate: [authGuard]
-  }
+    path: 'admin-leaves',
+    component: LeavesAdminDashboardComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'leave-types',
+    component: LeavetypesComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'leave-plans',
+    component: LeaveplansComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'leaves_allocation',
+    component: LeavesAllocationComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'employee_lEAVE_allocation',
+    component: EmployeeLeaveAllocationComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'admin-setup',
+    component: MasterAdminSetupComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'preonboarding-setup',
+    component: PreonboardSubItemsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'CreateProject',
+    component: CreateProjectComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'createProject_shifts',
+    component: ProjectAssignComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] },
+  },
+  {
+    path: 'project-details/:id',
+    loadComponent: () =>
+      import('./Administration/organisation-info/project-details/project-details.component')
+        .then(m => m.ProjectDetailsComponent),
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'masterpayroll',
+    component: PayrollSetupComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'payroll-components',
+    component: PayrollCompoentsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'payroll-templates',
+    component: PayrollTemplatesComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'template-composition/:id',
+    component: TemplateCompositionComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'payroll-structure',
+    component: PayrollStructureComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'structure-composition/:id',
+    component: StructureCompoentsComponent,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['admin', 'hr'] }
+  },
+  {
+    path: 'TeamReports',
+    component: TeamReportsPage,
+    canActivate: [AuthGuard, roleHandlerGuard],
+    data: { role: ['manager', 'hr', 'admin'] }
+  },
 
 ];
