@@ -1,0 +1,32 @@
+@import '../../../../global.scss';
+.request-card {
+    ion-card-title {
+        @include card-sub-title();
+        color: #2d2d2d;
+    }
+}
+.requests-table {
+    .table-header {
+        ion-col {
+          @include normal-text();
+          height: 40px;
+          padding: 0 16px;
+          color: #2d2d2d;
+        }
+    }
+    .table-row {
+        ion-col {
+            @include normal-text-unbold();
+            height: 52px;
+            padding: 0 16px;
+            color: #2d2d2d;
+        }
+    }
+}
+.no-data {
+    text-align: center;
+    @include normal-text-unbold();
+            height: 52px;
+            padding: 0 16px;
+            color: #2d2d2d;
+}

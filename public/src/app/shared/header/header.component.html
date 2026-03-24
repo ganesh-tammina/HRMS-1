@@ -1,0 +1,72 @@
+<ion-header [translucent]="true" class="keka-navbar">
+  <ion-toolbar class="navbar-toolbar">
+    <ion-grid [fixed]="true" class="p-0">
+      <ion-row class="ion-align-items-center ion-justify-content-between">
+        <!-- Left: Company Name -->
+        <ion-col size="9" class="row-left">
+          <img src="./../assets/techlogo.png" alt="Tech Tammina" class="logo" width="100px" />
+
+          <ion-searchbar placeholder="Search employee by name" [(ngModel)]="searchQuery" (ionInput)="onSearch()"
+            showCancelButton="never">
+          </ion-searchbar>
+          <!-- <ion-button
+            *ngIf="searchResults.length > 0"
+            (click)="openEmployeeListModal(searchResults.length)"
+          >
+            {{ results.join(", ") }}
+          </ion-button> -->
+          <!-- <ion-button *ngIf="searchResults.length > 0" (click)="openEmployeeListModal(results.FirstName)">
+              Show {{ results.FirstName }} Employee(s)
+            </ion-button> -->
+          <ion-popover [id]="(searchResults.length > 0) ? 'popover-button':'' " [dismissOnSelect]="true">
+            <ng-template>
+              <ion-content>
+                <ion-list>
+                  <ion-button (click)="openEmployeeListModal(results.join(', '))">
+                    {{ results.join(', ') }}
+                  </ion-button>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+
+
+        </ion-col>
+
+        <!-- Right: Notifications + Candidate Info -->
+        <ion-col size="3" class="ion-text-end">
+          <div class="row-right">
+            <div *ngIf="isAdmin" class="candidate-name">
+              Tammina Admin
+            </div>
+            <div *ngIf="!isAdmin && currentEmployee as emp" class="candidate-name">
+              {{ emp.FirstName || "Loading..." }}
+            </div>
+            <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+            <ion-button id="popover-dropdown" fill="clear">
+              <img class="profilePic" [attr.alt]="currentEmployee?.FullName || 'Profile'" [src]="profileImageUrl"
+                width="50" height="50" />
+            </ion-button>
+            <ion-popover class="profile-dropdown" trigger="popover-dropdown" [dismissOnSelect]="true">
+              <ng-template>
+                <ion-content>
+                  <ion-list>
+                    <ion-item (click)="viewProfile()" lines="none" detail="false">
+                      <ion-icon name="person-outline"></ion-icon> View Profile
+                    </ion-item>
+                    <ion-item lines="none" detail="false">
+                      <ion-icon name="key-outline"></ion-icon> Change Password
+                    </ion-item>
+                    <ion-item (click)="logout()" lines="none" detail="false">
+                      <ion-icon name="log-out-outline"></ion-icon> Logout
+                    </ion-item>
+                  </ion-list>
+                </ion-content>
+              </ng-template>
+            </ion-popover>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>

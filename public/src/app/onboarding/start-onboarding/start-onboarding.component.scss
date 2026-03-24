@@ -1,0 +1,98 @@
+@import '../../../global.scss';
+.candidate-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+  ion-input {
+    background: #fff;
+    --border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px !important;
+    min-height: 42px;
+    max-height: 44px;
+    display: flex;
+    align-items: center;
+    @include normal-text-unbold();
+    // Override Ionic's default visual to look more like the image
+    &.item-native {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+
+
+  .info {
+    padding-left: 12px;
+    p {
+      margin: 0;
+    }
+    .name {
+      @include text-style-bold();
+    }
+    .designation {
+      @include normal-text-unbold();
+      color: $text-color;
+    }
+    .meta-status {
+      color: #CE5F1A;
+      @include normal-text-unbold();
+    }
+    .meta {
+      @include normal-text-unbold();
+    }
+    .info-name {
+      @include body-text();
+      display: flex;
+    }
+    ion-icon {
+     fill: #3498DB;
+     font-size: 18px;
+    }
+  }
+}
+
+.section {
+  margin-bottom: 24px;
+  .section-header {
+    display: flex;
+    align-items: center;
+    background-color: #E6F1FF; // Light blue background
+    @include text-style-bold();
+    border-radius:8px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;  
+    ion-img {
+      margin-right: 0.5rem;
+    }
+  }  
+  ion-checkbox {
+    --size: 24px;
+    --checkbox-background-checked: var(--ion-color-secondary);
+  }
+  
+  ion-checkbox::part(container) {
+    border-radius: 6px;
+    border: 2px solid $secondry-color;
+  }
+  ion-label {
+    @include normal-text-unbold();
+    margin-bottom: 14px;
+    transform: translateY(50%) scale(1);
+  }
+  ion-input {
+    border: 1px solid;
+    border-radius: 8px;
+    padding-left: 8px !important;
+  }
+}
+
+.footer {
+  @extend .row-space-between;  
+  padding: 0 24px;
+  ion-button {
+    width: 45%;
+  }
+}

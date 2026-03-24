@@ -1,0 +1,258 @@
+@import '../../../../global.scss';
+
+.tax-container {
+  padding: 30px 40px;
+  background: white;
+  min-height: 100%;
+}
+
+.tax-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+
+  .header-left {
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      ion-icon {
+        font-size: 18px;
+        color: #64748b;
+        cursor: pointer;
+      }
+    }
+    p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 700px;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+
+    .btn-outline {
+      padding: 8px 16px;
+      border: 1px solid #3d6ff4;
+      background: transparent;
+      color: #3d6ff4;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #f0f4ff;
+      }
+    }
+
+    .period-selector {
+      padding: 8px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+  }
+}
+
+.important-info {
+  background: #fff9f0;
+  border: 1px solid #ffedc1;
+  border-radius: 6px;
+  padding: 15px 20px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+
+  .info-icon {
+    color: #f59e0b;
+    font-size: 20px;
+  }
+
+  .info-content {
+    strong {
+      display: block;
+      color: #1e293b;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      li {
+        font-size: 13px;
+        color: #475569;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+
+  .card {
+    background: white;
+    padding: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+  }
+}
+
+.section {
+  margin-bottom: 40px;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .section-badge {
+      background: #3d6ff4;
+      color: white;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+  }
+
+  .legend {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 20px;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #64748b;
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        &.previous { background: #38bdf8; }
+        &.current { background: #3d6ff4; }
+        &.projected { background: #fbbf24; }
+      }
+    }
+  }
+}
+
+.table-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+  &.mini-table {
+    max-width: 600px;
+  }
+}
+
+.tax-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    background: #f8fafc;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 15px;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    white-space: nowrap;
+  }
+
+  .sticky-col {
+    position: sticky;
+    left: 0;
+    background: #f8fafc;
+    z-index: 2;
+    border-right: 1px solid #e2e8f0;
+    width: 200px;
+  }
+
+  .total-col {
+    background: #f1f5f9;
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  .total-row {
+    background: #f8fafc !important;
+    td {
+      font-weight: 700;
+      color: #1e293b;
+      border-top: 1px solid #e2e8f0;
+    }
+  }
+
+  .text-right {
+    text-align: right;
+  }
+}
+
+.mt-4 {
+  margin-top: 2rem;
+}

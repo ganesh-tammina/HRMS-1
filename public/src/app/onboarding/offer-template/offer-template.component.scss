@@ -1,0 +1,158 @@
+.offer-container {
+  padding: 20px;
+}
+
+/* Header Row */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0 0;
+  }
+
+  .btn-create {
+    --background: #6b46c1;
+    --color: #fff;
+    --border-radius: 6px;
+    font-size: 14px;
+    padding: 0 16px;
+    height: 36px;
+  }
+}
+
+/* Filter Row */
+.filter-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  ion-select {
+    --placeholder-color: #666;
+    --border-radius: 6px;
+    --padding-start: 8px;
+    width: 180px;
+    border: 1px solid #ddd;
+    background: #fff;
+  }
+
+  ion-searchbar {
+    --background: #fff;
+    --border-radius: 6px;
+    border: 1px solid #ddd;
+    height: 42px;
+    flex: 1;
+  }
+}
+
+/* Table Card */
+.table-card {
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.offer-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: #fafafa;
+
+    th {
+      text-align: left;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      border-bottom: 1px solid #eaeaea;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #eaeaea;
+
+    td {
+      padding: 12px;
+      font-size: 14px;
+      color: #333;
+      vertical-align: top;
+    }
+  }
+
+  .template-link {
+    color: #4f46e5;
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .template-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  ion-icon {
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    flex-wrap: wrap;
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fbbf24;
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date {
+      font-size: 11px;
+      color: #666;
+    }
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  font-size: 12px;
+  color: #555;
+  align-items: center;
+
+  .page-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    ion-icon {
+      font-size: 16px;
+      cursor: pointer;
+    }
+  }
+}

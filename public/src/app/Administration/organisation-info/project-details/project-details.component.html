@@ -1,0 +1,339 @@
+<ion-content class="page-containerOn project-details-wrapper ion-padding">
+    <p class="page-header mb-8">
+        <a routerLink="/admin" (click)="adminManagement()">Admin Management /</a>
+        <a routerLink="/admin" (click)="projectDeails()">Projects /</a> Projects Details
+       </p>
+  <!-- LOADING -->
+  <ion-spinner *ngIf="loading" class="center-spinner"></ion-spinner>
+
+  <!-- ERROR -->
+  <p *ngIf="!loading && errorMessage" class="error">
+    {{ errorMessage }}
+  </p>
+
+  <!-- ======= TOP BAR ======= -->
+  <div class="project-header-block row-left" *ngIf="!loading && project">
+    <ion-img src="../../../../assets/Icons/project-name.svg"></ion-img>
+    <div>
+      <h1>{{ project.project_name }}
+          <ion-chip [ngClass]="project.status === 'active' ? 'success' : project.status === 'completed' ? 'medium' : 'warning'">
+              {{ project.status }}
+            </ion-chip>
+      </h1>
+      <div class="row-left">
+          <p><ion-img src="../../../../assets/Icons/building-blue.svg"  width="18"></ion-img>
+            {{ project.client_name }} ({{ project.project_code }}) </p>
+          <p><ion-img src="../../../../assets/Icons/calender-blue.svg" width="18"></ion-img>
+            {{ project.start_date | date:'mediumDate' }} to {{ project.end_date | date:'mediumDate' }} </p>
+            <p><ion-img src="../../../../assets/user.svg"></ion-img>
+              {{ project.project_manager_name || 'Not assigned' }} </p>
+      </div>
+    </div>
+  
+  </div>
+
+
+
+  <!-- ================= SHIFTS LIST ================= -->
+  <ion-card class="shift-card">
+    <ion-card-header class="row-space-between">
+      <ion-card-title>Project Shifts</ion-card-title>
+      <ion-button class="primary-btn" (click)="openShiftModal()">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Add Shift
+      </ion-button>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-spinner *ngIf="loading"></ion-spinner>
+      <ion-grid>
+      <ion-row *ngIf="!loading && shifts.length">
+        <ion-col size="12" size-sm="12" size-md="6" size-lg="4"  size-xl="4"  
+        class="shift-list-card row-space-between" *ngFor="let s of shifts">
+        <div class="row-left">
+            <ion-img [src]="shiftIcons[s.shift_type] || ''"></ion-img>
+            <div>
+                <p>{{ s.shift_name }}</p>
+                <p>{{ s.start_time }} - {{ s.end_time }}</p>
+            </div>
+        </div>      
+            
+        <div class="row-space-between w-100">
+            <ion-chip [ngClass]="s.is_active ? 'success' : 'medium'">
+                {{ s.is_active ? 'Active' : 'Inactive' }}
+            </ion-chip>
+            <div class="action-buttons row-right">
+                <ion-button fill="clear" size="small" (click)="openShiftModal(s)">
+                    <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="danger" (click)="deleteShift(s.id)">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+        </div>
+        </ion-col>
+      </ion-row>     
+      </ion-grid>
+
+      <p *ngIf="!loading && !shifts.length" class="empty">No shifts created yet</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ======= CREATE SHIFT MODAL ======= -->
+  <ion-modal [isOpen]="showShiftModal" cssClass="side-custom-popup" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editingShiftId ? 'Edit Shift' : 'Add Shift' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="closeShiftModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding form-block">
+        <form [formGroup]="shiftForm" (ngSubmit)="createShift()">
+          <div class="form-grid">
+            <div>
+              <label>Shift Name *</label>
+              <ion-input formControlName="shift_name" placeholder="e.g., Morning Shift"></ion-input>
+            </div>
+
+            <div>
+              <label>Shift Type *</label>
+              <ion-select formControlName="shift_type" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                <ion-select-option value="day">Day</ion-select-option>
+                <ion-select-option value="night">Night</ion-select-option>
+                <ion-select-option value="general">General</ion-select-option>
+              </ion-select>
+            </div>
+
+            <div>
+              <label>Start Time *</label>
+              <ion-input type="time" formControlName="start_time"></ion-input>
+            </div>
+
+            <div>
+              <label>End Time *</label>
+              <ion-input type="time" formControlName="end_time"></ion-input>
+            </div>
+
+            <div>
+              <label>Timezone</label>
+              <ion-input formControlName="timezone" placeholder="UTC"></ion-input>
+            </div>
+          </div>
+
+          <div class="row-right">
+            <ion-button class="primary-outline-btn" (click)="closeShiftModal()">
+              Cancel
+            </ion-button>
+            <ion-button type="submit" class="primary-btn" [disabled]="submittingShift">
+              {{ submittingShift ? (editingShiftId ? 'Updating…' : 'Adding…') : (editingShiftId ? 'Update Shift' : 'Add Shift') }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- ================= ASSIGNED TEAM ================= -->
+  <ion-card class="list-card">
+    <ion-card-header class="row-space-between">
+      <ion-card-title>Assigned Team</ion-card-title>
+      <ion-button class="primary-btn" (click)="openAssignModal()">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        Assign Employee
+      </ion-button>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-spinner *ngIf="loading"></ion-spinner>
+
+      <ion-grid class="table-block" *ngIf="!loading && assignments.length">
+        <ion-row class="table-header">
+          <ion-col size="3">
+            <p>Employee</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>Status</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>Role</p>
+          </ion-col>
+          <ion-col size="2">
+            <p>Shift</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>Allocation</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>Duration</p>
+          </ion-col>
+          <ion-col size="1">
+            <p>Status</p>
+          </ion-col>
+          <ion-col size="1">
+            <p>Actions</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="table-row-list" *ngFor="let a of assignments">
+          <ion-col size="3">
+            <p><strong>{{ a.employee_name }}</strong></p>
+            <p><small>{{ a.designation_name }}</small></p>
+          </ion-col>
+          <ion-col size="1.5">
+            <div *ngIf="a.employee_id" style="display: flex; align-items: center; gap: 6px;">
+              <div [style.background-color]="getStatusBgColor(getEmployeeStatus(a.employee_id).status)"
+                [style.border]="'2px solid ' + (getEmployeeStatus(a.employee_id).status === 'in' ? '#28a745' : '#dc3545')"
+                style="padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                <div [style.background-color]="getEmployeeStatus(a.employee_id).status === 'in' ? '#28a745' : '#dc3545'"
+                  style="width: 8px; height: 8px; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                <span [style.color]="getEmployeeStatus(a.employee_id).status === 'in' ? '#155724' : '#721c24'"
+                  style="font-weight: 600; font-size: 12px; text-transform: uppercase;">
+                  {{ getEmployeeStatus(a.employee_id).status === 'in' ? 'IN' : 'OUT' }}
+                </span>
+              </div>
+              <small *ngIf="getEmployeeStatus(a.employee_id).work_mode" style="color: #666; font-size: 10px;">
+                {{ getEmployeeStatus(a.employee_id).work_mode }}
+              </small>
+            </div>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>{{ a.role_in_project }}</p>
+          </ion-col>
+          <ion-col size="2">
+            <p>{{ a.shift_name || 'Not assigned' }}</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p>{{ a.allocation_percentage }}%</p>
+          </ion-col>
+          <ion-col size="1.5">
+            <p><small>{{ a.assignment_start_date | date:'shortDate' }}</small></p>
+            <p *ngIf="a.assignment_end_date"><small>to {{ a.assignment_end_date | date:'shortDate' }}</small></p>
+          </ion-col>
+          <ion-col size="1">
+            <ion-badge [color]="a.status === 'active' ? 'success' : 'medium'">
+              {{ a.status }}
+            </ion-badge>
+          </ion-col>
+          <ion-col size="1" class="action-buttons">
+            <ion-button fill="clear" size="small" (click)="openAssignModal(a)">
+                <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="deleteAssignment(a.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <p *ngIf="!loading && !assignments.length" class="empty">
+        No employees assigned yet
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ======= ASSIGN EMPLOYEE MODAL ======= -->
+  <ion-modal [isOpen]="showAssignModal" cssClass="side-custom-popup" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editingAssignmentId ? 'Edit Assignment' : 'Assign Employee' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="closeAssignModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding form-block">
+        <form [formGroup]="assignForm" (ngSubmit)="assignEmployee()">
+          <div class="form-grid">
+            <div class="full employee-search-container">
+              <label>Search Employee *</label>
+              <div class="search-wrapper">
+                <ion-input [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}"
+                  (ionInput)="onEmployeeSearch($event)" placeholder="Search by name, employee ID, or email"
+                  [disabled]="!!selectedEmployee">
+                </ion-input>
+                <ion-button *ngIf="selectedEmployee" fill="clear" size="small" (click)="clearEmployeeSelection()"
+                  class="clear-btn">
+                  <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+
+              <!-- Search Results Dropdown -->
+              <div class="search-results" *ngIf="filteredEmployees.length > 0">
+                <div class="search-result-item" *ngFor="let emp of filteredEmployees" (click)="selectEmployee(emp)">
+                  <div class="emp-info">
+                    <strong>{{ emp.FirstName }} {{ emp.LastName }}</strong>
+                    <span class="emp-code">{{ emp.EmployeeNumber }}</span>
+                  </div>
+                  <small class="emp-email">{{ emp.WorkEmail }}</small>
+                </div>
+              </div>
+
+              <!-- Selected Employee Display -->
+              <div class="selected-employee" *ngIf="selectedEmployee">
+                <ion-chip color="primary">
+                  <ion-icon name="person"></ion-icon>
+                  <ion-label>{{ selectedEmployee.FirstName }} {{ selectedEmployee.LastName }} - {{
+                    selectedEmployee.EmployeeNumber }}</ion-label>
+                </ion-chip>
+              </div>
+
+              <!-- Hidden input for form validation -->
+              <input type="hidden" formControlName="employee_id">
+            </div>
+
+            <div>
+              <label>Role in Project *</label>
+              <ion-input formControlName="role_in_project" placeholder="e.g., Developer, Designer"></ion-input>
+            </div>
+
+            <div>
+              <label>Shift</label>
+              <ion-select formControlName="shift_id" placeholder="Select shift" toggleIcon="chevron-down"
+                expandedIcon="chevron-up">
+                <ion-select-option *ngFor="let s of shifts" [value]="s.id">
+                  {{ s.shift_name }} ({{ s.start_time }} - {{ s.end_time }})
+                </ion-select-option>
+              </ion-select>
+            </div>
+
+            <div>
+              <label>Allocation Percentage *</label>
+              <ion-input type="number" formControlName="allocation_percentage" placeholder="100" min="1"
+                max="100"></ion-input>
+            </div>
+
+            <div>
+              <label>Start Date *</label>
+              <ion-input type="date" formControlName="assignment_start_date"></ion-input>
+            </div>
+
+            <div>
+              <label>End Date</label>
+              <ion-input type="date" formControlName="assignment_end_date"></ion-input>
+            </div>
+          </div>
+
+          <div class="row-right">
+            <ion-button class="primary-outline-btn" (click)="closeAssignModal()">
+              Cancel
+            </ion-button>
+            <ion-button type="submit" class="primary-btn" [disabled]="submittingAssignment">
+              {{ submittingAssignment ? (editingAssignmentId ? 'Updating…' : 'Assigning…') : (editingAssignmentId ? 'Update Assignment' : 'Assign Employee') }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

@@ -1,0 +1,153 @@
+<div class="offerletter-block">
+  <div class="logo-header row-space-between">
+    <ion-img src="../../assets/tammina-blue-logo.svg" alt="On Leave"></ion-img>
+    <div>
+      <ion-icon name="person-circle"></ion-icon>
+      {{ candidate?.FirstName }}
+    </div>
+  </div>
+
+  <div class="offerletter-continer" *ngIf="candidate">
+    <div class="header-block">
+      <p class="text-bold">Welcome {{ candidate?.FirstName }}</p>
+      <p class="text-dec">
+        It was great interacting with you as part of our interview process.
+        We are quite excited about the possibilities of working together.
+        Just a few steps remain to get you onboard
+      </p>
+    </div>
+
+    <div class="offer-letter">
+      <div class="offer-header row-space-between">
+        <p>Offer Letter</p>
+        <ion-img src="../../assets/download-02.svg"></ion-img>
+      </div>
+
+      <div class="offer-block">
+        <ion-card>
+          <ion-img src="../../assets/tammina-blue-logo.svg" alt="logo"></ion-img>
+          <div>
+            <p>Dear {{ candidate?.FirstName }},</p>
+            <p>Welcome Tech Tammina !!!</p>
+            <p>
+              It was a pleasure interacting with you during our hiring process and we believe that
+              you would make a great asset to Sree Tammina Software Solutions Pvt. Ltd. hence we are
+              pleased to release this offer for the role of <b>{{ candidate?.JobTitle }}</b>.
+              You are required to join us on or before {{ candidate?.joining_date | date:'dd-MM-yyyy' }} and the offer
+              stands withdrawn thereafter unless
+              extended by us in writing.
+            </p>
+
+            <ol type="I">
+              <li>
+                You will be working in our office located in #49-24-64, Sri Venkata Sai Towers,
+                Madhuranagar, Visakhapatnam, Andhra Pradesh, India-530016.
+              </li>
+              <li>
+                Your annual gross salary will be INR {{ candidate?.offered_ctc | number:'1.2-2' }} calculated as Cost to
+                Company (CTC)
+                and the break-up of the salary is attached herewith in Annexure A.
+              </li>
+              <li>Your offer is contingent upon successful background verification.</li>
+              <li>
+                You shall be eligible for promotions and increments based on performance.
+              </li>
+              <li>You will be entitled to leaves and holidays as per company policy.</li>
+            </ol>
+
+            <div class="annexure-block" *ngIf="earnings.length > 0">
+              <h3 class="text-bold">Annexure A: Salary Breakdown</h3>
+              <div class="salary-grid-container">
+                <div class="salary-column earnings-col">
+                  <div class="grid-header">
+                    <span>EARNINGS</span>
+                    <span>Paid Amount</span>
+                    <span>Actual Amount</span>
+                  </div>
+                  <div class="grid-row" *ngFor="let item of earnings">
+                    <span>{{ item.name }}</span>
+                    <span>{{ item.monthly | number:'1.2-2' }}</span>
+                    <span>{{ item.monthly | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="grid-row total-row">
+                    <span>Total Earnings (A)</span>
+                    <span>{{ totalEarnings | number:'1.2-2' }}</span>
+                    <span>{{ totalEarnings | number:'1.2-2' }}</span>
+                  </div>
+                </div>
+
+                <div class="salary-column deductions-col">
+                  <div class="grid-header">
+                    <span>CONTRIBUTIONS</span>
+                    <span>Amount</span>
+                  </div>
+                  <div class="grid-row" *ngFor="let item of contributions">
+                    <span>{{ item.name }}</span>
+                    <span>{{ item.monthly | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="grid-row total-row">
+                    <span>Total Contributions (B)</span>
+                    <span>{{ totalContributions | number:'1.2-2' }}</span>
+                  </div>
+
+                  <div class="spacer-v"></div>
+
+                  <div class="grid-header">
+                    <span>TAXES & DEDUCTIONS</span>
+                    <span>Amount</span>
+                  </div>
+                  <div class="grid-row" *ngFor="let item of taxes">
+                    <span>{{ item.name }}</span>
+                    <span>{{ item.monthly | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="grid-row total-row">
+                    <span>Total Taxes & Deductions (C)</span>
+                    <span>{{ totalTaxes | number:'1.2-2' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="net-summary-panel">
+                <div class="summary-line">
+                  <span class="label">Net Salary Payable ( A - B - C )</span>
+                  <span class="value">{{ netSalary | number:'1.2-2' }}</span>
+                </div>
+                <div class="summary-line">
+                  <span class="label">Net Salary in words</span>
+                  <span class="value">{{ netSalaryInWords }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-card>
+      </div>
+    </div>
+
+    <div class="action-block row-right">
+      <ion-button (click)="rejectOffer()" [disabled]="rejectDisabled" class="danger-outline-btn">
+        Reject
+      </ion-button>
+
+      <ion-button (click)="acceptOffer()" [disabled]="acceptDisabled" class="primary-btn">
+        Accept
+      </ion-button>
+    </div>
+
+    <div class="footer-block">
+      <p class="mail-text">Any questions? Reach out to us</p>
+      <div class="row-space-between">
+        <div class="row-left">
+          <ion-icon name="mail"></ion-icon>
+          <p>hr@techtammina.com</p>
+        </div>
+        <div class="row-left">
+          <ion-icon name="phone-portrait"></ion-icon>
+          <p>+91 99999 00000</p>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>

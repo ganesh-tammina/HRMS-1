@@ -1,0 +1,201 @@
+<ion-content class="ion-padding">
+    <div class="manage-main-block">
+ <!-- Client Timesheets Accordion -->
+ <h2 class="client-title">Client Time Sheets</h2>
+ <div>
+   <h2>Monthly Reports</h2>
+   <ion-accordion-group>
+     <ion-accordion>
+       <ion-item slot="header">
+         <ion-icon name="document-text-outline"></ion-icon>
+         <ion-label>January- </ion-label>
+         <ion-icon name="download-outline"></ion-icon>
+       </ion-item>
+
+       <div class="ion-padding" slot="content">
+         <!-- Consultant Details -->
+         <ion-grid>
+           <ion-row>
+             <ion-col><strong>Consultant:</strong></ion-col>
+             <ion-col><strong>Manager:</strong></ion-col>
+           </ion-row>
+           <ion-row>
+             <ion-col><strong>Project:</strong></ion-col>
+             <ion-col><strong>Location:</strong></ion-col>
+           </ion-row>
+           <ion-row>
+             <ion-col><strong>Business Unit:</strong></ion-col>
+             <ion-col><strong>Start Date:</strong> </ion-col>
+           </ion-row>
+         </ion-grid>
+
+       
+
+         <!-- Days Table (Compact 7-column format) -->
+         <ion-row class="calendar-details-block">
+             <ion-col class="calendar-grid" size="8">
+                 <div class="day-header">
+                   <button class="day-header-cell"></button>
+                 </div>
+                 <div class="day-cell-row" *ngFor="let row of [].constructor(5); let rIdx = index">
+                   <div class="day-cell" *ngFor="let col of [].constructor(7); let cIdx = index"
+                 >
+                        <div class="date"></div>
+                     <!-- <div class="timing" *ngIf="date.timing">{{ date.timing }}</div> -->
+                     <div class="timing"></div>
+                     
+                   </div>
+                 </div>
+               </ion-col>
+               <ion-col size="4"  class="details-container ion-no-padding"> 
+                   <h2>Monthly Summary</h2>                   
+                         <div class="detail-item">                             
+                           <p>Days Worked:</p>
+                           <p></p></div>
+                         <div class="detail-item">
+                           <p>Leaves:</p>
+                           <p></p>
+                         </div>
+                         <div class="detail-item">
+                           <p>Comp-offs:</p> 
+                           <p></p>
+                         </div>
+                     
+                         <div class="detail-item">
+                           <p>Holidays:</p>
+                           <p> </p>
+                         </div>
+                         <div class="detail-item">
+                           <p>Weekends:</p>
+                           <p></p>
+                         </div>                            
+                         <div class="message-item" colspan="3">
+                           <p>Remarks:</p>
+                           <p></p>
+                         </div>
+                     
+               </ion-col>
+         </ion-row>
+       
+     
+
+         <!-- <ion-grid class="table-block">
+         <ion-row class="table-header">
+             <ion-col *ngFor="let i of [].constructor(7); let idx = index" size="1">Day</ion-col>
+             <ion-col *ngFor="let i of [].constructor(7); let idx = index" size="1">Status</ion-col>
+           </ion-row>
+
+           <ng-container *ngFor="let row of [].constructor(5); let rIdx = index">
+             <ion-row>
+               <ng-container *ngFor="let col of [].constructor(7); let cIdx = index">
+                 <ion-col size="1">{{ rIdx*7 + cIdx + 1 <= 31 ? rIdx*7 + cIdx + 1 : '' }}</ion-col>
+                     <ion-col size="1">{{ rIdx*7 + cIdx + 1 <= 31 ? report['day' + (rIdx*7 + cIdx + 1)] || '-' : ''
+                         }}</ion-col>
+               </ng-container>
+             </ion-row>
+           </ng-container>
+         </ion-grid> -->
+
+         <!-- <hr /> -->
+
+         <!-- Summary -->
+         <!-- <ion-grid>
+           <ion-row>
+             <ion-col><strong>Days Worked:</strong> {{ report.days_worked }}</ion-col>
+             <ion-col><strong>Leaves:</strong> {{ report.leaves }}</ion-col>
+             <ion-col><strong>Comp-offs:</strong> {{ report.comp_offs }}</ion-col>
+           </ion-row>
+           <ion-row>
+             <ion-col><strong>Holidays:</strong> {{ report.holidays }}</ion-col>
+             <ion-col><strong>Weekends:</strong> {{ report.weekends }}</ion-col>
+             <ion-col><strong>Total Pay:</strong> {{ report.total_pay }}</ion-col>
+           </ion-row>
+           <ion-row>
+             <ion-col colspan="3"><strong>Remarks:</strong> {{ report.remarks }}</ion-col>
+           </ion-row>
+         </ion-grid> -->
+       </div>
+     </ion-accordion>
+   </ion-accordion-group>
+ </div>
+</div>
+
+<!-- <ion-popover trigger="trigger-button1" *ngIf="show" class="daily-block">
+ <ng-template> -->
+   <!-- DATE BAR -->
+   <!-- <div class="date-bar">
+     <div class="row-left">
+       <p>📅 <b>Work Date :</b> <span class="date pl-5"></span></p>
+       <p class="total-hours pl-5">(  hrs )</p>
+     </div>
+     <ion-button size="small" shape="round">Add Missed</ion-button>
+     <div class="calendar-box">
+       <ion-datetime presentation="date">
+       </ion-datetime>
+     </div>
+   </div> -->
+
+   <!-- TECHNOLOGY INPUT -->
+  <!-- p <div class="row-left">
+     <div class="glass-item">
+       <ion-input placeholder="Technologies(ex: Angular, Node, Ionic...) "></ion-input>
+       <ion-button slot="end">Add</ion-button>
+     </div>
+     <div class="tech-chips">
+       <ion-chip>
+        
+         <ion-icon name="close-circle"></ion-icon>
+       </ion-chip>
+     </div>
+   </div> -->
+
+   <!-- HOURLY GRID -->
+   <!-- <div class="hours-grid">
+     <div class="hour-row" *ngFor="let h of hours">
+       <p class="time"> </p>
+
+       <ion-textarea laceholder="Describe work done...">
+       </ion-textarea>
+
+       <ion-select interface="popover" placeholder="Project">
+         <ion-select-option value="CNS">CNS</ion-select-option>
+         <ion-select-option value="CIS">CIS</ion-select-option>
+         <ion-select-option value="Nasco">Nasco</ion-select-option>
+         <ion-select-option value="COE">COE (Bench)</ion-select-option>
+       </ion-select>
+
+       <span class="break-label">🍔 Break</span>
+     </div>
+   </div>
+
+   <div class="row-center">
+     <ion-button class="primary-btn">Submit Daily Report</ion-button>
+     <ion-button fill="outline">Export Daily</ion-button>
+   </div> -->
+
+   <!-- TOTAL -->
+   <!-- <div class="graph-box">
+     <canvas id="dailyChart"></canvas>
+   </div>
+ </ng-template>
+</ion-popover>
+
+<ion-popover trigger="monthly-report" class="box animate monthly-report">
+ <ng-template>
+   <div>
+     <h2 class="center">📈 Monthly Report</h2>
+     <div class="graph-box">
+       <canvas id="monthlyChart"></canvas>
+     </div>
+
+     <ion-button class="primary-btn">
+       <ion-icon name="download-outline" class="pr-5"></ion-icon>Export Monthly
+     </ion-button>
+
+     <div class="center total">
+       Monthly Total:  hrs
+     </div>
+   </div>
+ </ng-template>
+</ion-popover> -->
+</ion-content>

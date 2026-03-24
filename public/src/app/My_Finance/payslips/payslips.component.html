@@ -1,0 +1,198 @@
+<div class="payslip-container">
+  <!-- MINI HEADER -->
+  <nav class="mini-header">
+    <div class="nav-item" [class.active]="currentTab === 'salary'" (click)="currentTab = 'salary'">My Salary</div>
+    <div class="nav-item" [class.active]="currentTab === 'payslips'" (click)="currentTab = 'payslips'">Pay Slips</div>
+    <div class="nav-item" [class.active]="currentTab === 'incometax'" (click)="currentTab = 'incometax'">Income Tax</div>
+    <div class="nav-item" [class.active]="currentTab === 'fbp'" (click)="currentTab = 'fbp'">Flexible Benefit Plan (FBP)</div>
+  </nav>
+
+  <div class="payslip-wrapper coming-soon" *ngIf="currentEmployee && currentTab === 'payslips'">
+    <!-- MAIN CONTENT -->
+    <main class="content-area d-none">
+      <div class="payslip-card">
+        <!-- HEADER -->
+        <header class="payslip-header">
+          <div>
+            <h2>PAYSLIP</h2>
+            <p>TECH TAMMINA SOFTWARE SOLUTIONS PVT LTD</p>
+            <p>2nd Floor, Sri Sai Plaza, Madhapur</p>
+            <p>Hyderabad, Telangana - 500081</p>
+          </div>
+          <div class="logo">
+            <img src="../../../assets/tammina-blue-logo.svg" alt="Company Logo" />
+          </div>
+        </header>
+
+        <!-- EMPLOYEE NAME -->
+        <h2 class="employee-name">
+          {{ currentEmployee?.FullName }}
+        </h2>
+
+        <!-- EMPLOYEE DETAILS -->
+        <ion-grid class="details-grid">
+          <ion-row class="detail-item">
+            <ion-col size="3">
+              <label>EMPLOYEE ID</label>
+              <p>{{ currentEmployee?.EmployeeNumber }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>DEPARTMENT</label>
+              <p>{{ currentEmployee?.department_name }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>DESIGNATION</label>
+              <p>{{ currentEmployee?.designation_name }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>LOCATION</label>
+              <p>{{ currentEmployee?.location_name }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="detail-item">
+            <ion-col size="3">
+              <label>PAN NUMBER</label>
+              <p>{{ currentEmployee?.PANNumber }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>AADHAAR NUMBER</label>
+              <p>{{ currentEmployee?.AadhaarNumber }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>UAN NUMBER</label>
+              <p>{{ currentEmployee?.uan_number }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>PF NUMBER</label>
+              <p>{{ currentEmployee?.pf_number }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="detail-item">
+            <ion-col size="3">
+              <label>MONTHLY SALARY</label>
+              <p>₹ {{ monthlySalary | number:'1.0-2' }}</p>
+            </ion-col>
+            <ion-col size="3">
+              <label>ANNUAL CTC (LPA)</label>
+              <p>₹ {{ currentEmployee?.lpa | number:'1.0-2' }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <hr />
+
+        <!-- SALARY DETAILS -->
+        <h2 class="section-title">Salary Details</h2>
+        <!-- ATTENDANCE/LEAVE SUMMARY -->
+        <h2 class="section-title">Attendance & Leave Summary</h2>
+        <ion-grid class="attendance-summary">
+          <ion-row>
+            <ion-col size="3"><strong>Total Working Days</strong></ion-col>
+            <ion-col size="3"><strong>Actual Payable Days</strong></ion-col>
+            <ion-col size="3"><strong>Loss of Pay (LOP) Days</strong></ion-col>
+            <ion-col size="3"><strong>Days Payable</strong></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">31</ion-col>
+            <ion-col size="3">{{ payableDays }}</ion-col>
+            <ion-col size="3">{{ lopDays }}</ion-col>
+            <ion-col size="3">{{ payableDays }}</ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-grid class="salary-table">
+          <ion-row>
+            <!-- EARNINGS (Left Column) -->
+            <ion-col size="7" class="border-right">
+              <ion-row class="table-header">
+                <ion-col size="6">EARNINGS</ion-col>
+                <ion-col size="3">Paid Amount</ion-col>
+                <ion-col size="3">Actual Amount</ion-col>
+              </ion-row>
+              <ion-row class="table-list" *ngFor="let item of earnings">
+                <ion-col size="6">{{ item.name }}</ion-col>
+                <ion-col size="3">{{ item.paid | number:'1.2-2' }}</ion-col>
+                <ion-col size="3">{{ item.actual | number:'1.2-2' }}</ion-col>
+              </ion-row>
+              <ion-row class="table-list label-total">
+                <ion-col size="6">Total Earnings (A)</ion-col>
+                <ion-col size="3">{{ totalEarnings | number:'1.2-2' }}</ion-col>
+                <ion-col size="3">{{ totalEarnings | number:'1.2-2' }}</ion-col>
+              </ion-row>
+            </ion-col>
+
+            <!-- CONTRIBUTIONS & TAXES (Right Column) -->
+            <ion-col size="5">
+              <!-- CONTRIBUTIONS -->
+              <ion-row class="table-header">
+                <ion-col size="8">CONTRIBUTIONS</ion-col>
+                <ion-col size="4"></ion-col>
+              </ion-row>
+              <ion-row class="table-list" *ngFor="let item of contributions">
+                <ion-col size="8">{{ item.name }}</ion-col>
+                <ion-col size="4">{{ item.paid | number:'1.2-2' }}</ion-col>
+              </ion-row>
+              <ion-row class="table-list label-total">
+                <ion-col size="8">Total Contributions (B)</ion-col>
+                <ion-col size="4">{{ totalContributions | number:'1.2-2' }}</ion-col>
+              </ion-row>
+              <div style="margin-top: 20px;"></div>
+              <!-- TAXES & DEDUCTIONS -->
+              <ion-row class="table-header">
+                <ion-col size="8">TAXES & DEDUCTIONS</ion-col>
+                <ion-col size="4"></ion-col>
+              </ion-row>
+              <ion-row class="table-list" *ngFor="let item of taxes">
+                <ion-col size="8">{{ item.name }}</ion-col>
+                <ion-col size="4">{{ item.paid | number:'1.2-2' }}</ion-col>
+              </ion-row>
+              <ion-row class="table-list label-total">
+                <ion-col size="8">Total Taxes & Deductions (C)</ion-col>
+                <ion-col size="4">{{ totalTaxes | number:'1.2-2' }}</ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- NET PAY -->
+        <ion-grid class="netpay-section">
+          <ion-row>
+            <ion-col size="5"><strong>Net Salary Payable ( A - B - C )</strong></ion-col>
+            <ion-col size="7"><strong>{{ netSalary | number:'1.2-2' }}</strong></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="5"><strong>Net Salary in words</strong></ion-col>
+            <ion-col size="7">{{ netSalaryInWords }}</ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- NOTE -->
+        <ion-note class="note-section">
+          <p><strong>Note:</strong></p>
+          <ul>
+            <li>All amounts displayed are in INR</li>
+            <li>Paid Amount is after LOP adjustments</li>
+            <li>Actual Amount is as per salary structure</li>
+          </ul>
+        </ion-note>
+
+        <footer class="disclaimer">
+          <p>* This is a system generated payslip.</p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="tax-wrapper coming-soon" *ngIf="currentTab === 'incometax'">
+    <app-incometax class="d-none"></app-incometax>
+  </div>
+
+  <div class="salary-wrapper coming-soon" *ngIf="currentTab === 'salary'">
+    <!-- Placeholder for salary content -->
+  </div>
+
+  <div class="fbp-wrapper coming-soon" *ngIf="currentTab === 'fbp'">
+    <!-- Placeholder for FBP content -->
+  </div>
+</div>

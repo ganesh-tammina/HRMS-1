@@ -1,0 +1,125 @@
+@import '../../master-admin-setup/master-admin-setup.component.scss';
+
+.table-list-block {
+  background: #fff;
+  border: 1px solid #ababaa;
+  border-radius: 8px;
+  .title {
+    margin: 0;
+    small {
+      border-radius: 50%;
+      background: #1F74BB;
+      padding: 3px;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      text-align: center;
+      font-weight: 600;
+    }
+  }
+  .table-block {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+}
+/* ===== Form ===== */
+.form-block {
+  ion-item {
+    display: block;
+  }
+  padding: 0px 24px;
+  ion-select {
+    border: 1px solid #C4C4C4;
+    height: 45px;
+    border-radius: 4px;
+    padding: 0px 12px !important;
+    margin: 11px 0px;
+  }
+  ion-input, ion-textarea {
+    border: 1px solid #C4C4C4;
+    height: auto;
+    border-radius: 4px;
+    padding: 0px 12px !important;
+    margin: 11px 0px;
+  }     
+}
+
+
+/* ===== STATUS BADGES ===== */
+
+.status {
+  p {    
+    width: max-content;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .active {
+    background: #e7f7ee;
+    color: #0f766e;
+    border: 0.73px solid #0f766e;
+  }
+  .onhold {
+    background: #fff4e5;
+    color: #b45309;
+    border: 0.73px solid #b45309;
+  }
+  .completed {
+    background: #e8f0fe;
+    color: #1d4ed8;
+    border: 0.73px solid #1d4ed8;
+  }
+}
+
+/* ===== EMPTY ===== */
+.empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 20px;
+}
+
+
+
+
+/* ===== Layout ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  margin-top: 16px;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  div {
+    width: 100%;
+    padding-right: 16px;
+  }
+}
+.create-project-modal {
+  --width: 400px;
+}
+.projectmanager{
+  position: absolute; 
+  z-index: 1000; 
+  width: 100%; 
+  max-height: 200px; 
+  overflow-y: auto; 
+  background: white; 
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+  margin-top: 4px;
+  h4{
+    margin: 3px 0px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+}

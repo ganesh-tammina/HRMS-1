@@ -1,0 +1,89 @@
+<ion-content class="ion-padding custom-popup">
+  <div class="row-space-between">
+    <div class="modal-header mb-30">
+      <h1> Start Preboarding</h1>
+    </div>
+    <!-- <ion-button fill="clear" (click)="close()"><ion-icon name="close-outline"></ion-icon></ion-button> -->
+  </div>
+  <div class="candidate-card">
+    <!-- {{ candidate.personalDetails.initials }} -->
+    <div class="d-flex pr-5">
+      <img class="pr-5" src="../../assets/user.svg" width="46" />
+      <div class="info">
+        <p class="name pb-8">{{ candidate.FirstName}}</p>
+        <p class="designation">{{ candidate.JobTitle}}</p>
+      </div>
+    </div>
+    <div class="info">
+      <p class="meta-status pb-8">{{ candidate.status}} </p>
+      <p class="meta">since 20 Aug 2025</p>
+    </div>
+    <div class="info">
+      <p class="info-name pb-8">
+        <img class="pr-5" src="../../assets/contact-form.svg" width="18" />
+        Department
+      </p>
+
+      <p class="meta">{{ candidate.Department}}</p>
+    </div>
+    <div class="info">
+      <p class="info-name pb-8">
+        <ion-icon class="pr-5" name="location"></ion-icon>
+        Location
+      </p>
+      <p class="meta">{{ candidate.JobLocation}}</p>
+    </div>
+  </div>
+
+  <!-- Contact Details -->
+  <div class="section">
+    <div class="section-header ion-padding-start ion-padding-vertical">
+      <img class="pr-5" src="../../assets/contact-form.svg" width="24" />
+      Confirm contact details
+    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Personal email<span class="required">*</span></ion-label>
+            <ion-input value="{{candidate.Email}}" disabled></ion-input>
+          </ion-item>
+
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Mobile number</ion-label>
+            <ion-input value="{{candidate.PhoneNumber}}" disabled></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-item lines="none" class="checkbox-item">
+      <ion-checkbox checked="true" label-placement="end">Candidate will receive email / SMS invite to onboard and
+        receive details to complete tasks</ion-checkbox>
+      <!-- <ion-checkbox slot="start" checked="true"></ion-checkbox>
+      <ion-label>
+        Candidate will receive email / SMS invite to onboard and receive details to complete tasks
+      </ion-label> -->
+    </ion-item>
+  </div>
+
+  <!-- Task Section -->
+  <!-- <div class="section">
+    <h3>Tasks available to assign (0)</h3>
+    <ion-button expand="block" fill="outline" color="primary">
+      Go to Task Templates
+    </ion-button>
+    <p class="note">Tasks can be created for candidates either before or after onboarding</p>
+  </div> -->
+
+  <!-- Bottom Button -->
+  <div class="footer">
+    <ion-button class="danger-outline-btn" (click)="close()">Cancel</ion-button>
+    <ion-button class="primary-btn" (click)="createOffer()">Move to create offer</ion-button>
+  </div>
+
+
+
+</ion-content>

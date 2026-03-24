@@ -1,0 +1,145 @@
+@import '../../global.scss';
+.page-container {
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.request-card {
+  border-radius: 12px;  
+  background: #fff;
+    .team-header {
+      @include card-sub-title();
+      color: $side-bar-color;
+      margin-top: 12px;
+      margin-bottom: 5px;
+  }
+//   .table {    
+//     border: 0.5px solid $border-color;
+//     padding: 0;
+//     .table-header {
+//       @include text-bold();
+//       height: 44px;
+//       align-items: center;
+//       background: #EBEDEF;
+//       ion-col {
+//         border: 0.5px solid $border-color;
+//         height: 44px;
+//         display: flex;
+//         align-items: center;
+//       }
+//     }
+//     .table-list-row {
+//       @include body-text();
+//       height: 48px;
+//       align-items: center;
+//       border: 0.5px solid $border-color;
+//       &:nth-child(odd) {
+//         background: $bg-color;
+//       }
+//       ion-col {
+//         border-right: 0.5px solid $border-color;
+//         height: 52px;
+//         display: flex;
+//         align-items: center;
+//       }
+//     }
+// p {
+//   margin: 0;
+// }
+//   }
+  }
+
+
+
+/* Popup Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-card {
+  background: white;
+  padding: 25px;
+  width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.cancel-btn {
+  width: 100%;
+  background: #d1d5db;
+  color: black;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.tooltip-box {
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #222;
+  color: #fff;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+ion-popover {
+  --box-shadow: none;
+}
+.yellow-status {
+  color: #9A3412;
+    background: #FFEDD5;
+    border: 1px solid #9A3412;
+    padding: 3px;
+    border-radius: 12px;
+    text-align: center;
+}
+.red-status {
+  color: #D33434;
+    background: #FFD3D3;
+    border: 1px solid #D33434;
+    padding: 3px;
+    border-radius: 12px;
+}
+.green-status {
+  color: #2E9D74;
+    background: #E7F8F2;
+    border: 1px solid #2E9D74 ;
+    padding: 3px;
+    border-radius: 12px;
+}
+.approve-btn {
+  color: #2563eb;
+  --background: transperent;
+  ion-icon {
+    font-size: 24px;
+  }
+}

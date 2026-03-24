@@ -1,0 +1,131 @@
+<ion-header translucent="true">
+  <!-- <app-header></app-header> -->
+  <app-create-offer-header (continueClick)="goToOfferDetails()"></app-create-offer-header>
+</ion-header>
+
+<ion-content fullscreen class="jobdetails-block ion-padding">
+    <ion-button fill="clear" class="back-btn"><ion-icon name="chevron-back-outline"></ion-icon>Back</ion-button>
+    <h1 class="ion-padding ">Compensation</h1>
+  <ion-grid>
+    <ion-row>
+      <!-- Left: Compensation Form -->
+      <ion-col size="6">
+          <ion-item lines="none" class="checkbox-item ion-no-margin">
+              <ion-checkbox  label-placement="end"> Eligible for Provident Fund (PF)</ion-checkbox>
+            </ion-item>
+            <ion-item lines="none" class="checkbox-item ion-no-margin">
+                <ion-checkbox label-placement="end"> Eligible for TDS</ion-checkbox>
+              </ion-item>
+            
+            <ion-item>
+              <ion-label position="stacked">Pay Group</ion-label>
+              <ion-select  class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+               placeholder="Default pay group" interface="popover"></ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Incurredation Type</ion-label>
+              <ion-select  class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+               placeholder="Annual" interface="popover"></ion-select>
+            </ion-item>
+
+            <form [formGroup]="salaryForm">
+              <ion-item>
+                <ion-label position="stacked">Salary (Annual Gross)</ion-label>
+                <ion-input type="number" formControlName="salary"></ion-input>
+              </ion-item>
+
+              <ion-text color="danger"
+                *ngIf="salaryForm.get('salary')?.touched && salaryForm.get('salary')?.hasError('required')">
+                Salary is required
+              </ion-text>
+
+              <ion-text color="danger"
+                *ngIf="salaryForm.get('salary')?.touched && salaryForm.get('salary')?.hasError('min')">
+                Salary must be greater than 0
+              </ion-text>
+            </form>
+
+
+            <ion-item>
+              <ion-label position="stacked">Range</ion-label>
+              <ion-select  class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+               placeholder="Range: Band1" interface="popover"></ion-select>
+            </ion-item>
+
+            <div class="view-structure">
+              <ion-button class="primary-btn" (click)="onViewSalary()">View Salary Structure</ion-button>
+            </div>
+      </ion-col>
+
+      <!-- Right: Salary Structure -->
+      <ion-col size="6" class="employee-card">
+        <ion-card>
+          <h6>Salary Structure</h6>
+          <ion-card-content>
+            <ion-grid class="salary-table">
+              <ion-row class="table-header">
+                <ion-col size="6">DETAILS</ion-col>
+                <ion-col size="3">MONTHLY</ion-col>
+                <ion-col size="3">ANNUALLY</ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="6">Basic</ion-col>
+                <ion-col size="3">{{ salaryStructure.basic/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.basic | currency:'INR' }}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">HRA</ion-col>
+                <ion-col size="3">{{ salaryStructure.hra/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.hra | currency:'INR' }}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">Medical Allowance</ion-col>
+                <ion-col size="3">{{ salaryStructure.medical/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.medical | currency:'INR' }}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">Transport Allowance</ion-col>
+                <ion-col size="3">{{ salaryStructure.transport/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.transport | currency:'INR' }}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">Special Allowance</ion-col>
+                <ion-col size="3">{{ salaryStructure.special/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.special | currency:'INR' }}</ion-col>
+              </ion-row>
+
+              <ion-row class="subtotal">
+                <ion-col size="6">SUB TOTAL</ion-col>
+                <ion-col size="3">{{ salaryStructure.subtotal/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.subtotal | currency:'INR' }}</ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="6">PF Employer</ion-col>
+                <ion-col size="3">{{ salaryStructure.pfEmployer/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.pfEmployer | currency:'INR' }}</ion-col>
+              </ion-row>
+
+              <ion-row class="total">
+                <ion-col size="6"><strong>TOTAL</strong></ion-col>
+                <ion-col size="3"><strong>{{ salaryStructure.total/12 | currency:'INR' }}</strong></ion-col>
+                <ion-col size="3"><strong>{{ salaryStructure.total | currency:'INR' }}</strong></ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <div class="deductions">
+              <h3>DEDUCTIONS</h3>
+              <ion-row>
+                <ion-col size="6">PF Employee</ion-col>
+                <ion-col size="3">{{ salaryStructure.pfEmployee/12 | currency:'INR' }}</ion-col>
+                <ion-col size="3">{{ salaryStructure.pfEmployee | currency:'INR' }}</ion-col>
+              </ion-row>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

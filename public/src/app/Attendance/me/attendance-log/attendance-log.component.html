@@ -1,0 +1,313 @@
+<!-- Filters -->
+<div class="row-space-between">
+  <div>
+    <p style="font-weight: bold; color: #334155; font-size: 14px; margin: 0;">{{ getSelectedPeriodLabel() }}</p>
+  </div>
+
+  <div class="filters">
+    <div class="filter-block">
+      <button class="btn-secondry" [class.active]="selectedPeriod === '30DAYS'" (click)="filterByPeriod('30DAYS')">
+        30 DAYS
+      </button>
+
+      <button *ngFor="let month of monthButtons" class="btn-secondry" [class.active]="selectedPeriod === month"
+        (click)="filterByPeriod(month)">
+        {{ month }}
+      </button>
+    </div>
+
+    <div class="outline-btns">
+      <button class="btn-secondry active">
+        <ion-icon name="list-outline"></ion-icon>
+      </button>
+      <!-- <button class="btn-secondry">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Grid -->
+<ion-grid class="attendance-table">
+
+  <!-- Header -->
+  <ion-row class="table-header">
+    <ion-col size="2">Date</ion-col>
+    <ion-col size="3">Attendance Visual</ion-col>
+    <ion-col size="2">Effective Hours</ion-col>
+    <ion-col size="2">Gross Hours</ion-col>
+    <ion-col size="2">Arrival</ion-col>
+    <ion-col size="1">Log</ion-col>
+  </ion-row>
+
+  <!-- Rows -->
+  <ion-row *ngFor="let log of currentMonthreport" class="table-row"
+    [ngClass]="{'weekoff-row': log.status === 'weekend', 'leave-row': log.status === 'on-leave'}">
+    <ion-col size="2">
+      {{ log.attendance_date | date:'EEE, dd MMM' }}
+      <ng-container *ngIf="log.status === 'on-leave'">
+        <span
+          style="background:#b39ddb;color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">LEAVE</span>
+      </ng-container>
+      <ng-container *ngIf="log.status === 'weekend'">
+        <span
+          style="background:#d7ccc8;color:#795548;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">W-OFF</span>
+      </ng-container>
+      <ng-container *ngIf="log.status === 'holiday'">
+        <span
+          style="background:#e0f7fa;color:#00796b;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">HLDY</span>
+      </ng-container>
+      <ng-template #noLogs>
+        <span *ngIf="log.status !== 'weekend' && log.status !== 'on-leave' && log.status !== 'holiday'" class="pl-5"
+          style="color:#999;font-size:12px">( No logs )</span>
+      </ng-template>
+    </ion-col>
+    <ion-col size='10' *ngIf="(log.status == 'weekend' || log.status == 'on-leave') && log.noLogs" class="no-log">
+      <p *ngIf="log.status === 'weekend'" style="color:#333333;font-size:11px;font-weight:550;margin:0;">Full day week
+        off</p>
+      <p *ngIf="log.status === 'on-leave'" style="color:#ABABAB;font-size:13px;font-weight:bold;margin:0;">
+        <span style="color:#333333; font-size:11px; font-weight: 550;">{{ log.leaveType }}</span>
+      </p>
+    </ion-col>
+
+    <ion-col size="3" *ngIf="!((log.status === 'weekend' || log.status === 'on-leave') && log.noLogs)">
+      <ion-progress-bar style="height: 6px; border-radius: 4px;"></ion-progress-bar>
+    </ion-col>
+    <ion-col size="2" *ngIf="!((log.status === 'weekend' || log.status === 'on-leave') && log.noLogs)">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <ion-icon [name]="islogToday(log.attendance_date) ? 'ellipse-outline' : 'ellipse'"
+          [style.color]="islogToday(log.attendance_date) ? '#0EA5E9' : '#0EA5E9'" style="font-size: 14px;"></ion-icon>
+        <span>{{ formatHours(log.total_work_hours, log.attendance_date) }}</span>
+      </div>
+    </ion-col>
+    <ion-col size="2" *ngIf="!((log.status === 'weekend' || log.status === 'on-leave') && log.noLogs)">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <ion-icon [name]="islogToday(log.attendance_date) ? 'ellipse-outline' : 'ellipse'"
+          [style.color]="islogToday(log.attendance_date) ? '#334155' : '#334155'" style="font-size: 14px;"></ion-icon>
+        <span>{{ formatHours(log.gross_hours, log.attendance_date) }}</span>
+      </div>
+    </ion-col>
+
+    <ion-col size="2" *ngIf="!((log.status === 'weekend' || log.status === 'on-leave') && log.noLogs)">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <!-- Icon -->
+        <ng-container [ngSwitch]="getArrivalStatus(log)">
+          <ion-icon *ngSwitchCase="'Late Arrival'" name="alarm-outline"
+            style="color: #D97706; font-size: 18px;"></ion-icon>
+          <ion-icon *ngSwitchCase="'On Time'" name="checkmark-circle-outline"
+            style="color: #10B981; font-size: 18px;"></ion-icon>
+          <ion-icon *ngSwitchDefault name="ellipse-outline" style="color: #64748B; font-size: 14px;"></ion-icon>
+        </ng-container>
+
+        <!-- Text -->
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <span [style.color]="getArrivalStatus(log) === 'Late Arrival' ? '#D97706' : 'inherit'"
+            style="font-size: 13px; font-weight: 500; line-height: 1;">
+            {{ getArrivalStatus(log) }}
+          </span>
+          <span *ngIf="getLateDuration(log)" style="color: #64748B; font-size: 10px; margin-top: 2px;">
+            {{ getLateDuration(log) }}
+          </span>
+        </div>
+      </div>
+    </ion-col>
+    <ion-col size="1" *ngIf="!((log.status === 'weekend' || log.status === 'on-leave') && log.noLogs)">
+      <ion-icon name="information-circle-outline" color="primary" style="cursor:pointer"
+        (click)="openLogDetails(log)"></ion-icon>
+    </ion-col>
+
+  </ion-row>
+
+</ion-grid>
+
+<!-- ================= RIGHT SIDE SLIDER ================= -->
+<ion-modal [isOpen]="showSlider" class="side-custom-popup checkinInfo-popup" backdropDismiss="true"
+  (didDismiss)="closeSlider()">
+
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Attendance Log</ion-title>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" (click)="closeSlider()">Close</ion-button>
+        </ion-buttons>
+        <p class="card-title">
+          {{ selectedLog?.attendance_date | date:'fullDate' }}
+        </p>
+      </ion-toolbar>
+
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <p class="divider"></p>
+      <div *ngIf="selectedLog?.records?.length; else noRecords">
+        <ion-grid style="padding: 0;">
+          <ion-row *ngIf="getOfficeRecords(selectedLog.records).length > 0">
+            <!-- ========== LEFT SIDE: OFFICE LOGS ========== -->
+            <ion-col size="12" size-md="12" style="padding-right: 8px;">
+              <div class="clock-flex">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div>
+                    <h2>On Office</h2>
+                  </div>
+                </div>
+              </div>
+              <p>Web Clock In</p>
+              <div *ngIf="getOfficeRecords(selectedLog.records).length > 0; else noOfficeRecords">
+                <div *ngFor="let rec of getOfficeRecords(selectedLog.records).slice().reverse()">
+
+                  <ion-grid class="clockin-out" style="padding: 0;">
+                    <ion-row>
+                      <ion-col size="6">
+                        <div style="text-align: center;">
+                          <div class="clockin-img">
+                            <ion-img src="../../../../assets/clockin.svg"></ion-img>
+                            <h4 *ngIf="rec.check_in">
+                              {{ rec.check_in | date:'h:mm a' }}
+                            </h4>
+                          </div>
+
+                          <p *ngIf="!rec.check_in">--:--</p>
+                        </div>
+                      </ion-col>
+                      <ion-col size="6">
+                        <div style="text-align: center;">
+                          <div class="clockout-img">
+                            <ion-img src="../../../../assets/clockout.svg"></ion-img>
+                            <h4 *ngIf="rec.check_out">
+                              {{ rec.check_out | date:'h:mm a' }}
+                            </h4>
+                            <h4 *ngIf="!rec.check_out">Missing</h4>
+                          </div>
+
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+
+                  <!-- <div *ngIf="rec.location || rec.notes"
+                    style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed #ccc;">
+                    <p *ngIf="rec.location" style="font-size: 10px; color: #666; margin: 0 0 3px 0;">📍 {{ rec.location
+                      }}</p>
+                    <p *ngIf="rec.notes" style="font-size: 10px; color: #555; margin: 0;">💬 {{ rec.notes }}</p>
+                  </div> -->
+                </div>
+              </div>
+
+              <ng-template #noOfficeRecords>
+                <div
+                  style="text-align: center; padding: 25px 15px; background: #f8f9fa; border-radius: 8px; color: #999;">
+                  <ion-icon name="business-outline" style="font-size: 40px; opacity: 0.3;"></ion-icon>
+                  <p style="margin: 6px 0 0 0; font-size: 13px;">No office clock-ins</p>
+                </div>
+              </ng-template>
+            </ion-col>
+          </ion-row>
+
+          <!-- ========== RIGHT SIDE: WFH LOGS ========== -->
+
+          <ion-row *ngIf="getWFHRecords(selectedLog.records).length > 0">
+            <ion-col size="12" size-md="12" style="padding-left: 8px;">
+              <div class="clock-flex">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div>
+                    <h2>
+                      Work From Home</h2>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="getWFHRecords(selectedLog.records).length > 0; else noWFHRecords">
+                <div *ngFor="let rec of getWFHRecords(selectedLog.records).slice().reverse()">
+                  <ion-grid style="padding: 0;">
+                    <ion-row class="clockin-out">
+                      <ion-col size="6">
+                        <div class="clockin-img" style="text-align: center;">
+                          <ion-img src="../../../../assets/clockin.svg"></ion-img>
+                          <h4 *ngIf="rec.check_in">{{ rec.check_in | date:'h:mm a' }}</h4>
+                          <h4 *ngIf="!rec.check_in">--:--</h4>
+                        </div>
+                      </ion-col>
+                      <ion-col size="6">
+                        <div class="clockout-img" style="text-align: center;">
+                          <ion-img src="../../../../assets/clockout.svg"></ion-img>
+                          <h4 *ngIf="rec.check_out">{{ rec.check_out | date:'h:mm a' }}</h4>
+                          <h4 *ngIf="!rec.check_out">Active</h4>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div *ngIf="rec.location || rec.notes">
+                    <p *ngIf="rec.location">{{ rec.location
+                      }}</p>
+                    <p *ngIf="rec.notes"> {{ rec.notes }}</p>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noWFHRecords>
+                <div>
+                  <ion-icon name="home-outline"></ion-icon>
+                  <p>No WFH clock-ins</p>
+                </div>
+              </ng-template>
+            </ion-col>
+          </ion-row>
+
+          <!-- ========== REMOTE LOGS ========== -->
+          <ion-row *ngIf="getRemoteRecords(selectedLog.records).length > 0">
+            <ion-col size="12" size-md="12" style="padding-left: 8px;">
+              <div class="clock-flex">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div>
+                    <h2> Remote</h2>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="getRemoteRecords(selectedLog.records).length > 0; else noRemoteRecords">
+                <div *ngFor="let rec of getRemoteRecords(selectedLog.records).slice().reverse()">
+                  <p style="font-weight:bold">Remote Clock In</p>
+                  <ion-grid class="clockin-out" style="padding: 0;">
+                    <ion-row>
+                      <ion-col size="6">
+                        <div class="clockin-img" style="text-align: center;">
+                          <ion-img src="../../../../assets/clockin.svg"></ion-img>
+                          <h4 *ngIf="rec.check_in">{{ rec.check_in | date:'h:mm a' }}</h4>
+                          <h4 *ngIf="!rec.check_in">--:--</h4>
+                        </div>
+                      </ion-col>
+                      <ion-col size="6">
+                        <div class="clockout-img" style="text-align: center;">
+                          <ion-img src="../../../../assets/clockout.svg"></ion-img>
+                          <h4 *ngIf="rec.check_out">{{ rec.check_out | date:'h:mm a' }}</h4>
+                          <h4 *ngIf="!rec.check_out">Active</h4>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div *ngIf="rec.location || rec.notes"
+                    style="margin-top: 8px; padding-top: 6px; border-bottom: 1px dashed #ccc;">
+                    <p *ngIf="rec.location">{{ rec.location }}</p>
+                    <p *ngIf="rec.notes">{{ rec.notes }}</p>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noRemoteRecords>
+                <div>
+                  <ion-icon name="globe-outline" style="font-size: 40px; opacity: 0.3;"></ion-icon>
+                  <p>No Remote clock-ins</p>
+                </div>
+              </ng-template>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </div>
+
+      <ng-template #noRecords>
+        <p>No check-in / check-out records found.</p>
+      </ng-template>
+
+    </ion-content>
+
+  </ng-template>
+</ion-modal>

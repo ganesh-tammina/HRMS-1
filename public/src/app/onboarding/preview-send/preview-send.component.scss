@@ -1,0 +1,88 @@
+@import '../create-offer-header/create-offer-header.component.scss';
+
+.offer-container {
+  --background: var(--ion-bg-color);
+  h1 {
+    @include card-header-title();
+    padding-top: 0px;
+    margin: 0;
+  }
+  h3 {
+    @include text-style-bold();
+    padding-top: 0px;
+    margin: 0;
+  }
+  ion-card {
+    padding: 16px 8px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+  }
+  ion-select {
+    border: 1px solid #D1D5DB;
+    height: 45px;
+    border-radius: 4px;
+    padding: 0px 12px !important;
+    margin: 11px 0px;
+    background: #EFEFEF;
+  }
+}
+ion-radio {
+  --border-radius: 50%;
+  --inner-border-radius: 50%;
+  --color: #ddd;
+  --color-checked: #24A0ED;
+  ;
+  display: block;
+  padding: 8px 16px;
+  border: 1px solid #ABABAB;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  ion-img {
+    width: 24px;
+    position: absolute;
+    right: 0;
+  }
+
+}
+
+ion-radio.ios::part(container) {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+}
+
+.radio-checked.ios::part(container) {
+  border-color: #24A0ED;
+}
+
+.template-preview {
+  padding: 24px !important;
+  .company-logo {
+    ion-img {
+      width: fit-content;
+      margin-bottom: 30px;
+    }
+  }
+  .offer-header {
+    border-bottom: 1px solid #00000040;
+    @include text-style-bold();
+  }
+}
+ion-accordion-group {
+  ion-accordion {
+    margin-bottom: 8px;
+    border-radius: 12px;
+    border: 0;
+    ion-item {
+      --border-width: 0;
+    }
+  }
+}
+.email-form-block {
+  .form-header {
+    border-bottom: 1px solid #00000040;
+    @include text-style-bold();
+  }
+}
+

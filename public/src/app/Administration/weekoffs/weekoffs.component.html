@@ -1,0 +1,47 @@
+<ion-card>
+    <ion-card-header class="row-space-between">
+      <ion-card-title>Week Off Policy</ion-card-title>       
+    </ion-card-header>
+
+    <ion-card-content>
+        <form [formGroup]="weekOffForm" (ngSubmit)="submitForm()">
+
+            <!-- Policy Name -->
+            <div class="form-group">
+              <label>Week Off Policy Name</label>
+              <input type="text" formControlName="week_off_policy_name" placeholder="Enter Policy Name">
+            </div>
+      
+            <!-- Week Off Days -->
+            <div class="form-group">
+              <label>Select Week Off Days (Choose Only 2)</label>
+      
+              <div class="checkbox-group">
+                <div *ngFor="let day of daysList" class="checkbox-item">
+                  <input type="checkbox"
+                         [value]="day"
+                         (change)="onDaySelect($event)"
+                         [checked]="selectedDays.includes(day)">
+                  <span>{{ day }}</span>
+                </div>
+              </div>
+      
+              <p class="error" *ngIf="selectedDays.length > 2">
+                You can select only 2 week-off days!
+              </p>
+            </div>
+      
+            <!-- Buttons -->
+            <div class="btn-row">
+              <button type="button" class="cancel-btn" (click)="weekOffForm.reset(); selectedDays = []">Cancel</button>
+              <button type="submit" class="save-btn"
+                      [disabled]="weekOffForm.invalid || selectedDays.length !== 2">
+                Save Policy
+              </button>
+            </div>
+      
+          </form>
+    </ion-card-content>
+  </ion-card>
+
+

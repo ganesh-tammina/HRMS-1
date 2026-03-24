@@ -1,0 +1,40 @@
+<div class="ion-card team-card" *ngIf="team && team.length > 0">
+  <div class="team-header">
+    Reporting Team <span class="team-count">({{value}})</span>
+  </div>
+
+  <div class="team-grid">
+
+    <!-- Member -->
+    <!-- <div class="member" *ngFor="let member of team">
+      <img src="https://i.pravatar.cc/150?img=12" class="avatar" />
+      <div class="info">
+        <div class="name">{{ member.full_name }}</div>
+        <div class="role">{{member.job_title}}</div>
+      </div>
+      <button class="menu-btn">⋯</button>
+    </div> -->
+    <ul class="member">
+      <li *ngFor="let member of team | paginate: { itemsPerPage: 8, currentPage: p }">
+        <img src="https://i.pravatar.cc/150?img=12" class="avatar" />
+        <div class="info">
+          <div class="name">{{ member.full_name }}</div>
+          <div class="role">{{member.job_title}}</div>
+        </div>
+        <button class="menu-btn">⋯</button>
+      </li>
+    </ul>
+    <div class="has-text-centered">
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+
+    <!-- Member -->
+
+
+    <!-- Member -->
+
+
+
+
+  </div>
+</div>

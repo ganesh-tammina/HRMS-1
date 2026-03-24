@@ -1,0 +1,165 @@
+<!-- <ion-toolbar color="light" class="top-nav">
+  <ion-buttons slot="start" class="nav-links">
+    <ion-button fill="clear">Dashboard</ion-button>
+    <ion-button fill="clear">Employees</ion-button>
+    <ion-button fill="clear">Org Structure</ion-button>
+    <ion-button fill="clear" class="active">Onboarding</ion-button>
+    <ion-button fill="clear">Exits</ion-button>
+    <ion-button fill="clear">Expenses & Travel</ion-button>
+    <ion-button fill="clear">Documents</ion-button>
+    <ion-button fill="clear">Engage</ion-button>
+    <ion-button fill="clear">Assets</ion-button>
+    <ion-button fill="clear">Helpdesk</ion-button>
+    <ion-button fill="clear">Settings</ion-button>
+  </ion-buttons>
+</ion-toolbar> -->
+
+
+
+
+
+
+
+
+<ion-content class="container" [fullscreen]="true">
+<ion-row class="row-left">
+  <ion-col>
+      <ion-card class="card clickable" (click)="Setup()">
+          <ion-card-header class="imgBx">
+              <ion-img src="../../../assets/pre onboarding cards/SetUp.svg" ></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>SetUp</h2>      
+              <!-- <ion-button class="primary-btn" (click)="Setup()"></ion-button> -->
+              <p>Configure initial settings for your onboarding process.</p>
+               <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="Preonboard()">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/PreOnboarding.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>PreOnboarding</h2>      
+              <!-- <ion-button class="primary-btn" (click)="Preonboard()"></ion-button> -->
+              <p>Engage new hires before their first day.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="newJoiner()">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/newJoiners.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>New Joiners</h2>      
+              <!-- <ion-button class="primary-btn" (click)="newJoiner()"></ion-button> -->
+              <p>Manage details for recent additions to the team.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="PastOffers()">
+          <ion-card-header class="imgBx">
+            <ion-img src="../../../assets/pre onboarding cards/pastOffers.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Past Offers</h2>      
+              <!-- <ion-button class="primary-btn" (click)="PastOffers()">View more</ion-button> -->
+               <p>Review previous job offers and their status.</p>
+               <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="Onboardingtasks()">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/Onboardingtask.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Onboarding Tasks</h2>      
+              <!-- <ion-button class="primary-btn"  (click)="Onboardingtasks()">View more</ion-button> -->
+              <p>Track and assign tasks for a smooth onboarding.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="Tasktemplate()">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/TaskTemplate.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Task Templates</h2>      
+              <!-- <ion-button class="primary-btn" (click)="Tasktemplate()">View more</ion-button> -->
+              <p>Create reusable task lists for different roles.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/backgroundverification.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Background Verification</h2>      
+              <!-- <ion-button class="primary-btn">View more</ion-button> -->
+              <p>Monitor the verification status of new employees.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card">
+          <ion-card-header class="imgBx">
+            <ion-img class="pb-8" src="../../../assets/pre onboarding cards/Archieved.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Archieved</h2>      
+              <!-- <ion-button class="primary-btn">View more</ion-button> -->
+              <p>Store and manage completed or closed onboarding records</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  <ion-col>
+      <ion-card class="card clickable" (click)="Settings()">
+          <ion-card-header class="imgBx">
+            <ion-img  class="pb-8" src="../../../assets/pre onboarding cards/Settings.svg"></ion-img>
+          </ion-card-header>
+        
+          <ion-card-content class="contentBx">
+              <h2>Seetings</h2>      
+              <!-- <ion-button class="primary-btn" (click)="Settings()">View more</ion-button> -->
+              <p>Adjust overall module configurations and preferences.</p>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+
+  </ion-col>
+  
+
+</ion-row>
+    
+
+</ion-content>

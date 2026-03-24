@@ -1,0 +1,460 @@
+@import './../../../theme/variables.scss';
+// .keka-navbar {
+//   height: 56px;
+
+//   .navbar-toolbar {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     height: 100%;
+//     padding: 0 16px;
+//     --background: #bb4b72;
+//     display: grid;
+//   }
+
+//   .navbar-left {
+//     display: flex;
+//     align-items: center;
+
+//     .logo {
+//       height: 30px;
+//       margin-right: 8px;
+//     }
+
+//     .company-name {
+//       font-size: 14px;
+//       color: white;
+//       font-weight: 500;
+//     }
+//   }
+
+//   .navbar-center {
+//     // flex: 1;
+//     // display: flex;
+//     // justify-content: center;
+
+//     .search-box {
+//       --border-radius: 9999px;
+//       --background: white;
+//       --color: #444;
+//       --icon-color: #666;
+//       max-width: 480px;
+//       width: 100%;
+//       padding: 0 10px;
+//     }
+//   }
+
+//   .navbar-right {
+//     display: flex;
+//     align-items: center;
+
+//     .nav-icon {
+//       font-size: 24px;
+//       color: white;
+//       margin-right: 16px;
+//     }
+
+//     .avatar {
+//       width: 32px;
+//       height: 32px;
+//       border-radius: 50%;
+//     }
+//   }
+// }
+
+// .sc-ion-searchbar-md {
+//   padding-inline-start: 2.375rem;
+// }
+
+.dashboard {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+
+  .attendance-block {
+    ion-card {
+      border-radius: 12px;
+      box-shadow: 0 3px 8px #00000036;
+      height: 250px;
+      padding: 8px;
+
+      ion-card-title {
+        @include card-sub-title();
+        text-align: left;
+      }
+    }
+  }
+
+  // Timings style
+  .days-grid {
+    padding: 10px;
+  }
+
+  .day-container {
+
+    &::before {
+      content: "";
+      transition: background-color 0.3s ease;
+      width: 40px;
+      position: absolute;
+      background: linear-gradient(180deg, #3498DB 0%, #7FCAFD 100%);
+      top: -8px;
+      height: 12px;
+      left: 5px;
+      border-radius: 12px;
+    }
+
+    .day-of-week {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 0;
+      text-overflow: initial;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 4px;
+    }
+
+  }
+
+  .highlight-today {
+    &::before {
+      background: linear-gradient(180deg, #FF4B4B 0%, #FFCCCC 100%);
+    }
+  }
+
+  .highlight-weekoff {
+    // background: #ffe6e6 !important;
+    // color: blue !important;
+    font-weight: 600;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -6px;
+    margin-left: 6px;
+
+    &::before {
+      background: linear-gradient(180deg, #D4D4D4 0%, #EFEFEF 100%);
+      ;
+    }
+  }
+
+
+}
+
+ion-progress-bar {
+  height: 6px;
+  border-radius: 6px;
+  --background: #E4E4E4 !important;
+  --progress-background: #3498db !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.weekdays-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+
+  span {
+    flex: 1;
+    text-align: center;
+    padding: 4px 5px;
+    border-radius: 30%;
+    font-size: 12px;
+    font-weight: 400;
+    margin: 0 2px;
+    transition: all 0.2s ease;
+
+    &.work-day {
+      background: #3498DB;
+      color: white;
+      border: 1px solid #2980b9;
+    }
+
+    &.week-off {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+      color: white;
+      border: 1px solid #dc3545;
+      box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+    }
+  }
+}
+
+/* Individual cards */
+.card-pannel {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  flex: 1;
+}
+
+/* Attendance Stats */
+.attendance-status {
+  .today-status {
+    font-size: 14px;
+    font-weight: 500;
+
+    ion-badge {
+      text-transform: capitalize;
+      color: #fff;
+      position: relative;
+      top: 5px;
+    }
+  }
+
+  .monthly-stats {
+    background: #f8fbff;
+    padding: 10px;
+    border-radius: 8px;
+
+    .stat-label {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      margin: 0;
+
+      &.text-success {
+        color: #2ecc71;
+      }
+
+      &.text-danger {
+        color: #e74c3c;
+      }
+
+      &.text-warning {
+        color: #f1c40f;
+      }
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background: #e1e9f5;
+    width: 100%;
+  }
+
+  .divider-dashed {
+    height: 1px;
+    border-top: 1px dashed #cedae9;
+    width: 100%;
+  }
+}
+
+.dashboard .attendance-block ion-card.attendance-status {
+  height: auto;
+  min-height: 250px;
+}
+
+.attendance-status .header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Timings */
+.timings .days {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.timings .days div {
+  background: #f0f1f4;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+.timings .days .active {
+  background-color: #87d1d8;
+  color: #fff;
+}
+
+.timings .duration-bar {
+  height: 8px;
+  background: #a0dde6;
+  border-radius: 4px;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.timings .break {
+  position: absolute;
+  height: 8px;
+  background: #d0ebf1;
+  width: 20%;
+  left: 40%;
+}
+
+/* Actions */
+
+
+
+.actions {
+  text-align: center;
+
+  .actions-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .clock {
+      font-size: 18px;
+      font-weight: 400;
+      border: 1px solid #dee2e6 !important;
+      border-radius: 4px;
+      margin-top: 0;
+      padding: 8px;
+    }
+
+    .clear {
+      min-height: auto;
+      @include body-text();
+      font-size: 12px;
+      --padding-top: 4px;
+      --padding-bottom: 4px;
+      --padding-start: 0;
+      --padding-end: 0;
+      display: block;
+      text-align: left;
+      text-transform: capitalize;
+      justify-self: flex-start;
+
+      &:hover {
+        --background: transparent;
+      }
+
+      img {
+        margin-right: 8px;
+      }
+    }
+
+    .info {
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 1;
+      margin: 8px 0;
+      font-weight: 500;
+    }
+
+    .links {
+      color: #d35c6b;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+  }
+
+}
+
+// Custom tab
+.custom-tabs {
+  width: fit-content;
+
+  button {
+    &:first-child {
+      border-bottom-left-radius: 8px;
+      border-top-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    padding: 12px 24px;
+    background: #fff;
+    border: 0.5px solid #DEDEDE;
+    @include normal-text-unbold();
+
+    &.active {
+      background: #3498DB;
+      color: #fff;
+    }
+
+  }
+}
+
+
+
+
+
+// attendance-log
+.attendance-log-card {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+}
+
+
+ion-modal {
+  --height: 70%;
+  --border-radius: 16px;
+}
+
+
+//   tab style
+
+
+
+
+
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  .table-header {
+    font-weight: 600;
+    background: #f7f7f7;
+  }
+
+  .table-row {
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+  }
+
+  ion-col {
+    padding: 0.5rem;
+  }
+
+  .status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    &.approved {
+      background: #e6f9f0;
+      color: #0a8754;
+    }
+
+    &.pending {
+      background: #fff4e5;
+      color: #d48806;
+    }
+
+    &.rejected {
+      background: #fdecea;
+      color: #d93025;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bank Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="bankForm" (ngSubmit)="submitBank()">
+    <ion-item>
+      <ion-input placeholder="Account Holder Name" formControlName="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Account Number" formControlName="accountNumber" type="number"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="IFSC Code" formControlName="ifsc"></ion-input>
+    </ion-item>
+    <ion-button expand="block" type="submit" [disabled]="bankForm.invalid">Submit</ion-button>
+  </form>
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-content class="ion-padding">
+
+  <!-- File input -->
+  <ion-item lines="full">
+    <ion-label position="stacked">Tammina Logo</ion-label>
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" style="margin-top: 8px;" />
+  </ion-item>
+
+  <!-- Image preview -->
+  <div *ngIf="previewUrl" class="preview-container">
+    <ion-card>
+      <ion-card-content>
+        <img [src]="previewUrl" width="200px" height="200px" alt="Preview" class="preview-image" />
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Upload button -->
+  <div *ngIf="selectedFile" class="upload-btn-container">
+    <ion-button expand="block" color="success" (click)="onUpload()">
+      <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+      Upload Image
+    </ion-button>
+  </div>
+
+</ion-content>

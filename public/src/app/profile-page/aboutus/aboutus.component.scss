@@ -1,0 +1,85 @@
+@import '../../../global.scss';
+
+.header-text {
+    @include card-sub-title();
+    color: $side-bar-color;
+  }
+  p {
+    @include text-bold();
+    color: $Subtle-Text;
+    margin: 0;
+    margin-top: 12px;
+  }
+  h6 {
+    @include normal-text-unbold();
+    color: $text-color;
+    margin: 0;
+    margin-top: 5px;   
+  }
+  .content-detail-block {
+    align-items: stretch;
+    margin-bottom: 12px;
+    .ion-card {
+      padding: 16px;
+      border: 1.25px solid #E4E4E7;
+      background: #fff;
+      --margin-end: var(--ion-margin, 16px);
+      width: 49.5%;
+      border-radius: 8px;
+      &:first-child {
+        margin-right: 1%;
+      }
+    }
+  }
+ 
+
+
+ion-button {
+  float: right;
+  margin-top: 12px;
+}
+ion-input, ion-select {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px !important;
+  min-height: 42px;
+  max-height: 44px;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  @include normal-text-unbold();
+  // Override Ionic's default visual to look more like the image
+  &.item-native {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+// Fix padding for the actual input area within ion-item
+ion-item:has(ion-input), ion-item:has(ion-select) {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    --background-activated: transparent;
+    --background-focused: transparent;
+    --background-hover: transparent;
+    // This allows the full-width input to sit right up to the grid column edge
+    .item-inner {
+        padding-inline-end: 0 !important;
+    }
+}
+
+.report-block {
+  .org-form {
+    border-bottom: 1px solid #E3E3E3;
+    padding-bottom: 15px;
+  }
+}
+ion-input, ion-textarea {
+  border: 1px solid #C4C4C4;
+  height: auto;
+  border-radius: 4px;
+  padding: 0px 12px !important;
+  margin: 11px 0px;
+}

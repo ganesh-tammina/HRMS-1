@@ -1,0 +1,33 @@
+<ion-header>
+  <!-- <app-header></app-header> -->
+  <app-create-offer-header></app-create-offer-header>
+</ion-header>
+
+<ion-content>
+  <div class="container" *ngIf="candidate">
+    <h2>Create Employee Credentials for {{ candidate.personalDetails.FirstName }}</h2>
+
+    <form [formGroup]="credentialsForm" (ngSubmit)="saveEmployeeCredentials()">
+      <div>
+        <label>Company Email:</label>
+        <input type="email" formControlName="companyEmail" />
+        <div *ngIf="credentialsForm.get('companyEmail')?.invalid && credentialsForm.get('companyEmail')?.touched"
+          style="color:red">
+          Valid email is required.
+        </div>
+      </div>
+
+      <div>
+        <label>Password:</label>
+        <input type="password" formControlName="password" />
+        <div *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched"
+          style="color:red">
+          Password is required (min 6 characters).
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="credentialsForm.invalid">Save Credentials</button>
+    </form>
+  </div>
+
+</ion-content>

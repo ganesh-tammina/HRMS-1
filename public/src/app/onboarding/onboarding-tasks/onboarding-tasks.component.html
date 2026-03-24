@@ -1,0 +1,231 @@
+
+<ion-header>
+    <!-- <app-header></app-header> -->
+    <app-onboarding-mainheader></app-onboarding-mainheader>
+  </ion-header>
+  <ion-content class="pre-on-boarding-block" fullscreen>
+    <!-- <ion-content class="pre-on-boarding-block" fullscreen> -->
+    <p class="page-header mt-0 mb-8">
+    <a routerLink="/preonboarding-cards" (click)="org()">Org /</a>
+    <a routerLink="/pre-onboarding-setup" (click)="onboard()">Onboarding /</a>
+    Onboarding tasks
+  </p>
+      <!-- <p class="page-header mb-8"> Org > Onboarding > Onboarding tasks </p> -->
+      <ion-row class="mt-20 mb-10">
+        <ion-col>
+         <p class="page-sub-header">Onboarding tasks</p>
+         <p> Track employees who are assigned onboarding tasks and employees whose onboarding is not initiated.
+            <a href="#">Know more</a></p>
+        </ion-col>
+      </ion-row>
+
+   <!-- Filters -->
+   <div class="filters">
+  <ion-grid class="filters-grid">
+    <ion-row class="ion-align-items-center">
+
+      <!-- Department -->
+      <ion-col class="d-flex ion-align-items-end">
+          <div class="filter-chip">
+              <span>Department</span>
+              <ion-select class="custom-dropdown" formcontrol="department" 
+              toggleIcon="chevron-down" expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+                <ion-select-option>HR</ion-select-option>
+                <ion-select-option>Finance</ion-select-option>
+                <ion-select-option>IT Development</ion-select-option>
+              </ion-select>
+            </div>
+    
+
+      <!-- Location -->
+      <div class="filter-chip">
+          <span>Location</span>
+          <ion-select class="custom-dropdown" formcontrol="Location" 
+          toggleIcon="chevron-down" expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+            <ion-select-option>Visakhapatnam</ion-select-option>
+            <ion-select-option>Hyderabad</ion-select-option>
+            <ion-select-option>Night shift Visakhapatnam</ion-select-option>
+          </ion-select>
+        </div>
+       
+
+      <!-- Worker Type -->
+      <div class="filter-chip">
+          <ion-label>Work Type</ion-label>
+          <ion-select class="custom-dropdown" formcontrol="work-type"
+          toggleIcon="chevron-down" expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+            <ion-select-option>Perminent</ion-select-option>
+            <ion-select-option>Part Time</ion-select-option>
+            <ion-select-option>Contarct</ion-select-option>
+          </ion-select>
+      </div>
+      <!-- Business Unit -->
+      <div class="filter-chip">
+          <span>Business Unit</span>
+          <ion-select class="custom-dropdown" formcontrol="business-unit" 
+          toggleIcon="chevron-down" expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+            <ion-select-option>Visakhapatnam</ion-select-option>
+            <ion-select-option>Hyderabad</ion-select-option>
+            <ion-select-option>Night shift Visakhapatnam</ion-select-option>
+          </ion-select>
+        </div>
+   
+      <!-- Search -->
+      <div class="search-wrap">
+          <ion-icon name="search-outline"></ion-icon>
+          <input placeholder="Search" />
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+  <!-- Metrics Cards -->
+  <ion-grid class="metrics">
+    <ion-row>
+      <!-- Overall onboarded -->
+      <ion-col size="12" size-md="3">
+        <div class="card">
+          <div class="title">
+            <ion-img src="../../../assets/Dept.svg" width="18"></ion-img>
+            <p>Overall onboarded</p>
+          </div>
+          <div class="value">94</div>
+          <div class="note">in last 30 days</div>
+        </div>
+      </ion-col>
+
+      <!-- Avg onboarding time -->
+      <ion-col size="12" size-md="3">
+        <div class="card">
+          <div class="title">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Avg. onboarding time</span>
+            <ion-icon name="information-circle-outline" class="info"></ion-icon>
+          </div>
+          <div class="value">296d 23h</div>
+        </div>
+      </ion-col>
+
+      <!-- Task completion rate -->
+      <ion-col size="12" size-md="3">
+        <div class="card">
+          <div class="title">
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <span>Task completion rate</span>
+            <ion-icon name="information-circle-outline" class="info"></ion-icon>
+          </div>
+          <div class="value">53.21%</div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+<div class="ion-display-flex ion-justify-content-between">
+    <div class="tabs">
+        <div class="tab active">Not Initiated <span class="count">53</span></div>
+        <div class="tab">In Progress <span class="count">247</span></div>
+        <div class="tab">Completed <span class="count">6</span></div>
+        <div class="tab">Skipped <span class="count">20</span></div>
+      </div>
+  <!-- Bulk actions -->
+  <div class="actions-bar">
+    <div class ="row-space-between">
+      <div>
+      <!-- <ion-checkbox></ion-checkbox>
+      <span class="select-all">Select all</span> -->
+      </div>
+      <div class ="login-right">
+      <ion-button class="primary-outline-btn">Initiate onboarding</ion-button>
+      <ion-button class="primary-outline-btn">Skip onboarding</ion-button>
+      </div>
+    </div>
+
+     
+    </div>
+</div>
+ 
+
+
+
+  <!-- Table -->
+  <div class="table">
+      <ion-row class="table-header">
+        <ion-col size="3" class="row-left"><p>NAME & JOB TITLE</p></ion-col>
+        <ion-col size="3"><p>DEPT. & LOCATION</p></ion-col>
+        <ion-col size="3"><p>Joining Date</p></ion-col>     
+          <ion-col size="3"> <p>Actions</p></ion-col>
+      </ion-row>
+
+      <div class="table-list" >
+          <ion-grid>
+             <ion-row class="table-list-row">
+                <ion-col size="3"  class="row-left">
+                     <div class="cell">
+                       <img src="../../../assets/Icons/user-01.svg" width="18">
+                       <div class="name-stack">
+                         <p class="name-link">A Ramarao</p>
+                         <p class="sub">Supervisor</p>
+                       </div>
+                     </div>
+                    
+                   </ion-col>
+                   <ion-col size="3">
+                      <p>Operations</p>
+                     <p>Site 2 - SVS</p>
+                   </ion-col>
+                   <ion-col size="3">
+                      <p>28 Dec 2017</p>
+                   </ion-col>
+                   <ion-col size="3" class="actions">
+                      <ion-button fill="clear"  id="accept1" class="dot-button">
+                      <ion-icon name="ellipsis-vertical-circle-outline" id="accept1"></ion-icon></ion-button>
+                      <ion-popover trigger=accept1 [dismissOnSelect]="true">
+                        <ng-template>
+                          <ion-content>
+                            <ion-list>
+                              <ion-item [button]="true" [detail]="false">Initiate onboarding</ion-item>
+                              <ion-item [button]="true" [detail]="false">Skip onboarding</ion-item>
+                            </ion-list>
+                          </ion-content>
+                        </ng-template>
+                      </ion-popover> 
+                   </ion-col>
+             </ion-row>
+
+             <ion-row class="table-list-row">
+                <ion-col size="3"  class="row-left">
+                     <div class="cell">
+                       <img src="../../../assets/Icons/user-01.svg" width="18">
+                       <div class="name-stack">
+                         <p class="name-link">A V S K Pramod</p>
+                         <p class="sub">Sr. Tech Lead</p>
+                       </div>
+                     </div>
+                    
+                   </ion-col>
+                   <ion-col size="3">
+                      <p>Operations</p>
+                     <p>Site 2 - SVS</p>
+                   </ion-col>
+                   <ion-col size="3">
+                      <p>28 Dec 2017</p>
+                   </ion-col>
+                   <ion-col size="3" class="actions">
+                      <ion-button fill="clear"  id="accept2" class="dot-button">
+                      <ion-icon name="ellipsis-vertical-circle-outline"></ion-icon></ion-button>
+                      <ion-popover trigger=accept2 [dismissOnSelect]="true">
+                        <ng-template>
+                          <ion-content>
+                            <ion-list>
+                              <ion-item [button]="true" [detail]="false">Initiate onboarding</ion-item>
+                              <ion-item [button]="true" [detail]="false">Skip onboarding</ion-item>
+                            </ion-list>
+                          </ion-content>
+                        </ng-template>
+                      </ion-popover> 
+                     </ion-col>
+             </ion-row>
+          </ion-grid>
+        </div>
+        </div>
+</ion-content>

@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border content-modal-header">
+  <ion-toolbar>
+    <ion-title>Employee Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding profile-modal-content">
+  <!-- Profile Summary Card -->
+  <div class="profile-hero">
+    <div class="avatar-wrapper">
+      <ion-avatar class="profile-main-avatar">
+        <img [src]="getProfileImage(selectedObeject)" [alt]="selectedObeject.FullName">
+      </ion-avatar>
+      <div class="status-badge" [class.is-in]="attendanceStatus === 'in'" [class.is-out]="attendanceStatus === 'out'">
+      </div>
+    </div>
+
+    <div class="profile-essentials">
+      <h2 class="emp-fullname">{{ selectedObeject.FullName || selectedObeject.full_name }}</h2>
+      <p class="emp-job-title">{{ selectedObeject.designation_name || selectedObeject.job_title || '-' }}</p>
+      
+      <div class="contact-pills">
+        <div class="pill">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>{{ selectedObeject.location_name || selectedObeject.location || '-' }}</span>
+        </div>
+        <div class="pill">
+          <ion-icon name="mail-outline"></ion-icon>
+          <span>{{ selectedObeject.WorkEmail || selectedObeject.work_email || '-' }}</span>
+        </div>
+      </div>
+      
+      <div class="realtime-status" [class.clocked-in]="attendanceStatus === 'in'">
+        <span class="status-pulse"></span>
+        <span class="status-text">{{ attendanceStatus === 'in' ? 'Currently In' : 'Currently Out' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Organizational Details Section -->
+  <div class="details-section">
+    <div class="section-heading">
+      <ion-icon name="business-outline"></ion-icon>
+      <h3>Organizational Details</h3>
+    </div>
+    
+    <div class="info-grid">
+      <div class="info-item">
+        <label>Business Unit</label>
+        <p>{{ selectedObeject.business_unit_name || selectedObeject.business_unit || '-' }}</p>
+      </div>
+      <div class="info-item">
+        <label>Department</label>
+        <p>{{ selectedObeject.department_name || selectedObeject.department || '-' }}</p>
+      </div>
+      <div class="info-item full-width">
+        <label>Reporting Manager</label>
+        <p>
+          {{ selectedObeject.manager_first_name || '' }} {{ selectedObeject.manager_last_name || selectedObeject.reporting_to || '' }}
+          <span class="emp-id-tag" *ngIf="selectedObeject.manager_employee_number || selectedObeject.reporting_manager_employee_number">
+            ({{ selectedObeject.manager_employee_number || selectedObeject.reporting_manager_employee_number }})
+          </span>
+        </p>
+      </div>
+      <div class="info-item">
+        <label>Shift Policy</label>
+        <p class="highlight-info">{{ selectedObeject.shift_policy_name || '-' }}</p>
+      </div>
+      <div class="info-item">
+        <label>Weekly Off Policy</label>
+        <p class="highlight-info">{{ selectedObeject.weekly_off_policy_name || '-' }}</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
