@@ -89,18 +89,23 @@ app.use(
 );
 
 // Serve static files from public/www/browser folder (where Angular build outputs)
-app.use(express.static(path.join(__dirname, 'public', 'www', 'browser')));
+// IMPORTANT: This must come BEFORE the catch-all route
+app.use(express.static(path.join(__dirname, 'public', 'www', 'browser'), {
+    maxAge: '1d', // Cache static assets for 1 day
+    etag: false   // Disable ETag for better caching
+}));
 
 // Serve uploaded files (profile images, documents, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// SPA fallback - serve index.html for all non-api routes
+// SPA fallback - serve index.html for root path
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
 });
 
-// Catch-all for SPA routing - serve index.html for non-API routes
-app.get(/^(?!(\/api|\/uploads|\/api-docs)).*$/, (req, res) => {
+// SPA fallback - serve index.html for non-API routes (client-side routing)
+// This regex ensures API routes, uploads, and swagger docs are NOT caught by this fallback
+app.get(/^(?!.*\/(api|uploads|api-docs|assets|media|chunk|main|polyfills|styles))/, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
 });
 
