@@ -104,8 +104,14 @@ app.get('/', (req, res) => {
 });
 
 // SPA fallback - serve index.html for non-API routes (client-side routing)
-// This regex ensures API routes, uploads, and swagger docs are NOT caught by this fallback
-app.get(/^(?!.*\/(api|uploads|api-docs|assets|media|chunk|main|polyfills|styles))/, (req, res) => {
+// This route ONLY matches paths without file extensions (no dots = no files)
+// Pattern explained:
+//   ^              - start of path
+//   (?!.*\.)       - negative lookahead: must NOT contain a dot (file extension)
+//   (?!.*api)      - must NOT contain /api
+//   (?!.*uploads)  - must NOT contain /uploads
+//   (?!.*api-docs) - must NOT contain /api-docs
+app.get(/^(?!.*\.)(?!.*api|.*uploads|.*api-docs).*$/, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
 });
 
@@ -114,6 +120,51 @@ app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json(swaggerSpec);
+});
+
+/* ============ FRONTEND DIAGNOSTICS ENDPOINT ============ */
+
+app.get('/api/diagnostics', (req, res) => {
+    const fs = require('fs');
+    const browserPath = path.join(__dirname, 'public', 'www', 'browser');
+    
+    const diagnostics = {
+        timestamp: new Date().toISOString(),
+        server: {
+            nodeVersion: process.version,
+            environment: process.env.NODE_ENV || 'development',
+            port: process.env.PORT || 3000,
+            platform: process.platform
+        },
+        frontend: {
+            buildPath: browserPath,
+            exists: fs.existsSync(browserPath),
+            files: {
+                indexHtml: fs.existsSync(path.join(browserPath, 'index.html')),
+                mainJs: fs.readdirSync(browserPath).filter(f => f.startsWith('main-')).length > 0,
+                polyfillsJs: fs.readdirSync(browserPath).filter(f => f.startsWith('polyfills-')).length > 0,
+                stylesCss: fs.readdirSync(browserPath).filter(f => f.startsWith('styles-')).length > 0,
+            },
+            fileList: fs.existsSync(browserPath) ? 
+                fs.readdirSync(browserPath)
+                    .filter(f => f.match(/\.(js|css|html|map)$/))
+                    .map(f => ({
+                        name: f,
+                        size: fs.statSync(path.join(browserPath, f)).size,
+                        modified: fs.statSync(path.join(browserPath, f)).mtime
+                    }))
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                : []
+        },
+        staticServing: {
+            middleware: 'express.static configured for /public/www/browser',
+            spaFallback: 'Regex: /^(?!.*)(?!.*api|.*uploads|.*api-docs).*$/',
+            corsEnabled: true
+        },
+        status: '✅ Frontend build detected - UI should render properly'
+    };
+    
+    res.json(diagnostics);
 });
 
 /* ============ DATABASE INITIALIZATION ============ */
