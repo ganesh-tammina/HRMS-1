@@ -304,7 +304,7 @@ ion-modal {
       @include scroll-style();
 
       ion-select {
-        border: 1px solid #C4C4C4;
+        // border: 1px solid #C4C4C4;
         height: 45px;
         border-radius: 4px;
         padding: 0px 12px !important;
@@ -313,7 +313,7 @@ ion-modal {
 
       ion-input,
       ion-textarea {
-        border: 1px solid #C4C4C4;
+        // border: 1px solid #C4C4C4;
         height: auto;
         border-radius: 4px;
         padding: 0px 12px !important;

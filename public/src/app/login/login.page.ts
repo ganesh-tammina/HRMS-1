@@ -276,12 +276,19 @@ export class LoginPage implements OnInit {
   private navigateBasedOnRole(): void {
     const role = this.routeGuardService.userRole?.toLowerCase();
 
+    // Activate the main loading spinner for a smooth visual transition
+    this.loading = true;
+
     if (role === 'admin') {
-      this.router.navigate(['/admin'], { replaceUrl: true });
+      this.router.navigate(['/admin'], { replaceUrl: true }).then(() => {
+        window.location.reload();
+      });
     } else {
       // Show welcome popup for employees before navigation
       // this.showWelcomePopup();
-      this.router.navigate(['/Home'], { replaceUrl: true });
+      this.router.navigate(['/Home'], { replaceUrl: true }).then(() => {
+        window.location.reload();
+      });
     }
   }
 

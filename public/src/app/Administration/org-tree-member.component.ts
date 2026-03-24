@@ -82,6 +82,7 @@ export class OrgTreeMemberComponent {
             this.subTeam = data.team;
           } else if (Array.isArray(data)) {
             this.subTeam = data;
+            console.log(this.subTeam);
           } else {
             this.subTeam = [];
           }

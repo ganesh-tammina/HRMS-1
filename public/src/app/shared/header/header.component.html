@@ -18,7 +18,7 @@
           <!-- <ion-button *ngIf="searchResults.length > 0" (click)="openEmployeeListModal(results.FirstName)">
               Show {{ results.FirstName }} Employee(s)
             </ion-button> -->
-          <ion-popover [id]="(searchResults.length > 0) ? 'popover-button':'' " [dismissOnSelect]="true">
+          <ion-popover [id]="(searchResults.length > 0) ? 'popover-button' : 'empty-popover-id'" [dismissOnSelect]="true">
             <ng-template>
               <ion-content>
                 <ion-list>

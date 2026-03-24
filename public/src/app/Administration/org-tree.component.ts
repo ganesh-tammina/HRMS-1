@@ -46,7 +46,7 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
         'linear-gradient(135deg, #EF4444, #DC2626)', // Red
         'linear-gradient(135deg, #8B5CF6, #7C3AED)', // Violet
         'linear-gradient(135deg, #EC4899, #DB2777)'  // Pink
-      ];
+    ];
     constructor(private employeeService: EmployeeService) { }
 
     // Handle expansion with lazy loading
@@ -57,6 +57,7 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
                 this.loading = true;
                 this.employeeService.getReportingTeamByEmployeeId(node.id).subscribe({
                     next: (res: any) => {
+                        console.log(res, 'hi');
                         node.directReports = res.team || [];
                         // Identify team members if node is 'Me' or already 'Manager' path
                         if (node.isMe || node.isManager) {
@@ -109,11 +110,11 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
         const parentId = this.parentMap[nodeId];
         let siblings: number[] = [];
         if (parentId === undefined) {
-             // Fallback if not found
-             this.expanded[nodeId] = !this.expanded[nodeId];
-             return;
+            // Fallback if not found
+            this.expanded[nodeId] = !this.expanded[nodeId];
+            return;
         }
-        
+
         if (parentId === null) {
             siblings = Object.keys(this.parentMap)
                 .filter(id => this.parentMap[id] === null)
@@ -232,7 +233,7 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.myEmployeeId = me.id;
-                
+
                 const managerId = me.reporting_manager_id || me.manager_id || me.reportingTo || me.reporting_to;
                 const requests: any = {
                     coTeam: this.employeeService.getMyCoTeam(),
@@ -244,6 +245,7 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
 
                 forkJoin(requests).pipe(takeUntil(this.destroy$)).subscribe({
                     next: (res: any) => {
+                        console.log('OrgTree: Hierarchy:', res);
                         const manager = res.manager;
                         const coTeam = res.coTeam?.team || [];
                         const myTeam = res.reportingTeam?.team || [];
@@ -259,7 +261,7 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
                                 peer.isCoTeam = true;
                                 managerNode.directReports.push(peer);
                             });
-                            
+
                             // Sort reports (Me should be first or co-team sorted)
                             managerNode.directReports.sort((a: any, b: any) => {
                                 if (a.isMe) return -1;
@@ -305,12 +307,12 @@ export class OrgTreeComponent implements OnInit, OnDestroy {
     getAvatarColor(emp: any): string {
         const key = emp.id || emp.WorkEmail || emp.FirstName;
         let hash = 0;
-      
+
         for (let i = 0; i < String(key).length; i++) {
-          hash = String(key).charCodeAt(i) + ((hash << 5) - hash);
+            hash = String(key).charCodeAt(i) + ((hash << 5) - hash);
         }
-      
+
         const index = Math.abs(hash) % this.avatarColors.length;
         return this.avatarColors[index];
-      }
+    }
 }
