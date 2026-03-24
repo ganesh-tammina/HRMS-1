@@ -1,0 +1,77 @@
+<ion-content class="ion-padding ">
+  <!-- ================= TOP BAR ================= -->
+  <!-- <div class="top-bar">
+    <div>
+      <ion-title>Leave Types</ion-title>
+    </div>
+
+    <ion-button shape="round" color="primary" (click)="openCreateForm()">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Employee Leave Allocation
+    </ion-button>
+  </div> -->
+
+  <!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Employee Leave Allocation</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+  <!-- <ion-modal [isOpen]="showCreateForm" cssClass="create-project-modal side-custom-popup" backdropDismiss="false">
+    <ng-template> -->
+  <div class="initializationhead">
+    <h4>Configure Leave Initialization</h4>
+    <p>Setup leave balances for employees </p>
+  </div>
+  <form [formGroup]="allocationForm">
+    <ion-list lines="none" class="allocation-ipt form-container">
+
+      <!-- Toggle -->
+      <ion-item class="toggle">
+        <p>Apply for all employees</p>
+        <ion-toggle (ionChange)="onToggleChange($event)"></ion-toggle>
+      </ion-item>
+
+      <!-- Employee selector -->
+      <ion-item *ngIf="!applyForAll" button (click)="openEmployeeDropdown($event)">
+        <ion-label position="stacked">Employee</ion-label>
+        <ion-text fill="outline" color="medium">
+          {{ selectedEmployeeLabel || 'Select Employee' }}
+        </ion-text>
+      </ion-item>
+
+      <!-- ✅ LEAVE PLAN SELECT (SAME PATTERN AS LEAVE TYPE) -->
+      <ion-item>
+        <ion-label position="stacked">Leave Plan</ion-label>
+        <ion-select fill="outline" formControlName="leave_plan_id" placeholder="Select Leave Plan" interface="popover"
+          toggleIcon="chevron-down" expandedIcon="chevron-up">
+          <ion-select-option *ngFor="let plan of leavePlans" [value]="plan.id" class="custom-popover">
+            {{ plan.name }}
+          </ion-select-option>
+
+        </ion-select>
+      </ion-item>
+
+      <!-- Leave Year -->
+      <ion-item>
+        <ion-label position="stacked">Leave Year</ion-label>
+        <ion-input fill="outline" type="number" formControlName="leave_year"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div class="form-footer">
+      <ion-button type="button" class="ion-margin-top primary-outline-btn cancel-btn" (click)="cancelCreate()">
+        Cancel
+      </ion-button>
+
+      <ion-button class="ion-margin-top primary-btn" [disabled]="loading" (click)="submitAllocation()">
+        {{ loading ? 'Initializing...' : 'Initialize Leave Balance' }}
+      </ion-button>
+    </div>
+
+
+  </form>
+
+
+  <!-- </ng-template>
+</ion-modal> -->
+</ion-content>

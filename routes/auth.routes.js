@@ -1254,7 +1254,9 @@ router.post("/auto-assign-role", auth, async (req, res) => {
 
     // Find employee by email/username
     const [employee] = await c.query(
-      "SELECT EmployeeID, EmailAddress, Department FROM employees WHERE EmailAddress = ?",
+      `SELECT e.id, e.WorkEmail, d.name as DepartmentName FROM employees e
+       LEFT JOIN departments d ON e.DepartmentId = d.id
+       WHERE e.WorkEmail = ?`,
       [user[0].username]
     );
 
@@ -1268,8 +1270,8 @@ router.post("/auto-assign-role", auth, async (req, res) => {
       });
     }
 
-    const empId = employee[0].EmployeeID;
-    const dept = employee[0].Department || "N/A";
+    const empId = employee[0].id;
+    const dept = employee[0].DepartmentName || "N/A";
     console.log(`👤 Employee found: ID=${empId}, Department=${dept}`);
 
     let newRole = "employee";
@@ -1284,7 +1286,7 @@ router.post("/auto-assign-role", auth, async (req, res) => {
     } else {
       // Check if employee has reporting members (is a manager)
       const [reportingMembers] = await c.query(
-        "SELECT COUNT(*) as count FROM employees WHERE ManagerID = ?",
+        "SELECT COUNT(*) as count FROM employees WHERE reporting_manager_id = ?",
         [empId]
       );
 

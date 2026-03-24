@@ -88,15 +88,20 @@ app.use(
     })
 );
 
-// Serve static files from public/www folder
-app.use(express.static(path.join(__dirname, 'public', 'www')));
+// Serve static files from public/www/browser folder (where Angular build outputs)
+app.use(express.static(path.join(__dirname, 'public', 'www', 'browser')));
 
 // Serve uploaded files (profile images, documents, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Home route - serve index.html from public/www
+// SPA fallback - serve index.html for all non-api routes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'www', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
+});
+
+// Catch-all for SPA routing - serve index.html for non-API routes
+app.get(/^(?!(\/api|\/uploads|\/api-docs)).*$/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
 });
 
 // Swagger JSON endpoint (needed for Swagger UI)

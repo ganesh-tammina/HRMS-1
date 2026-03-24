@@ -1,0 +1,83 @@
+<ion-content [fullscreen]="true" class="admin-dashboard ion-padding">
+  <!-- <app-org-tree></app-org-tree> -->
+  <div class="top-bar">
+    <h1>Manage and maintain organizational master data</h1>
+    <p>Track and manage all organizational information</p>
+  </div>
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+
+
+
+      <!-- ================= OTHER UI ================= -->
+      <ion-col size="12" class="manage-block">
+
+        <ion-card>
+          <ion-card-header>
+            <img src="../../../assets/emploees_manage.svg" width="48" class="blue-img">
+            <ion-card-title>Employees List</ion-card-title>
+            <p>Monitor and maintain employee records</p>
+            <ion-button class="primary-outline-btn" (click)="emp()">Employee Details <ion-icon
+                name="arrow-forward-outline"></ion-icon></ion-button>
+
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <img src="../../../assets/Org-master-data.svg" width="48">
+
+
+            <ion-card-title>Organization Master Data</ion-card-title>
+            <p>Access and manage core organizational lists and settings.</p>
+
+            <ion-button class="primary-outline-btn" (click)="dep()">Org Setup<ion-icon
+                name="arrow-forward-outline"></ion-icon></ion-button>
+
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <img src="../../../assets/roles-management.svg" width="48">
+
+            <ion-card-title>Role & Access Management</ion-card-title>
+            <p>Assign roles and permissions for HR, managers and admin</p>
+
+            <ion-button class="primary-outline-btn" (click)="adminsetup()">Roles & Access<ion-icon
+                name="arrow-forward-outline"></ion-icon></ion-button>
+
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <img src="../../../assets/leave-management.svg" width="48">
+
+
+            <ion-card-title>Leave Management</ion-card-title>
+            <p>Manage leave types, plans, and balance initialization.</p>
+
+            <ion-button class="primary-outline-btn" (click)="adminleaves()">Leave Configuration<ion-icon
+                name="arrow-forward-outline"></ion-icon></ion-button>
+
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <img src="../../../assets/project_blue.svg" width="48">
+
+            <ion-card-title>Projects Management</ion-card-title>
+            <p>All client, project, and shift information—organized and up to date.</p>
+
+            <ion-button class="primary-outline-btn" (click)="projectsetup()">Projects & Shifts<ion-icon
+                name="arrow-forward-outline"></ion-icon></ion-button>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

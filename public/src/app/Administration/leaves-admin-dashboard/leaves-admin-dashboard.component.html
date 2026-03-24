@@ -1,0 +1,151 @@
+<ion-content class="ion-padding page-containerOn">
+  <p class="page-header mb-8">
+    <a routerLink="/admin-leaves" (click)="adminManagement()">Admin Management /</a>
+    Leaves Admin Dashboard
+  </p>
+
+  <h2 class="page-title">Leaves Admin Dashboard</h2>
+  <p class="sub-text">Configure leave types, plans, and employee balances</p>
+
+  <!-- ================= SUMMARY CARDS ================= -->
+  <ion-grid>
+    <ion-row class="leave-cards">
+      <ion-col size="6">
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <div class="txt-img">
+              <ion-card-subtitle>Leave Types</ion-card-subtitle>
+              <ion-img src=".././../../assets/Icons/leave-cal.svg" class="calendar-img"></ion-img>
+            </div>
+            <ion-card-title>{{ totalLeaveTypes }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6" class="cards">
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <div class="txt-img">
+              <ion-card-subtitle>Leave Plans</ion-card-subtitle>
+              <ion-img src=".././../../assets/Icons/leave-cal.svg" class="calendar-img"></ion-img>
+            </div>
+            <ion-card-title>{{ totalLeavePlans }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- <ion-col size="4">
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <ion-card-title>{{ totalEmployees }}</ion-card-title>
+            <ion-card-subtitle>Employees</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col> -->
+
+    </ion-row>
+  </ion-grid>
+
+  <!-- ================= QUICK ACTIONS ================= -->
+
+  <ion-grid class="leaves-config">
+    <ion-row>
+      <ion-col size-sm="12" size-md="6" size-lg="6" size-xl="6">
+        <h2 class="page-title">Leave Configuration</h2>
+        <p class="sub-text">Set up and manage leave types and plans</p>
+
+        <ion-card class="leavedata">
+          <ion-card-header>
+            <div class="leave-head">
+              <ion-card-title>Manage Leave Types</ion-card-title>
+              <ion-button class="primary-outline-btn" expand="block" (click)="goTo('/leave-types')">Manage
+              </ion-button>
+            </div>
+            <p>Create and configure leave categories</p>
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card class="leavedata">
+          <ion-card-header>
+            <div class="leave-head">
+              <ion-card-title>Manage Leave Plans</ion-card-title>
+              <ion-button class="primary-outline-btn" expand="block" (click)="goTo('/leave-plans')">Manage
+              </ion-button>
+            </div>
+            <p>Define yearly leave plans and allocation rules</p>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size-sm="12" size-md="6" size-lg="6" size-xl="6">
+        <h2 class="page-title">Leave Administration</h2>
+        <p class="sub-text">Allocate and manage employee leave balances</p>
+
+        <ion-card class="leavedata">
+          <ion-card-header>
+            <div class="leave-head">
+              <ion-card-title>Leave Allocation</ion-card-title>
+              <ion-button class="primary-outline-btn" expand="block" (click)="leavesallocation()">Allocate
+              </ion-button>
+            </div>
+            <p>Allocate leaves to employees based on plans</p>
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card class="leavedata">
+          <ion-card-header>
+            <div class="leave-head">
+              <ion-card-title>Initialize Leave Balance</ion-card-title>
+              <ion-button class="primary-outline-btn" expand="block" (click)="employeeallocation()">Initialize
+              </ion-button>
+            </div>
+            <p>Set up initial leave balances for employees</p>
+          </ion-card-header>
+        </ion-card>
+
+      </ion-col>
+      <p class="sub-text">Note: Configure leave types, create leave plans and initialize employee leave balances for the
+        selected leave year.</p>
+    </ion-row>
+  </ion-grid>
+
+
+
+  <!-- <ion-card> -->
+  <!-- <ion-card-header>
+      <ion-card-title>Leave Administration</ion-card-title>
+    </ion-card-header> -->
+
+  <!-- <ion-card-content> -->
+
+  <!-- ✅ Leave Types -->
+  <!-- <ion-button expand="block" (click)="goTo('/leave-types')">
+        Manage Leave Types
+      </ion-button> -->
+
+  <!-- ✅ Leave Plans -->
+  <!-- <ion-button expand="block" (click)="goTo('/leave-plans')">
+        Manage Leave Plans
+      </ion-button>
+
+      <ion-button expand="block" (click)="leavesallocation()">
+        Initialize Leave Balance
+      </ion-button>
+      <ion-button expand="block" (click)="employeeallocation()">
+        Empployee's Initialize Leave Balance
+      </ion-button> -->
+
+  <!-- </ion-card-content> -->
+  <!-- </ion-card> -->
+
+  <!-- ================= INFO ================= -->
+  <!-- <ion-card color="light">
+    <ion-card-content>
+      <p>
+        Note: Configure leave types, create leave plans and initialize employee
+        leave balances for the selected leave year.
+      </p>
+    </ion-card-content>
+  </ion-card> -->
+
+</ion-content>

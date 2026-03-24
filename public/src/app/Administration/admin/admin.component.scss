@@ -1,0 +1,210 @@
+@import '../../../global.scss';
+
+/* ================= UPLOAD LOADING OVERLAY ================= */
+.upload-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.loading-content {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 60px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease-out;
+  max-width: 400px;
+
+  .spinner-container {
+    margin-bottom: 24px;
+
+    ion-spinner {
+      transform: scale(2.5);
+      --color: var(--ion-color-primary);
+    }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 16px 0 8px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    margin: 0 0 20px;
+  }
+}
+
+.progress-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
+    animation: dotPulse 1.4s ease-in-out infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+/* ================= EXISTING STYLES ================= */
+
+.admin-dashboard {
+  @extend .page-containerOn;
+  ion-card {
+    margin-left: 0;
+    margin-right: 0;
+    ion-card-header {
+      ion-card-title {
+        @include card-sub-title();
+        small {
+          background: #1F74BB;
+          color: #fff;
+          border-radius: 20px;
+          padding: 2px 5px;
+        }
+      }
+      ion-searchbar {
+        --background: var(--ion-background-color, #fff);
+        border-radius: 20px;
+        --box-shadow: none;
+        border: 1px solid #ABABAB;
+        --min-height: 36px;
+        height: 42px;
+        width: 50%;
+      }
+    }
+  }
+  .manage-block {
+    display: flex;
+    flex-wrap: wrap;
+    ion-card {
+      background: linear-gradient(105.32deg, #1F74BB -0.07%, #0E3555 62.91%);
+      width: 56.553957vh;
+      margin-right: 20px;   
+      border-radius: 12px;
+      .blue-img {
+        background: #fff;
+        border-radius: 50%;
+        padding: 10px;
+      }
+      ion-card-title, p {
+        color: #fff;
+        margin-top: 15px;
+      }   
+      ion-card-title {
+        @include card-sub-title();
+      }
+      p {
+        @include text-style-normal();
+      }
+    }
+    ion-button {
+      width: fit-content;
+    }
+  }
+}
+//Upload employees popup UI
+.upload-main-block {
+  --width: 400px;
+    --height: 400px;
+    .upload-block {
+      p {
+        @include body-text();
+      }
+      .folder-icon {
+        font-size: 35px;
+        color: var(--ion-color-medium);
+        margin-bottom: 15px;
+      }
+      
+      .drag-drop-area {
+        border: 2px dashed var(--ion-color-medium);
+        padding: 20px 12px;
+        text-align: center;
+        margin-bottom: 15px;
+        &:hover {
+          border-color: #007bff;
+        }
+      }
+      
+      .upload-icon {
+        font-size: 32px;
+        color: var(--ion-color-primary);
+      }
+      
+      .select-file-link {
+        color: var(--ion-color-primary);
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    
+    
+    /* Hide the actual file input */
+    #file-upload-input {
+      display: none;
+    }
+    
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+    }
+  }
