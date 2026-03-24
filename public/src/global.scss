@@ -100,17 +100,16 @@ ion-item a {
   width: 100%;
 }
 
-/* Fix for production builds where Ionic pages sometimes remain invisible due to animation state being stuck */
-.ion-page-invisible,
-[ion-page-invisible] {
+/* targeted fix for invisible pages in production - only applies to the active router outlet content if it gets stuck */
+ion-router-outlet > .ion-page-invisible:last-child {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
 
-/* Ensure ion-split-pane behaves correctly and doesn't collapse incorrectly in production */
+/* Fix sidebar alignment without breaking split-pane's internal logic */
 ion-split-pane {
-  display: flex !important;
+  --side-width: 90px !important;
 }
 
 @media (min-width: 1200px) {
