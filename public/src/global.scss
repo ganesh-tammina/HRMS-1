@@ -111,13 +111,25 @@ ion-item {
 }
 
 ion-item a {
-  display: grid !important;
-  place-content: center;
+  display: flex !important;
+  width: 100%;
+}
+
+/* targeted fix for invisible pages in production - only applies to the active router outlet content if it gets stuck */
+ion-router-outlet > .ion-page-invisible:last-child {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Fix sidebar alignment without breaking split-pane's internal logic */
+ion-split-pane {
+  --side-width: 90px !important;
 }
 
 @media (min-width: 1200px) {
   .grid-fixed {
-    width: 100vw;
+    width: 100%;
   }
 }
 

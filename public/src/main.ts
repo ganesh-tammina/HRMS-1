@@ -18,9 +18,11 @@ addIcons(allIcons);
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({
+      mode: 'md'
+    }),
     provideHttpClient(
-      withInterceptors([employeeInterceptor]), // You can add global interceptors here
+      withInterceptors([employeeInterceptor]),
     ),
     provideAnimations(),
     provideRouter(routes, withPreloading(PreloadAllModules), 
