@@ -18,7 +18,8 @@
           <!-- <ion-button *ngIf="searchResults.length > 0" (click)="openEmployeeListModal(results.FirstName)">
               Show {{ results.FirstName }} Employee(s)
             </ion-button> -->
-          <ion-popover [id]="(searchResults.length > 0) ? 'popover-button' : 'empty-popover-id'" [dismissOnSelect]="true">
+          <ion-popover [id]="(searchResults.length > 0) ? 'popover-button' : 'empty-popover-id'"
+            [dismissOnSelect]="true">
             <ng-template>
               <ion-content>
                 <ion-list>
@@ -39,9 +40,9 @@
             <div *ngIf="isAdmin" class="candidate-name">
               Tammina Admin
             </div>
-            <div *ngIf="!isAdmin && currentEmployee as emp" class="candidate-name">
+            <!-- <div *ngIf="!isAdmin && currentEmployee as emp" class="candidate-name">
               {{ emp.FirstName || "Loading..." }}
-            </div>
+            </div> -->
             <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
             <!-- ✅ Only render popover button when authenticated -->
             <ng-container *ngIf="isAuthenticated">
