@@ -179,21 +179,21 @@ export class EmployeeService {
     return this.currentEmployee;
   }
 
-    getEmployeeById(id: number): Observable<any> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any>(`${this.API_URL}/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-    }
+  getEmployeeById(id: number): Observable<any> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.API_URL}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
 
-    searchEmployees(keyword: string, page: number = 1, limit: number = 20): Observable<any> {
+  searchEmployees(keyword: string, page: number = 1, limit: number = 20): Observable<any> {
     const token = localStorage.getItem('token') || localStorage.getItem('access_token');
     const params = new HttpParams()
       .set('q', keyword)
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<any>(this.API_URL, {
+    return this.http.get<any>(this.API_URL + 'search/query', {
       params,
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -221,12 +221,12 @@ export class EmployeeService {
     this.currentEmployee = null;
     this.profileInitialized = false;
     this.profile$ = undefined;
-    
+
     // Explicitly push nulls to ensure components receive the empty state
     this.currentEmployeeSubject.next(null);
     this.profileImageUpdateSubject.next(null);
     this.employeeIdSubject.next(null);
-    
+
     // Clear local storage entries specific to employees
     localStorage.removeItem('activeEmployeeId');
     for (let i = 0; i < localStorage.length; i++) {
@@ -235,7 +235,7 @@ export class EmployeeService {
         localStorage.removeItem(key);
       }
     }
-    
+
     console.log('🧹 EmployeeService: All employee state cleared');
   }
 
@@ -260,55 +260,55 @@ export class EmployeeService {
 
   /* ================= ✅ NEW METHOD: MY TEAM LIST ================= */
 
-    /**
-     * Get logged-in employee's team members
-     */
-    getMyTeamList(): Observable<any[]> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any[]>(this.myTeamEndpoint, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    }
+  /**
+   * Get logged-in employee's team members
+   */
+  getMyTeamList(): Observable<any[]> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any[]>(this.myTeamEndpoint, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
-    /**
-     * Get logged-in employee's co-team members
-     */
-    getMyCoTeam(): Observable<any> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any>(`${this.API_URL}/my-team/co-team`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    }
+  /**
+   * Get logged-in employee's co-team members
+   */
+  getMyCoTeam(): Observable<any> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.API_URL}/my-team/co-team`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
-    /**
-     * Get logged-in employee's reporting team
-     */
-    getMyReportingTeam(): Observable<any> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any>(`${this.API_URL}/my-team/reporting`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    }
+  /**
+   * Get logged-in employee's reporting team
+   */
+  getMyReportingTeam(): Observable<any> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.API_URL}/my-team/reporting`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
-    /**
-     * Get co-team for a specific employee
-     */
-    getCoTeamByEmployeeId(employeeId: number): Observable<any> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any>(`${this.API_URL}/my-team/co-team/${employeeId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    }
+  /**
+   * Get co-team for a specific employee
+   */
+  getCoTeamByEmployeeId(employeeId: number): Observable<any> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.API_URL}/my-team/co-team/${employeeId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
-    /**
-     * Get reporting team for a specific employee
-     */
-    getReportingTeamByEmployeeId(employeeId: number): Observable<any> {
-        const token = localStorage.getItem('token') || localStorage.getItem('access_token');
-        return this.http.get<any>(`${this.API_URL}/my-team/reporting/${employeeId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    }
+  /**
+   * Get reporting team for a specific employee
+   */
+  getReportingTeamByEmployeeId(employeeId: number): Observable<any> {
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.API_URL}/my-team/reporting/${employeeId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
   private employeeIdSubject = new BehaviorSubject<number | null>(null);
   employeeId$ = this.employeeIdSubject.asObservable();

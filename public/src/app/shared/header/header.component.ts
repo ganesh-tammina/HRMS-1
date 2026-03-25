@@ -63,17 +63,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.env = environment.apiURL.startsWith('http') ? environment.apiURL : `http://${environment.apiURL}`;
     this.isAdmin = this.routeGuardService.userRole?.toLowerCase() === 'admin';
-    
+
     // ✅ Check current URL to determine if we should initialize authenticated components
     const currentUrl = this.router.url;
     const isLoginPage = currentUrl.includes('/login') || currentUrl.includes('/candidate');
-    
+
     // ✅ CRITICAL: Only check authentication if NOT on login page
     if (isLoginPage) {
       this.isAuthenticated = false;
       return;
     }
-    
+
     this.isAuthenticated = this.routeGuardService.isLoggedIn;
 
     // Listen for general profile image changes (e.g. from candidate service)
@@ -166,7 +166,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.employeeService.searchEmployees(query.trim(), 1, 20).subscribe({
+    this.employeeService.searchEmployees(query.trim(), 1, 100).subscribe({
       next: (res: any) => {
         // Backend returns { data: [...], pagination: { ... } }
         this.searchResults = res.data || [];
