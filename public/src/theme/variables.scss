@@ -1,73 +1,158 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+$primary-color: #1F74BB;
+$secondry-color: #3498DB;
+$side-bar-color: #122E44;
+$black-color: #000000;
+$text-color: #333333;
+$border-color: #ABABAB;
+$Subtle-Text: #707070;
+$white-color: #FFFFFF;
+$success-color: #28A745;
+$bg-color: #f4f5f8;
+
 :root {
-  /** primary - Professional Blue **/
-  --ion-color-primary: #2a5298;
-  --ion-color-primary-rgb: 42, 82, 152;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #1e3c72;
-  --ion-color-primary-tint: #3d6bb3;
-
-  /** secondary **/
-  --ion-color-secondary: #3dc2ff;
-  --ion-color-secondary-rgb: 61, 194, 255;
-  --ion-color-secondary-contrast: #ffffff;
-  --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #36abe0;
-  --ion-color-secondary-tint: #50c8ff;
-
-  /** tertiary **/
-  --ion-color-tertiary: #5260ff;
-  --ion-color-tertiary-rgb: 82, 96, 255;
-  --ion-color-tertiary-contrast: #ffffff;
-  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #4854e0;
-  --ion-color-tertiary-tint: #6370ff;
-
-  /** success **/
-  --ion-color-success: #2dd36f;
-  --ion-color-success-rgb: 45, 211, 111;
-  --ion-color-success-contrast: #ffffff;
-  --ion-color-success-contrast-rgb: 255, 255, 255;
-  --ion-color-success-shade: #28ba62;
-  --ion-color-success-tint: #42d77d;
-
-  /** warning **/
+  --ion-color-secondary-shade: #015796;
+  --ion-color-primary: #1F74BB;
+  --ion-color-secondary: #3498DB;
+  --ion-color-success: #28A745;
   --ion-color-warning: #ffc409;
-  --ion-color-warning-rgb: 255, 196, 9;
-  --ion-color-warning-contrast: #000000;
-  --ion-color-warning-contrast-rgb: 0, 0, 0;
-  --ion-color-warning-shade: #e0ac08;
-  --ion-color-warning-tint: #ffca22;
-
-  /** danger **/
-  --ion-color-danger: #eb445a;
-  --ion-color-danger-rgb: 235, 68, 90;
-  --ion-color-danger-contrast: #ffffff;
-  --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #cf3c4f;
-  --ion-color-danger-tint: #ed576b;
-
-  /** dark **/
-  --ion-color-dark: #222428;
-  --ion-color-dark-rgb: 34, 36, 40;
-  --ion-color-dark-contrast: #ffffff;
-  --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #1e2023;
-  --ion-color-dark-tint: #383a3e;
-
-  /** medium **/
-  --ion-color-medium: #92949c;
-  --ion-color-medium-rgb: 146, 148, 156;
-  --ion-color-medium-contrast: #ffffff;
-  --ion-color-medium-contrast-rgb: 255, 255, 255;
-  --ion-color-medium-shade: #808289;
-  --ion-color-medium-tint: #9d9fa6;
-
-  /** light **/
-  --ion-color-light: #f4f5f8;
-  --ion-color-light-rgb: 244, 245, 248;
-  --ion-color-light-contrast: #000000;
-  --ion-color-light-contrast-rgb: 0, 0, 0;
-  --ion-color-light-shade: #d7d8da;
-  --ion-color-light-tint: #f5f6f9;
+  --ion-color-danger: #bb4b72;
+  --ion-bg-color: #E6F1FF;
+  --ion-text-color: #333333;
+  --ion-border-color: #ABABAB;
+  --ion-subtle-text: #707070;
+  --ion-white-color: #FFFFFF;
+  --ion-side-bar-color: #122E44;
+  --ion-bg-color-primary: #f4f5f8;
 }
+
+
+
+@mixin font-bold {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}  
+@mixin font-normal {
+    font-weight: 400;
+    letter-spacing: 0.2px;
+} 
+
+@mixin page-header {
+    font-size: 4.60431654676259vh;   //32px
+    line-height: 26px;
+    @include font-bold();
+}
+@mixin page-header-title {
+    font-size: 4.028776978417266vh;   // 28px
+    line-height: 24px;
+    @include font-bold();
+}
+
+@mixin card-header {
+    font-size: 3.4532374100719423vh;   //24px
+    line-height: 34px;
+    @include font-bold();
+}
+
+@mixin card-header-title {
+    font-size: 2.8776978417266186vh;   //20px
+    line-height: 32px;
+    @include font-bold();
+}
+
+
+@mixin card-sub-title {
+    font-size: 2.5899280575539567vh;  //18px
+    line-height: 20px;
+    @include font-bold();
+}
+@mixin text-style-normal {
+    font-size: 2.302158273381295vh;   //16px
+    line-height: 20px;
+    @include font-normal();
+}
+@mixin text-style-bold {
+    font-size: 2.302158273381295vh;  //16px
+    line-height: 20px;
+    @include font-bold();
+}
+@mixin body-text {
+    font-size: 1.7266187050359711vh; //12px
+    line-height: 16px;    
+    @include font-normal();
+}
+
+@mixin text-bold {
+    @include body-text();
+    @include font-bold();
+}
+@mixin table-text {
+  font-size: 1.870503597122302vh; //13px
+  line-height: 16px;    
+  @include font-normal();
+}
+
+@mixin table-text-bold {
+  @include table-text();
+  @include font-bold();
+}
+
+@mixin normal-text {
+    font-size:  2.014388489208633vh; //14px
+    line-height: 19px;    
+    @include font-bold();
+}
+@mixin normal-text-unbold {
+    font-size:  2.014388489208633vh;  //14px
+    line-height: 2.7338129496402876vh;     //19px
+    @include font-normal();
+}
+
+@mixin small-text {
+  font-size: 1.4388489208633093vh; //10px
+  line-height: 14px;    
+  @include font-normal();
+}
+@mixin small-text-bold {
+  font-size: 1.4388489208633093vh; //10px
+  line-height: 14px;    
+  @include font-bold();
+}
+
+body{
+  color: #333333;
+}
+
+@mixin scroll-style {
+    /* width */
+    &::-webkit-scrollbar {
+      width: 6px !important;
+      height: 6px !important;
+    }
+  
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 10px;
+    }
+  
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: rgba(31, 116, 187, 0.2); // $primary-color with low opacity
+      border-radius: 10px;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: rgba(31, 116, 187, 0.6); // $primary-color with higher opacity
+      }
+    }
+  
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 116, 187, 0.4) transparent;
+  }

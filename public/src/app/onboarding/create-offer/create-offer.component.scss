@@ -1,0 +1,9 @@
+@import '../create-offer-header/create-offer-header.component.scss';
+
+ion-content::part[scroll] {
+  @include scroll-style();
+}
+
+ion-header {
+ box-shadow: none;
+}

@@ -1,0 +1,52 @@
+<div *ngFor="let reqGroup of attendanceRequestsHistory" class="request-card">
+  <ion-card>
+    <ion-card-header class="row-space-between">
+      <ion-card-title>{{ reqGroup.type }}</ion-card-title>
+      <ion-card-subtitle>{{ reqGroup.dateRange }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- DATA -->
+      <ng-container *ngIf="reqGroup.records.length > 0; else noRequests">
+        <ion-grid class="table-block">
+          <ion-row class="table-header">
+            <ion-col size="2">Date</ion-col>
+            <ion-col size="2">Request</ion-col>
+            <ion-col size="2">Requested On</ion-col>
+            <!-- <ion-col size="2">Note</ion-col> -->
+            <ion-col size="2">Status</ion-col>
+            <ion-col size="4">Reason</ion-col>
+            <!-- <ion-col size="1">Last Action</ion-col>
+            <ion-col size="2">Next Approver</ion-col> -->
+          </ion-row>
+
+          <ion-row *ngFor="let record of reqGroup.records" class="table-list-row">
+            <ion-col size="2"><p>{{ record.date }}</p></ion-col>
+            <ion-col size="2"><p>{{ record.request }}</p></ion-col>
+            <ion-col size="2"><p>{{ record.requestedOn }}</p></ion-col>
+            <!-- <ion-col size="2">{{ record.note }}</ion-col> -->           
+            <ion-col size="2">
+              <span class="status" [ngClass]="record.status.toLowerCase()">
+                {{ record.status }}
+              </span>
+            </ion-col>
+            <ion-col size="4" class="text-wrap"><p>{{ record.reason || '-' }}</p></ion-col>
+            <!-- <ion-col size="1">{{ record.lastAction }}</ion-col>
+            <ion-col size="2">{{ record.nextApprover || '-' }}</ion-col> -->
+          </ion-row>
+        </ion-grid>
+      </ng-container>
+
+      <!-- EMPTY -->
+      <ng-template #noRequests>
+        <div class="no-leaves-img">
+        <p class="empty-data">
+          <ion-img src="../../../assets/no_leavedata_img.svg"></ion-img>
+          No {{ reqGroup.type }} Available
+        </p>
+        </div>
+
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+</div>

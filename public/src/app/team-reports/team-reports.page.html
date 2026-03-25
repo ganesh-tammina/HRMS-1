@@ -1,0 +1,294 @@
+<ion-content class="report-content">
+    <!-- Modern Navigation Header -->
+    <header class="page-header">
+        <div class="header-top">
+            <div class="title-group">
+                <div class="back-btn" (click)="goBack()">
+                    <ion-icon name="chevron-back-outline"></ion-icon>
+                </div>
+                <h1>Team Analytics</h1>
+            </div>
+            <ion-button class="export-btn" (click)="downloadReport()" [disabled]="!reportData.length">
+                <ion-icon name="share-outline" slot="start"></ion-icon>
+                Export PDF
+            </ion-button>
+        </div>
+
+        <div class="report-tabs">
+            <div class="tab" [class.active]="reportType === 'attendance'"
+                (click)="reportType = 'attendance'; onReportTypeChange()">Attendance</div>
+            <div class="tab" [class.active]="reportType === 'leave'"
+                (click)="reportType = 'leave'; onReportTypeChange()">Leaves</div>
+            <div class="tab" [class.active]="reportType === 'timesheet'"
+                (click)="reportType = 'timesheet'; onReportTypeChange()">Timesheets</div>
+            <div class="tab" [class.active]="reportType === 'client-timesheet'"
+                (click)="reportType = 'client-timesheet'; onReportTypeChange()">Client Timesheets</div>
+        </div>
+    </header>
+
+    <!-- Interactive Filter Zone -->
+    <section class="filter-zone">
+        <div class="control-group">
+            <div class="input-box">
+                <ion-icon name="calendar-number-outline"></ion-icon>
+                <div class="content">
+                    <label>Report Month</label>
+                    <ion-select [(ngModel)]="selectedMonth" (ionChange)="updateDatesFromMonthYear()"
+                        interface="popover">
+                        <ion-select-option *ngFor="let m of months" [value]="m.value">{{ m.name }}</ion-select-option>
+                    </ion-select>
+                </div>
+            </div>
+            <div class="input-box">
+                <ion-icon name="layers-outline"></ion-icon>
+                <div class="content">
+                    <label>Report Year</label>
+                    <ion-select [(ngModel)]="selectedYear" (ionChange)="updateDatesFromMonthYear()" interface="popover">
+                        <ion-select-option *ngFor="let y of years" [value]="y">{{ y }}</ion-select-option>
+                    </ion-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="input-box">
+                <div class="content">
+                    <label>Period From</label>
+                    <ion-input type="date" [(ngModel)]="startDate" (ionChange)="onFiltersChange()"></ion-input>
+                </div>
+            </div>
+            <div class="input-box">
+                <div class="content">
+                    <label>Period To</label>
+                    <ion-input type="date" [(ngModel)]="endDate" (ionChange)="onFiltersChange()"></ion-input>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard Stats -->
+    <section class="stats-banner" *ngIf="!loading">
+        <!-- Leaves -->
+        <ng-container *ngIf="reportType === 'leave'">
+            <div class="stat-chip" [class.active]="statusFilter === 'ALL'" (click)="setFilter('ALL')">
+                <span class="label">Total Records</span>
+                <span class="value">{{ reportData.length }}</span>
+            </div>
+            <div class="stat-chip p-color" [class.active]="statusFilter === 'PENDING'" (click)="setFilter('PENDING')">
+                <span class="label">Pending</span>
+                <span class="value">{{ stats.pending }}</span>
+            </div>
+            <div class="stat-chip s-color" [class.active]="statusFilter === 'APPROVED'" (click)="setFilter('APPROVED')">
+                <span class="label">Approved</span>
+                <span class="value">{{ stats.approved }}</span>
+            </div>
+            <div class="stat-chip d-color" [class.active]="statusFilter === 'REJECTED'" (click)="setFilter('REJECTED')">
+                <span class="label">Rejected</span>
+                <span class="value">{{ stats.rejected }}</span>
+            </div>
+        </ng-container>
+
+        <!-- Attendance -->
+        <ng-container *ngIf="reportType === 'attendance'">
+            <div class="stat-chip" [class.active]="statusFilter === 'ALL'" (click)="setFilter('ALL')">
+                <span class="label">Headcount</span>
+                <span class="value">{{ reportData.length }}</span>
+            </div>
+            <div class="stat-chip s-color" [class.active]="statusFilter === 'PRESENT'" (click)="setFilter('PRESENT')">
+                <span class="label">Present</span>
+                <span class="value">{{ stats.present }}</span>
+            </div>
+            <div class="stat-chip d-color" [class.active]="statusFilter === 'ABSENT'" (click)="setFilter('ABSENT')">
+                <span class="label">Absent</span>
+                <span class="value">{{ stats.absent }}</span>
+            </div>
+            <div class="stat-chip p-color" [class.active]="statusFilter === 'ON-LEAVE'" (click)="setFilter('ON-LEAVE')">
+                <span class="label">On Leave</span>
+                <span class="value">{{ stats.onLeave }}</span>
+            </div>
+        </ng-container>
+
+        <!-- Timesheet -->
+        <ng-container *ngIf="reportType === 'timesheet'">
+            <div class="stat-chip" [class.active]="statusFilter === 'ALL'" (click)="setFilter('ALL')">
+                <span class="label">Total Logs</span>
+                <span class="value">{{ reportData.length }}</span>
+            </div>
+            <div class="stat-chip p-color" [class.active]="statusFilter === 'PENDING'" (click)="setFilter('PENDING')">
+                <span class="label">Pending</span>
+                <span class="value">{{ stats.pending }}</span>
+            </div>
+            <div class="stat-chip s-color" [class.active]="statusFilter === 'APPROVED'" (click)="setFilter('APPROVED')">
+                <span class="label">Verified</span>
+                <span class="value">{{ stats.approved }}</span>
+            </div>
+            <div class="stat-chip d-color" [class.active]="statusFilter === 'REJECTED'" (click)="setFilter('REJECTED')">
+                <span class="label">Rejected</span>
+                <span class="value">{{ stats.rejected }}</span>
+            </div>
+        </ng-container>
+    </section>
+
+    <!-- Sub-navigation for Balances -->
+    <div style="padding: 0 20px; margin-bottom: 24px;" *ngIf="reportType === 'leave' && !loading">
+        <ion-segment [(ngModel)]="leaveView" mode="ios"
+            style="background: var(--slate-100); border-radius: 12px; padding: 4px;">
+            <ion-segment-button value="history"><ion-label>Timeline</ion-label></ion-segment-button>
+            <ion-segment-button value="balances"><ion-label>Balances</ion-label></ion-segment-button>
+        </ion-segment>
+    </div>
+
+    <!-- Main Data Feed -->
+    <main class="data-feed">
+        <div class="sync-loader" *ngIf="loading">
+            <ion-spinner name="bubbles"></ion-spinner>
+            <p>Gathering team intelligence...</p>
+        </div>
+
+        <div class="empty-hero" *ngIf="!loading && !reportData.length && leaveView === 'history'">
+            <img src="assets/no_leavedata_img.svg" alt="Empty" />
+            <h2>Silent Period</h2>
+            <p>No activity records found for this range.</p>
+        </div>
+
+        <div class="data-tracks" *ngIf="!loading">
+            <!-- Attendance Row -->
+            <ng-container *ngIf="reportType === 'attendance'">
+                <div class="track-item" *ngFor="let item of filteredReportData">
+                    <div class="track-main">
+                        <div class="avatar-ring"><img [src]="getProfileImage(item)" /></div>
+                        <div class="info">
+                            <h3>{{ item.employee_name }}</h3>
+                            <p>{{ item.attendance_date | date:'EEE, dd MMM yyyy' }}</p>
+                        </div>
+                        <div class="status-pill" [class.present]="item.status === 'PRESENT'"
+                            [class.absent]="item.status === 'ABSENT'" [class.pending]="item.status === 'ON-LEAVE'">
+                            {{ item.status | titlecase }}
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Leave Row -->
+            <ng-container *ngIf="reportType === 'leave' && leaveView === 'history'">
+                <div class="track-item" *ngFor="let item of filteredReportData">
+                    <div class="track-main">
+                        <div class="avatar-ring"><img [src]="getProfileImage(item)" /></div>
+                        <div class="info">
+                            <h3>{{ item.FirstName }} {{ item.LastName }}</h3>
+                            <p>Applied {{ item.applied_at | date:'dd MMM' }}</p>
+                        </div>
+                        <div class="status-pill" [class.approved]="item.status === 'APPROVED'"
+                            [class.rejected]="item.status === 'REJECTED'" [class.pending]="item.status === 'PENDING'">
+                            {{ item.status }}
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="chunk"><label>Duration</label><span>{{ item.total_days }} Days • {{ item.type_name
+                                || item.leave_type }}</span></div>
+                        <div class="chunk"><label>Schedule</label><span>{{ item.start_date | date:'dd MMM' }} - {{
+                                item.end_date | date:'dd MMM' }}</span></div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Leave Balances -->
+            <ng-container *ngIf="reportType === 'leave' && leaveView === 'balances'">
+                <div class="balance-shelf">
+                    <div class="member-profile" *ngFor="let member of teamBalances">
+                        <div class="member-header">
+                            <img class="mini-avatar" [src]="getProfileImage(member)" />
+                            <div class="meta">
+                                <h4>{{ member.FirstName }} {{ member.LastName }}</h4>
+                                <p>{{ member.EmployeeNumber }}</p>
+                            </div>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="m-box"><label>Total</label><span>{{ member.annual + member.casual + member.sick
+                                    }}</span></div>
+                            <div class="m-box"><label>Used</label><span style="color: var(--danger);">{{ member.used
+                                    }}</span></div>
+                            <div class="m-box"><label>Net</label><span style="color: var(--success);">{{
+                                    member.remaining }}</span></div>
+                        </div>
+                        <div class="usage-track">
+                            <div class="fill"
+                                [style.width.%]="(member.used / (member.used + member.remaining || 1)) * 100"></div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Timesheet Row -->
+            <ng-container *ngIf="reportType === 'timesheet'">
+                <div class="track-item" *ngFor="let item of filteredReportData">
+                    <div class="track-main">
+                        <div class="avatar-ring"><img [src]="getProfileImage(item)" /></div>
+                        <div class="info">
+                            <h3>{{ item.FirstName }} {{ item.LastName }}</h3>
+                            <p>{{ item.date | date:'dd MMM yyyy' }} • {{ item.total_hours }}h</p>
+                        </div>
+                        <div class="status-pill" [class.approved]="item.status === 'APPROVED'"
+                            [class.rejected]="item.status === 'REJECTED'" [class.pending]="item.status === 'PENDING'">
+                            {{ item.status }}
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="chunk"><label>Project</label><span>{{ item.project_name || 'Regular' }}</span></div>
+                        <div class="chunk"><label>Code</label><span>{{ item.project_code || 'GEN-01' }}</span></div>
+                    </div>
+                    <div class="track-actions">
+                        <div class="action-btn" (click)="viewTimesheet(item)"><ion-icon
+                                name="scan-outline"></ion-icon>View</div>
+                        <div class="action-btn" (click)="downloadTimesheet(item)"><ion-icon
+                                name="cloud-download-outline"></ion-icon> File</div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Client Timesheets Report -->
+            <ng-container *ngIf="reportType === 'client-timesheet'">
+                <div class="report-card client-timesheet-item" *ngFor="let item of filteredReportData">
+                    <div class="card-header">
+                        <div class="employee-meta">
+                            <img class="mini-avatar" [src]="getProfileImage(item)" />
+                            <div class="text">
+                                <h3>{{ item.FullName || (item.FirstName + ' ' + item.LastName) }}</h3>
+                                <p>{{ months[selectedMonth].name }} {{ selectedYear }}</p>
+                            </div>
+                        </div>
+                        <div class="status-pill" 
+                            [class.approved]="item.status === 'VALIDATED' || item.status === 'APPROVED'"
+                            [class.rejected]="item.status === 'REJECTED'" 
+                            [class.pending]="item.status === 'PENDING_VALIDATION' || item.status === 'PENDING'">
+                            {{ item.status === 'PENDING_VALIDATION' ? 'Validation' : (item.status | titlecase) }}
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="chunk">
+                            <label>Project</label>
+                            <span>{{ item.project_name }} ({{ item.project_code }})</span>
+                        </div>
+                        <div class="chunk">
+                            <label>Internal Log</label>
+                            <span>{{ item.total_days }} Logs • {{ item.internal_total_hours }}h</span>
+                        </div>
+                        <div class="chunk">
+                            <label>Client Sheet</label>
+                            <span *ngIf="item.client_file"><ion-icon name="document-attach-outline"></ion-icon> Attached</span>
+                            <span *ngIf="!item.client_file">None</span>
+                        </div>
+                    </div>
+                    <div class="track-actions">
+                        <div *ngIf="item.client_file" (click)="viewClientFile(item)" class="action-btn">
+                            <ion-icon name="eye-outline"></ion-icon> View
+                        </div>
+                        <div *ngIf="item.client_file" (click)="downloadClientFile(item)" class="action-btn">
+                            <ion-icon name="cloud-download-outline"></ion-icon> File
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </main>
+</ion-content>

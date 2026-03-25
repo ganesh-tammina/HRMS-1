@@ -1,0 +1,125 @@
+<div class="request-card ion-padding">
+  <div class="team-header">
+    Employee Leave Requests
+  </div>
+
+  <!-- ================= LEAVE REQUEST TABLE ================= -->
+  <ion-grid class="table-block">
+    <ion-row class="table-header">
+      <ion-col size="2">Name</ion-col>
+      <ion-col size="2">Leave Type</ion-col>
+      <ion-col size="2">Start Date</ion-col>
+      <ion-col size="2">End Date</ion-col>
+      <ion-col size="2">Reason</ion-col>
+      <ion-col size="1">Status</ion-col>
+      <ion-col size="1">Actions</ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let req of leaveRequests" class="table-row-list">
+      <ion-col size="2">
+        <p>{{ req.employee_id }}</p>
+        <p>{{ req.leave_type }}</p>
+      </ion-col>
+
+      <ion-col size="2">
+        <p class="badge">{{ req.type_name }}</p>
+      </ion-col>
+
+      <ion-col size="2">
+        {{ req.start_date | date:'dd-MM-yyyy' }}
+      </ion-col>
+
+      <ion-col size="2">
+        {{ req.end_date | date:'dd-MM-yyyy' }}
+      </ion-col>
+
+      <ion-col size="2">
+        <div class="tooltip">
+          <p>{{ req.reason }}</p>
+          <span class="tooltiptext">{{ req.remarks }}</span>
+        </div>
+      </ion-col>
+
+      <ion-col size="1">
+        <p class="yellow-status">{{ req.status }}</p>
+      </ion-col>
+
+      <ion-col size="1" class="row-center">
+        <button
+          fill="clear"
+          class="approve-btn"
+          (click)="openActionForm(req)">
+          <ion-icon name="ellipsis-vertical-circle-outline"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- ================= ACTION FORM POPUP ================= -->
+  <div class="overlay" *ngIf="selectedRequest">
+    <div class="form-card">
+
+      <h3>Approve or Reject</h3>
+
+      <form [formGroup]="actionForm" (ngSubmit)="submitDecision()">
+
+        <label>Status</label>
+        <select formControlName="status">
+          <option value="">-- Select --</option>
+          <option value="APPROVED">Accept Leave</option>
+          <option value="REJECTED">Reject Leave</option>
+        </select>
+
+        <label>Manager Comment</label>
+        <textarea
+          rows="3"
+          placeholder="Enter comment (required for reject)"
+          formControlName="manager_comment">
+        </textarea>
+
+        <p class="error"
+          *ngIf="actionForm.value.status === 'REJECTED'
+          && actionForm.get('manager_comment')?.invalid
+          && actionForm.get('manager_comment')?.touched">
+          Comment is required when rejecting
+        </p>
+
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="cancel-btn" (click)="closeForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= WFH REQUESTS ================= -->
+  <ion-card *ngFor="let wfh of pendingWFHRequests">
+    <ion-card-header>
+      <ion-card-title>WFH Request</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Date:</strong> {{ wfh.date }}</p>
+      <p><strong>Reason:</strong> {{ wfh.reason }}</p>
+      <p><strong>Status:</strong> {{ wfh.status }}</p>
+
+      <ion-row class="ion-margin-top">
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            color="success"
+            (click)="approveWFH(wfh)">
+            Approve
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            color="danger"
+            (click)="rejectWFH(wfh)">
+            Reject
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</div>

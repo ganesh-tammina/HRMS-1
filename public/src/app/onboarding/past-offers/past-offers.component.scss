@@ -1,0 +1,60 @@
+@import '../preonboarding/preonboarding.component.scss';
+@import '../../../global.scss';
+.search-wrap {
+  width: 320px;
+  height: 44px !important;
+}
+ion-datetime {
+  padding-top: 16px;
+  max-width: 100%;
+  border-radius: 18px !important;
+  // .datetime-size-fixed {
+    
+  // }
+  .day-of-week {     
+    font-weight: 700;
+    color: #333;
+  }
+  .calendar-day {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    font-size: 0.875rem;    
+}
+
+}
+.calendar-day-today::part[today] {
+  color: var(--ion-color-base);
+  background: #3498DB !important;
+  color: #ffffff;
+}
+ion-datetime::part(month-year-button) {
+    font-weight: 700;
+    color: #333;
+} 
+.custom-dropdown {
+ width: 250px !important;
+  background: var(--ion-white-color);
+  padding: 10px 12px;
+  border: 1px solid #ABABAB;
+  --highlight-height: 0;
+  border-radius: 6px;
+  min-height: auto;
+  margin-top: 8px;
+}
+ion-select::part(container) {
+  width: 210px !important;
+ }
+ ion-datetime-button {
+  width: 250px !important;
+  background: var(--ion-white-color);
+  padding: 4px 12px;
+  border: 1px solid #ABABAB;
+  --highlight-height: 0;
+  border-radius: 6px;
+  min-height: auto;
+  margin-top: 8px;
+ }
+ ion-datetime-button::part(native) {
+  background: var(--ion-white-color);
+ }

@@ -1,0 +1,84 @@
+<ion-header [translucent]="true">
+  <!-- <app-header></app-header> -->
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Tile Navigation -->
+  <ion-label>Select Candidate ID</ion-label>
+  <ion-select [(ngModel)]="selectedCandidateId" (ionChange)="onCandidateSelected($event.detail.value)" placeholder="Choose ID">
+    <ion-select-option *ngFor="let id of candidateList" [value]="id">
+      {{ id }}
+    </ion-select-option>
+  </ion-select>
+<ion-card *ngIf="selectedCandidate">
+  <ion-card-content>
+    <p><strong>Full Name:</strong> {{ selectedCandidate.fullName }}</p>
+    <p><strong>Email:</strong> {{ selectedCandidate.email }}</p>
+    <p><strong>Phone:</strong> {{ selectedCandidate.phone }}</p>
+    <p><strong>DOB:</strong> {{ selectedCandidate.dob }}</p>
+    <p><strong>Gender:</strong> {{ selectedCandidate.gender }}</p>
+    <!-- Add more fields as needed -->
+  </ion-card-content>
+</ion-card>
+
+
+
+  <div class="card-grid">
+    <div class="card-tile" (click)="openCard('bank')">
+      <h3>Bank Details</h3>
+    </div>
+    <div class="card-tile" (click)="openCard('tax')">
+      <h3>Tax Information</h3>
+    </div>
+    <div class="card-tile" (click)="openCard('confirm')">
+      <h3>Confirmation</h3>
+    </div>
+    <div class="card-tile" (click)="openCard('offer')">
+      <h3>Offer Letter</h3>
+    </div>
+  </div>
+
+  <form [formGroup]="onboardingForm" (ngSubmit)="submitOnboarding()">
+    <!-- Bank Details -->
+    <div *ngIf="selectedCard === 'bank'" class="card" formGroupName="bankDetails">
+      <h2>Bank Details</h2>
+      <ion-item>
+        <ion-input placeholder="Account Number" formControlName="accountNumber"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="IFSC Code" formControlName="ifsc"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="Bank Name" formControlName="bankName"></ion-input>
+      </ion-item>
+      <ion-button (click)="openCard('tax')">Next</ion-button>
+    </div>
+
+    <!-- Tax Information -->
+    <div *ngIf="selectedCard === 'tax'" class="card" formGroupName="taxInfo">
+      <h2>Tax Information</h2>
+      <ion-item>
+        <ion-input placeholder="PAN Number" formControlName="pan"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="Aadhar Number" formControlName="aadhar"></ion-input>
+      </ion-item>
+      <ion-button  (click)="openCard('confirm')">Next</ion-button>
+    </div>
+
+    <!-- Confirmation -->
+    <div *ngIf="selectedCard === 'confirm'" class="card">
+      <h2>Confirmation</h2>
+      <p>Please confirm your onboarding information is complete.</p>
+      <ion-button (click)="openCard('offer')">Confirm & Proceed</ion-button>
+    </div>
+
+    <!-- Offer Letter -->
+    <div *ngIf="selectedCard === 'offer'" class="card">
+      <h2>Offer Letter</h2>
+      <p>Your onboarding is complete. You can now download your offer letter.</p>
+      <ion-button  (click)="downloadOffer()">Download Offer Letter</ion-button>
+      <ion-button  type="submit" color="success">Finish</ion-button>
+    </div>
+  </form>
+</ion-content>

@@ -1,0 +1,50 @@
+@import '../onboarding//create-offer-header/create-offer-header.component.scss';
+
+.checkbox-item {
+  --background: transparent;
+  margin-bottom: 0;
+  ion-checkbox {
+    --size: 24px;
+    --checkbox-background-checked: #6815ec;
+    flex-direction: row-reverse;
+  }
+  
+  ion-checkbox::part(container) {
+    border-radius: 6px;
+    border: 1.3px solid #6C6C6C
+  }
+}
+.salary-table {
+  .table-header {
+    border-bottom: 1px solid #000000;
+    ion-col {
+     @include text-style-bold();
+     height: 40px;
+     color: $text-color;
+    }
+  }
+  ion-row {
+    border-bottom: 1px solid #0000001A;
+    height: 40px;
+    color: $text-color;
+    ion-col {
+      display: flex;
+      align-items: center;
+    }
+    &.subtotal {
+      @include text-style-bold();
+    }
+    
+    }  
+}
+.deductions {
+  h3 {
+    @include text-style-normal();
+    color: $black-color;
+  }
+}
+.back-btn::part(native) {
+  padding-inline-end: 0;
+  padding-inline-start: 0;
+  color: $text-color;
+}

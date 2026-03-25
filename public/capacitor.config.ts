@@ -1,13 +1,9 @@
-// Capacitor Config - Install @capacitor/cli to use this
-// npm install @capacitor/cli @capacitor/core
+import type { CapacitorConfig } from '@capacitor/cli';
 
-const config = {
-  appId: 'com.hrms.app',
+const config: CapacitorConfig = {
+  appId: 'io.ionic.starter',
   appName: 'HRMS',
-  webDir: 'www',
-  server: {
-    androidScheme: 'https'
-  }
+  webDir: 'www'
 };
 
 export default config;

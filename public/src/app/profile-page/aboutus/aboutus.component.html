@@ -1,0 +1,114 @@
+<div class="row-left content-detail-block" *ngIf="currentEmployee">
+
+  <!-- Personal Details -->
+  <div class="ion-card ion-padding">
+    <p class="header-text row-space-between">
+      Personal Summary
+      <!-- <img (click)="isEditSummary()" src="../../assets/Icons/pencil.svg" width="18" /> -->
+    </p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div class="editor-container" *ngIf="viewEditor">
+            <ion-textarea placeholder="About yourself"></ion-textarea>
+          </div>
+
+          <p *ngIf="!viewEditor">
+            Experienced product designer with 8+ years in SaaS and enterprise software.
+            Passionate about creating intuitive user experiences and leading design
+            systems initiatives.
+          </p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Organizational Details -->
+  <div class="ion-card">
+    <p class="header-text row-space-between">
+      Organizational Details
+      <!-- <img (click)="isEditOrg()" src="../../assets/Icons/pencil.svg" width="18" /> -->
+    </p>
+
+    <div class="report-block">
+      <form class="org-form row-left">
+        <div class="mr-15">
+          <p>Business Unit</p>
+          <h6 *ngIf="!IsOrg">
+            {{ currentEmployee?.business_unit_name || '-' }}
+          </h6>
+          <ion-input *ngIf="IsOrg" [value]="currentEmployee?.business_unit_name">
+          </ion-input>
+        </div>
+
+        <div>
+          <p>Department</p>
+          <h6 *ngIf="!IsOrg">
+            {{ currentEmployee?.department_name || '-' }}
+          </h6>
+          <ion-input *ngIf="IsOrg" [value]="currentEmployee?.department_name">
+          </ion-input>
+        </div>
+      </form>
+
+      <div>
+        <p class="mb-8">Reporting Manager</p>
+        <h6 class="row-left" *ngIf="!IsOrg">
+          <img src="../../assets/user.svg" width="18" class="mr-8" />
+          {{ currentEmployee?.manager_first_name }}
+          {{ currentEmployee?.manager_last_name }}
+        </h6>
+
+        <ion-input *ngIf="IsOrg"
+          [value]="currentEmployee?.manager_first_name + ' ' + currentEmployee?.manager_last_name">
+        </ion-input>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Primary Details -->
+<div class="row-left content-detail-block" *ngIf="currentEmployee">
+  <div class="ion-card">
+    <p class="header-text">Primary Details</p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <p>Employee ID</p>
+          <h6>{{ currentEmployee?.EmployeeNumber || '-' }}</h6>
+        </ion-col>
+
+        <ion-col>
+          <p>Date of Birth</p>
+          <h6>{{ currentEmployee?.DateOfBirth || '-' }}</h6>
+        </ion-col>
+
+        <ion-col>
+          <p>Gender</p>
+          <h6>{{ currentEmployee?.Gender || '-' }}</h6>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <p>Nationality</p>
+          <h6>{{ currentEmployee?.Nationality || '-' }}</h6>
+        </ion-col>
+
+        <ion-col>
+          <p>Marital Status</p>
+          <h6>{{ currentEmployee?.MaritalStatus || '-' }}</h6>
+        </ion-col>
+
+        <ion-col>
+          <p>Blood Group</p>
+          <h6>{{ currentEmployee?.BloodGroup || '-' }}</h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <app-reporting-team></app-reporting-team>
+</div>

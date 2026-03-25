@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../config/database");
-const { auth, admin, hr } = require("../middleware/auth");
+const { auth, admin, hr, roleAuth } = require("../middleware/auth");
 
 // ...existing code...
 
 // Allow HR to delete shift policies
-router.delete("/shift-policies/:id", auth, hr, async (req, res) => {
+router.delete("/shift-policies/:id", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const c = await db();
     const [result] = await c.query("DELETE FROM shift_policies WHERE id = ?", [
@@ -24,7 +24,7 @@ router.delete("/shift-policies/:id", auth, hr, async (req, res) => {
 
 // Generic master creation helper
 const createMasterRoutes = (route, table, col) => {
-  router.get(`/${route}`, auth, async (req, res) => {
+  router.get(`/${route}`, auth, roleAuth(["admin", "hr"]), async (req, res) => {
     const c = await db();
     const [r] = await c.query(
       `SELECT id, ${col} as name, created_at FROM ${table}`
@@ -33,7 +33,7 @@ const createMasterRoutes = (route, table, col) => {
     res.json(r);
   });
 
-  router.post(`/${route}`, auth, hr, async (req, res) => {
+  router.post(`/${route}`, auth, roleAuth(["admin", "hr"]), async (req, res) => {
     const value = req.body[col];
     if (!value || value.trim() === "") {
       return res.status(400).json({ error: `${col} is required` });
@@ -50,7 +50,7 @@ const createMasterRoutes = (route, table, col) => {
     res.json({ message: `${route} created` });
   });
 
-  router.delete(`/${route}/:id`, auth, hr, async (req, res) => {
+  router.delete(`/${route}/:id`, auth, roleAuth(["admin", "hr"]), async (req, res) => {
     try {
       const c = await db();
       const [result] = await c.query(`DELETE FROM ${table} WHERE id = ?`, [
@@ -91,7 +91,7 @@ createMasterRoutes("holiday-lists", "holiday_lists", "name");
 createMasterRoutes("expense-policies", "expense_policies", "name");
 
 // Enhanced Shift Policies Route
-router.get("/shift-policies", auth, async (req, res) => {
+router.get("/shift-policies", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const c = await db();
     const [rows] = await c.query(`
@@ -108,7 +108,7 @@ router.get("/shift-policies", auth, async (req, res) => {
   }
 });
 
-router.post("/shift-policies", auth, hr, async (req, res) => {
+router.post("/shift-policies", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const {
       name,
@@ -152,7 +152,7 @@ router.post("/shift-policies", auth, hr, async (req, res) => {
   }
 });
 
-router.put("/shift-policies/:id", auth, hr, async (req, res) => {
+router.put("/shift-policies/:id", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const {
       name,
@@ -220,7 +220,7 @@ router.put("/shift-policies/:id", auth, hr, async (req, res) => {
 });
 
 // ============ ENHANCED WEEKLY OFF POLICIES ROUTES ============
-router.get("/weekly-off-policies", auth, async (req, res) => {
+router.get("/weekly-off-policies", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   let c;
   try {
     c = await db();
@@ -263,7 +263,7 @@ router.get("/weekly-off-policies", auth, async (req, res) => {
   }
 });
 
-router.post("/weekly-off-policies", auth, hr, async (req, res) => {
+router.post("/weekly-off-policies", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const {
       policy_code,
@@ -351,7 +351,7 @@ router.post("/weekly-off-policies", auth, hr, async (req, res) => {
   }
 });
 
-router.put("/weekly-off-policies/:id", auth, hr, async (req, res) => {
+router.put("/weekly-off-policies/:id", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const c = await db();
     const updates = [];
@@ -432,7 +432,7 @@ router.put("/weekly-off-policies/:id", auth, hr, async (req, res) => {
   }
 });
 
-router.delete("/weekly-off-policies/:id", auth, hr, async (req, res) => {
+router.delete("/weekly-off-policies/:id", auth, roleAuth(["admin", "hr"]), async (req, res) => {
   try {
     const c = await db();
     const [result] = await c.query(
@@ -477,7 +477,7 @@ const updateMasterRoutes = [
 ];
 
 updateMasterRoutes.forEach(({ route, table, col }) => {
-  router.put(`/${route}/:id`, auth, hr, async (req, res) => {
+  router.put(`/${route}/:id`, auth, roleAuth(["admin", "hr"]), async (req, res) => {
     try {
       const c = await db();
       const value = req.body[col];

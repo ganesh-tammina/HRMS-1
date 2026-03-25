@@ -1,0 +1,462 @@
+@use "../../global.scss" as *;
+
+// --- Design Tokens ---
+$primary-gradient: linear-gradient(135deg, #2f86d6 0%, #1e6bb8 100%);
+$accent-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+$glass-bg: rgba(255, 255, 255, 0.75);
+$glass-border: rgba(255, 255, 255, 0.4);
+$text-main: #1e293b;
+$text-secondary: #64748b;
+$error-red: #ef4444;
+
+// --- Main Layout ---
+.login-page-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: #0f172a;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+  }
+}
+
+.login-content-wrapper {
+  display: flex;
+  width: 90%;
+  max-width: 1100px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  z-index: 1;
+}
+
+// --- Left Brand Section ---
+.brand-section {
+  flex: 1;
+  color: #fff;
+  padding: 20px;
+
+  .brand-logo {
+    width: 220px;
+    margin-bottom: 32px;
+    // filter: brightness(0) invert(1);
+    // opacity: 0.95;
+  }
+
+  .brand-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  .brand-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+}
+
+// --- Right Form Section ---
+.login-form-section {
+  flex: 0.8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// --- Flip Animation Setup ---
+.flip-container {
+  perspective: 1500px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.flipper {
+  width: 100%;
+  position: relative;
+  transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+  display: grid;
+  // This ensures the container takes the height of the tallest face.
+  grid-template-columns: 100%;
+}
+
+.flip-container.is-flipped .flipper {
+  transform: rotateY(180deg);
+}
+
+.front-face, .back-face {
+  backface-visibility: hidden;
+  width: 100%;
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.front-face {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.back-face {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+// ----------------
+
+.login-glass-card {
+  width: 100%;
+  max-width: 440px;
+  background: $glass-bg;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  border: 1px solid $glass-border;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 48px;
+  
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &:hover {
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-header {
+  text-align: left;
+  margin-bottom: 32px;
+
+  .form-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $text-main;
+    margin-bottom: 8px;
+  }
+
+  .form-subtitle {
+    font-size: 0.95rem;
+    color: $text-secondary;
+  }
+
+  .mobile-logo {
+    display: none;
+    width: 60%;
+    margin: 0 auto 24px auto;
+  }
+}
+
+// --- Form Elements ---
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-main;
+    margin-left: 2px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1.5px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      font-size: 1rem;
+      color: $text-main;
+      transition: all 0.3s ease;
+      outline: none;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+
+      &:focus {
+        background: #fff;
+        border-color: #2f86d6;
+        box-shadow: 0 0 0 4px rgba(47, 134, 214, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .field-error {
+    color: $error-red;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+}
+
+// --- Buttons ---
+.form-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &.vertical {
+    gap: 10px;
+  }
+}
+
+.primary-button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: $primary-gradient;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 6px -1px rgba(47, 134, 214, 0.2);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(47, 134, 214, 0.4);
+    filter: brightness(1.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #cbd5e1;
+    box-shadow: none;
+  }
+
+  &.outline {
+    background: transparent;
+    border: 2px solid #2f86d6;
+    color: #2f86d6;
+    box-shadow: none;
+
+    &:hover {
+      background: rgba(47, 134, 214, 0.05);
+    }
+  }
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #f1f5f9;
+  color: $text-main;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+.text-link {
+  background: none;
+  border: none;
+  color: #2f86d6;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(47, 134, 214, 0.1);
+    text-decoration: underline;
+  }
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 8px;
+}
+
+
+// --- Animations ---
+
+.fade-in-left {
+  animation: fadeInLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fade-in-right {
+  animation: fadeInRight 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.staggered-fade-in {
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.bg-pulse {
+  animation: bgPulse 20s infinite alternate ease-in-out;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bgPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+// --- Responsive ---
+@media (max-width: 1024px) {
+  .brand-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .login-content-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .brand-section {
+    display: none;
+  }
+
+  .login-form-section {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .login-glass-card {
+    max-width: 400px;
+    padding: 32px;
+  }
+
+  .card-header .mobile-logo {
+    display: block;
+  }
+
+  .card-header {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-glass-card {
+    padding: 24px;
+    border-radius: 0;
+    height: 100%;
+    max-width: none;
+    background: #fff;
+    backdrop-filter: none;
+  }
+
+  .hero-background {
+    display: none;
+  }
+
+  .login-page-container {
+    background: #fff;
+  }
+}
+
+// Loader
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

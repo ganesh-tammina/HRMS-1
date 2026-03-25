@@ -1,0 +1,26 @@
+.results-header {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.emp-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.emp-title {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+.header-md {
+    // -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    // box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: none !important;
+}

@@ -1,0 +1,124 @@
+<div class="tax-container">
+  <div class="tax-header">
+    <div class="header-left">
+      <h1>Income Tax Computation <ion-icon name="download-outline"></ion-icon></h1>
+      <p>View complete break-up of payments, deductions and declarations. You can analyze how income tax is being calculated and what is the TDS every month.</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-outline">Switch to Declared View</button>
+      <div class="period-selector">
+        APR 2024 - MAR 2025 <ion-icon name="chevron-down-outline"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="important-info">
+    <div class="info-icon">
+      <ion-icon name="bulb-outline"></ion-icon>
+    </div>
+    <div class="info-content">
+      <strong>Important:</strong>
+      <ul>
+        <li>Current income tax calculation is considering APPROVED amounts of Investment Declaration.</li>
+        <li>Your income and tax liability is being computed as per New Tax Regime.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="card" *ngFor="let card of summaryCards">
+      <label>{{card.label}}</label>
+      <div class="value">{{card.value}}</div>
+    </div>
+  </div>
+
+  <!-- A. Gross Earnings from Employment -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-badge">A</span>
+      <span class="section-label">Gross Earnings from Employment</span>
+    </div>
+    
+    <div class="legend">
+      <div class="legend-item"><span class="dot previous"></span> Income from previous employer</div>
+      <div class="legend-item"><span class="dot current"></span> Income from current employer (Internal)</div>
+      <div class="legend-item"><span class="dot projected"></span> Projected salary</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="tax-table">
+        <thead>
+          <tr>
+            <th class="sticky-col">SALARY BREAKUP</th>
+            <th class="total-col">TOTAL</th>
+            <th *ngFor="let month of months">{{month}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of earnings">
+            <td class="sticky-col">{{item.name}}</td>
+            <td class="total-col"><strong>{{item.total | number:'1.0-0'}}</strong></td>
+            <td *ngFor="let val of item.values">{{val | number:'1.0-0'}}</td>
+          </tr>
+          <tr class="total-row">
+            <td class="sticky-col">Total Earnings</td>
+            <td class="total-col"><strong>10,03,368</strong></td>
+            <td *ngFor="let month of months">83,614</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- F. Tax Calculation -->
+  <div class="section mt-4">
+    <div class="section-header">
+      <span class="section-badge">F</span>
+      <span class="section-label">Tax Calculation</span>
+    </div>
+    
+    <div class="table-wrapper mini-table">
+      <table class="tax-table">
+        <thead>
+          <tr>
+            <th>TAXABLE INCOME SLABS</th>
+            <th class="text-right">TAX AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let slab of taxSlabs">
+            <td>{{slab.range}}</td>
+            <td class="text-right">{{slab.amount | number:'1.0-0'}}</td>
+          </tr>
+          <tr class="total-row">
+            <td>Gross Income Tax</td>
+            <td class="text-right">33,388</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- G. Surcharge & Cess -->
+  <div class="section mt-4">
+    <div class="section-header">
+      <span class="section-badge">G</span>
+      <span class="section-label">Surcharge & Cess</span>
+    </div>
+    <div class="table-wrapper mini-table">
+      <table class="tax-table">
+        <tbody>
+          <tr>
+            <td>Health and Education Cess - 4% of Gross Income Tax and Surcharge</td>
+            <td class="text-right">1,336</td>
+          </tr>
+          <tr class="total-row">
+            <td>Total Surcharge & Cess</td>
+            <td class="text-right">1,336</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

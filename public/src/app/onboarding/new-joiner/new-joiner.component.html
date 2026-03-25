@@ -1,0 +1,125 @@
+<ion-header>
+  <!-- <app-header></app-header> -->
+  <app-onboarding-mainheader></app-onboarding-mainheader>
+</ion-header>
+<ion-content class="pre-on-boarding-block" fullscreen>
+  <p class="page-header mb-8"> Org > Onboarding > New Joiners </p>
+  <ion-row class="mt-30 mb-15">
+    <ion-col>
+      <p class="page-sub-header">New Joiners</p>
+      <p>Candidates who are marked as hired and not yet added as employees.</p>
+    </ion-col>
+  </ion-row>
+  <!-- Filters -->
+  <div class="filters">
+    <ion-grid class="filters-grid">
+      <ion-row class="ion-align-items-center">
+        <ion-col class="d-flex ion-align-items-end">
+          <div class="filter-chip">
+            <span>Department</span>
+            <ion-select class="custom-dropdown" formcontrol="department" toggleIcon="chevron-down"
+              expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+              <ion-select-option>HR</ion-select-option>
+              <ion-select-option>Finance</ion-select-option>
+              <ion-select-option>IT Development</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="filter-chip">
+            <span>Location</span>
+            <ion-select class="custom-dropdown" formcontrol="Location" toggleIcon="chevron-down"
+              expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+              <ion-select-option>Visakhapatnam</ion-select-option>
+              <ion-select-option>Hyderabad</ion-select-option>
+              <ion-select-option>Night shift Visakhapatnam</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="filter-chip">
+            <ion-label>Job Title</ion-label>
+            <ion-select class="custom-dropdown" formcontrol="Job Title" toggleIcon="chevron-down"
+              expandedIcon="chevron-up" placeholder="ALL" interface="popover">
+              <ion-select-option>Perminent</ion-select-option>
+              <ion-select-option>Part Time</ion-select-option>
+              <ion-select-option>Contarct</ion-select-option>
+            </ion-select>
+            <!-- <ion-icon color="gray" slot="end" name="chevron-down-outline"></ion-icon> -->
+          </div>
+          <div class="search-wrap">
+            <ion-icon name="search-outline"></ion-icon>
+            <input placeholder="Search" />
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active">Pending <span class="count">0</span></div>
+    <div class="tab">Today <span class="count">1</span></div>
+    <div class="tab">Tomorrow <span class="count">0</span></div>
+    <div class="tab">Day after <span class="count">1</span></div>
+    <div class="tab">Later <span class="count">0</span></div>
+  </div>
+
+  <!-- Table -->
+  <!-- Table Header -->
+  <div class="table">
+    <ion-row class="table-header">
+      <ion-col size="2" class="row-left">
+        <p>NAME & JOB TITLE</p>
+      </ion-col>
+      <ion-col size="2">
+        <p>DEPT. & LOCATION</p>
+      </ion-col>
+      <ion-col size="2">
+        <p>Joining Date</p>
+      </ion-col>
+      <ion-col size="2">
+        <p>TASKS</p>
+      </ion-col>
+      <ion-col size="2">
+        <p>Contact info</p>
+      </ion-col>
+      <ion-col size="2">
+        <p>Actions</p>
+      </ion-col>
+    </ion-row>
+
+    <div class="table-list">
+      <ion-grid *ngFor="let items of candidateList">
+        <ion-row class="table-list-row" *ngIf="candidateList.length !== 0">
+          <ion-col size="3">
+            <div class="cell">
+              <img src="../../../assets/Icons/user-01.svg" width="18">
+              <div class="name-stack">
+                <p class="name-link">{{items.FirstName}} {{items.LastName}}</p>
+                <p class="sub">{{items.JobTitle}}</p>
+              </div>
+            </div>
+
+          </ion-col>
+          <ion-col size="2">
+            {{items.JobTitle}}
+          </ion-col>
+          <ion-col size="2">
+            {{items.Department}} && {{items.JobLocation}}
+          </ion-col>
+          <ion-col size="2">
+            {{items.DOJ}}
+          </ion-col>
+          <ion-col size="2">
+            {{items.PhoneNumber}}
+          </ion-col>
+          <ion-col size="2">
+
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="candidateList.length === 0">
+          <ion-col class="col-12">No records found</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+
+</ion-content>

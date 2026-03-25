@@ -1,0 +1,119 @@
+<ion-content [fullscreen]="true">
+    <div class="payroll-container">
+
+        <!-- Back Navigation -->
+        <div class="back-nav">
+            <a (click)="goBack()" class="back-link">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                Back to Payroll Setup
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h2>Payroll Templates</h2>
+                <p>Manage and configure salary structure templates</p>
+            </div>
+            <button class="primary-btn" (click)="openCreateModal()">
+                Create New Template
+            </button>
+        </div>
+
+        <!-- Templates Table Card -->
+        <div class="components-card">
+            <div class="section-title">Configured Templates</div>
+
+            <div class="component-table-wrapper">
+                <div class="component-table">
+
+                    <!-- Table Head -->
+                    <div class="table-head">
+                        <span>ID</span>
+                        <span>Template Name</span>
+                        <span>Description</span>
+                        <span>Created By</span>
+                        <span>Created At</span>
+                        <span>Actions</span>
+                    </div>
+
+                    <!-- Table Rows -->
+                    <div class="table-row" *ngFor="let temp of templates" (click)="viewComposition(temp.template_id)">
+                        <span>{{ temp.template_id }}</span>
+
+                        <span class="name" style="cursor: pointer; color: #3880ff;">
+                            {{ temp.template_name }}
+                        </span>
+
+                        <span class="description">
+                            {{ temp.description || '-' }}
+                        </span>
+
+                        <span>User #{{ temp.created_by }}</span>
+
+                        <span>
+                            {{ temp.created_at | date:'mediumDate' }}
+                        </span>
+
+                        <span class="actions">
+                            <button class="icon-btn edit" (click)="$event.stopPropagation(); editTemplate(temp)">
+                                <ion-icon name="create-outline"></ion-icon>
+                            </button>
+
+                            <button class="icon-btn delete"
+                                (click)="$event.stopPropagation(); deleteTemplate(temp.template_id || temp.id)">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </button>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Modal Overlay -->
+        <div class="side-modal-overlay" *ngIf="isModalOpen" (click)="isModalOpen = false"></div>
+
+        <!-- Right Side Modal -->
+        <div class="side-modal" [class.open]="isModalOpen">
+            <div class="modal-header">
+                <h3>{{ isEditMode ? 'Edit Template' : 'Create New Template' }}</h3>
+                <ion-icon name="close" class="close-icon" (click)="isModalOpen = false"></ion-icon>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="templateForm" (ngSubmit)="saveTemplate()" class="form-vertical">
+                  <div class="form-continer">
+                      <div class="form-group">
+                        <label>Template Name</label>
+                        <input type="text" formControlName="template_name"
+                            placeholder="e.g. Standard Executive Package" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea formControlName="description" rows="3"
+                            placeholder="Describe this template..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="check">
+                            <input type="checkbox" formControlName="is_active" />
+                            Is Active
+                        </label>
+                    </div>
+                </div>
+                <div class="form-footer">
+                        <button type="submit" class="submit-btn" [disabled]="templateForm.invalid">
+                                {{ isEditMode ? 'Update Template' : 'Save Template' }}
+                            </button>
+                </div>
+                    
+
+                </form>
+            </div>
+        </div>
+
+    </div> <!-- ✅ payroll-container CLOSED properly -->
+
+</ion-content>

@@ -1,0 +1,89 @@
+<div class="calendar-container">
+  <div class="row-space-between">
+    <div class="calendar-header">
+      <button (click)="prevMonth()"><ion-icon name="chevron-back-outline"></ion-icon></button>
+      <span>{{ currentMonth | date: 'MMMM yyyy' }}</span>
+      <button (click)="nextMonth()"><ion-icon name="chevron-forward-outline"></ion-icon></button>
+    </div>
+    <div class="filters">
+      <div class="filter-block">
+        <button class="btn-secondry active">SEP</button>
+        <button class="btn-secondry">OCT</button>
+        <button class="btn-secondry">NOV</button>
+        <button class="btn-secondry">DEC</button>
+        <button class="btn-secondry">JAN</button>
+        <button class="btn-secondry">FEB</button>
+        <button class="btn-secondry">MAR</button>
+      </div>
+    </div>
+  </div>
+  <ion-row class="calendar-details-block">
+    <ion-col class="calendar-grid" size="12" size-sm="12" size-md="9" size-lg="9" size-xl="9">
+      <div class="day-header">
+        <button class="day-header-cell" *ngFor="let day of weekDays">{{ day }}</button>
+      </div>
+      <div class="day-cell-row">
+        <div class="day-cell" *ngFor="let date of calendarDays" (click)="selectDate(date)" [ngClass]="{
+              'highlight-today': isTodayCalendarDay(date), 
+              'weekoffs': date.isOff,
+              'selected': selectedDate === date
+            }">
+          <div class="date">{{ date.day }}</div>
+          <!-- <div class="timing" *ngIf="date.timing">{{ date.timing }}</div> -->
+          <div class="timing" *ngIf="date.isOff">W-OFF</div>
+        </div>
+      </div>
+    </ion-col>
+    <ion-col class="details-container ion-no-padding" size="12" size-sm="12" size-md="3" size-lg="3" size-xl="3">
+      <div class="details-header">
+        <p>Day Shift</p>
+        <p>{{ (selectedDate?.date | date: 'MMM d') || 'Select a date' }} ( {{
+          attendanceDetails?.attendance?.first_check_in | date: 'HH:mm' }} - {{
+          attendanceDetails?.attendance?.last_check_out | date: 'HH:mm' }} )</p>
+      </div>
+      <div class="details-block">
+        <div *ngIf="loadingDetails" class="ion-padding ion-text-center">
+          <ion-spinner></ion-spinner>
+        </div>
+        <div *ngIf="!loadingDetails && !attendanceDetails?.has_attendance" class="ion-padding ion-text-center">
+          <p>No attendance record found</p>
+        </div>
+        <div class="hours-block" *ngIf="!loadingDetails && attendanceDetails?.has_attendance">
+          <div>
+            <p>Gross Hours</p>
+            <p>{{ attendanceDetails?.attendance?.gross_hours | timeFormat }}h</p>
+          </div>
+          <div>
+            <p>Effective Hours</p>
+            <p>{{ attendanceDetails?.attendance?.total_work_hours | timeFormat }}h</p>
+          </div>
+        </div>
+        <ion-content class="logs-block ion-padding" *ngIf="!loadingDetails && attendanceDetails?.has_attendance">
+          <div>
+            <p class="status">
+              <ion-icon
+                [name]="attendanceDetails?.attendance?.status === 'present' ? 'checkmark-outline' : 'alert-circle-outline'"
+                [color]="attendanceDetails?.attendance?.status === 'present' ? 'success' : 'warning'"></ion-icon>
+              {{ getArrivalStatus(attendanceDetails?.attendance) }}
+            </p>
+            <p class="location"><ion-icon name="location"></ion-icon> {{ attendanceDetails?.attendance?.location ||
+              'Office' }}</p>
+          </div>
+          <p class="card-title">Time-Logs</p>
+          <ion-row class="ion-no-padding">
+            <ion-col class="clock-logs" size="12">
+              <div class="d-flex" *ngFor="let punch of attendanceDetails?.punches">
+                <p>
+                  <img
+                    [src]="punch.punch_type === 'in' ? '../../../../assets/Icons/attendance-icons/bx-log-in.svg' : '../../../../assets/Icons/attendance-icons/bx-log-in (1).svg'"
+                    width="18">
+                  {{ punch.punch_time | date: 'HH:mm:ss' }} ({{ punch.punch_type | titlecase }})
+                </p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-content>
+      </div>
+    </ion-col>
+  </ion-row>
+</div>

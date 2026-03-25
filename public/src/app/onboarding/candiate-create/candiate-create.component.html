@@ -1,0 +1,188 @@
+<ion-content class="ion-padding custom-popup ">
+
+  <!-- HEADER -->
+  <div class="modal-header row-space-between">
+    <div>
+      <h2>Add New Candidate</h2>
+      <p class="subtitle">Fill candidate details</p>
+    </div>
+    <ion-button fill="clear" (click)="close()">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <form [formGroup]="candidateForm" (ngSubmit)="submitForm()">
+   <div class="form-continer">
+  <!-- PERSONAL INFO -->
+    <div class="section-card">
+      <div class="section-title">
+        <ion-icon name="person-outline"></ion-icon>
+        Personal Information
+      </div>
+
+      <ion-grid class="info">
+        <ion-row>
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">First Name *</ion-label>
+              <ion-input formControlName="first_name"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">Middle Name</ion-label>
+              <ion-input formControlName="middle_name"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">Last Name *</ion-label>
+              <ion-input formControlName="last_name"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Full Name</ion-label>
+              <ion-input formControlName="full_name" readonly></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Email *</ion-label>
+              <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section-card">
+      <div class="section-title">
+        <ion-icon name="call-outline"></ion-icon>
+        Contact Details
+      </div>
+
+      <ion-grid class="info">
+        <ion-row>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Phone *</ion-label>
+              <ion-input formControlName="phone"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Alternate Phone</ion-label>
+              <ion-input formControlName="alternate_phone"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- JOB DETAILS -->
+    <div class="section-card">
+      <div class="section-title">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        Job Information
+      </div>
+
+      <ion-grid class="info">
+        <ion-row>
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">Gender</ion-label>
+              <ion-select formControlName="gender">
+                <ion-select-option value="Male">Male</ion-select-option>
+                <ion-select-option value="Female">Female</ion-select-option>
+                <ion-select-option value="Other">Other</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">Recruitment Source</ion-label>
+              <ion-select formControlName="recruitment_source">
+                <ion-select-option value="LinkedIn">LinkedIn</ion-select-option>
+                <ion-select-option value="Naukri">Naukri</ion-select-option>
+                <ion-select-option value="Indeed">Indeed</ion-select-option>
+                <ion-select-option value="Referral">Referral</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="stacked">Date of Birth</ion-label>
+              <ion-input id="dob-input" readonly placeholder="Select DOB"
+                [value]="candidateForm.value.date_of_birth | date:'yyyy-MM-dd'">
+              </ion-input>
+
+              <ion-popover trigger="dob-input">
+                <ng-template>
+                  <ion-datetime presentation="date" [max]="maxDOB"
+                    formControlName="date_of_birth">
+                  </ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- MASTERS -->
+    <div class="section-card">
+      <div class="section-title">
+        <ion-icon name="layers-outline"></ion-icon>
+        Organization Details
+      </div>
+
+      <ion-item class="info">
+        <ion-label position="stacked">Designation</ion-label>
+        <ion-select formControlName="designation_id">
+          <ion-select-option *ngFor="let d of designations" [value]="d.id">
+            {{ d.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="info">
+        <ion-label position="stacked">Department</ion-label>
+        <ion-select formControlName="department_id">
+          <ion-select-option *ngFor="let d of departments" [value]="d.id">
+            {{ d.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="info">
+        <ion-label position="stacked">Location</ion-label>
+        <ion-select formControlName="location_id">
+          <ion-select-option *ngFor="let l of locations" [value]="l.id">
+            {{ l.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+   </div>
+
+    <!-- ACTION -->
+ <div class="form-footer row-right">
+     <ion-button  expand="block" class="primary-btn" type="submit" [disabled]="submitting">
+      {{ submitting ? 'Saving...' : 'Save & Continue' }}
+    </ion-button>
+  </div>
+  </form>
+ 
+ 
+</ion-content>

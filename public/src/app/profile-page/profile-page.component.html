@@ -1,0 +1,132 @@
+<ion-header [translucent]="true">
+</ion-header>
+
+<ion-content [fullscreen]="true" class="profile-block">
+  <!-- <div class="profile-header"></div> -->
+  <ion-grid class="welcome-block ion-no-padding">
+    <ion-row class="profile-header"><ion-col></ion-col></ion-row>
+    <ion-row>
+      <ion-col size="4">
+        <div class="img-block">
+          <img class="profilePic" *ngIf="currentEmployee" [attr.alt]="currentEmployee.FullName" [src]="currentEmployee.profile_image
+          ? (env + currentEmployee.profile_image)
+          : 'assets/user.svg'" width="250" height="250" />
+        </div>
+
+      </ion-col>
+
+
+      <ion-col size="8">
+        <div class="content-block">
+          <p class="name">{{currentEmployee.FullName}}</p>
+          <p class="des">{{currentEmployee.designation_name}} (<small>{{currentEmployee.EmployeeNumber}}</small>)</p>
+
+          <div class="info-block">
+            <div class="row-left">
+              <ion-icon name="location"></ion-icon>
+              <p class="pl-5">{{currentEmployee.location_name}}</p>
+            </div>
+            <div class="row-left">
+              <ion-icon name="mail"></ion-icon>
+              <p class="pl-5">{{currentEmployee.WorkEmail}}</p>
+              <!-- <label>Reporting to </label>
+              <p class="pl-5"> {{currentEmployee.manager_first_name}} {{currentEmployee.manager_last_name}}
+              </p> -->
+
+            </div>
+          </div>
+
+        </div>
+        <div class="button-links row-right">
+          <!-- <ion-button fill="clear"><img src="../../assets/Icons/pencil.svg" width="18"> Edit Profile</ion-button> -->
+          <ion-button fill="clear" id="image-trigger"><img src="../../assets/Icons/upload.svg" width="18"> Upload
+            Image</ion-button>
+          <!-- modal popup for image uploader -->
+          <ion-popover trigger="image-trigger" class="image-popup" triggerAction="click">
+            <ng-template>
+              <div class="ion-padding">
+                <p class="popup-title">Upload profile photo</p>
+                <div class="img-border">
+                  <img [attr.alt]="currentEmployee.FirstName"
+                    [src]="previewImageUrl || uploadedImageUrl || '../../assets/user.svg'" width="100" height="100" />
+                  <p *ngIf="previewImageUrl" class="preview-text">Preview</p>
+                </div>
+
+                <label class="file-attach">
+                  <input type="file" accept="image/*" (change)="onFileSelected($event)">
+                  <p>Choose file</p>
+                </label>
+
+                <ion-button (click)="uploadProfilePic()" [disabled]="!selectedFile || isUploading"
+                  class="primary-btn row-right" type="submit">
+                  {{ isUploading ? 'Uploading...' : 'Upload Profile Pic' }}
+                </ion-button>
+              </div>
+            </ng-template>
+          </ion-popover>
+          <!-- <ion-button fill="clear"><img src="../../assets/Icons/password.svg" width="18"> Reset Password</ion-button> -->
+        </div>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+  <ion-grid class="tab-block">
+    <ion-row>
+
+
+      <ion-col size="12">
+        <!-- Tabs started -->
+
+        <ion-tabs class="custom-underline-tabs">
+          <ion-tab-bar slot="top">
+            <ion-tab-button class="row-center" tab="about">
+              <!-- <ion-icon name="home"></ion-icon> -->
+              <p>ABOUT</p>
+            </ion-tab-button>
+            <ion-tab-button class="row-center" tab="profile">
+              <!-- <ion-icon name="person-circle"></ion-icon> -->
+              <p>PROFILE</p>
+            </ion-tab-button>
+            <ion-tab-button class="row-center" tab="job">
+              <!-- <ion-icon name="bag-handle"></ion-icon> -->
+              <p>JOB</p>
+            </ion-tab-button>
+            <!-- <ion-tab-button class="row-center" tab="time"> -->
+              <!-- <ion-icon name="time"></ion-icon> -->
+              <!-- <p>Time</p>
+            </ion-tab-button> -->
+            <ion-tab-button class="row-center" tab="documents">
+              <!-- <ion-icon name="document-attach"></ion-icon> -->
+              <p>Documents</p>
+            </ion-tab-button>
+            <ion-tab-button class="row-center" tab="assets">
+              <!-- <ion-icon name="library"></ion-icon> -->
+              <p> Assets</p>
+            </ion-tab-button>
+          </ion-tab-bar>
+          <ion-tab tab="about">
+            <app-aboutus [currentEmployee]="currentEmployee"></app-aboutus>
+          </ion-tab>
+          <ion-tab tab="profile">
+            <app-profile [currentEmployee]="currentEmployee"></app-profile>
+          </ion-tab>
+          <ion-tab tab="job">
+            <app-job-tab [currentEmployee]="currentEmployee"></app-job-tab>
+          </ion-tab>
+          <!-- <ion-tab tab="time">
+            <app-leave-requests></app-leave-requests>
+          </ion-tab> -->
+          <ion-tab tab="documents">
+            <!-- <app-document-tab [currentemp]="currentemp"></app-document-tab> -->
+          </ion-tab>
+          <ion-tab tab="assets">
+            <!-- <app-assets-tab [currentemp]="currentemp"></app-assets-tab> -->
+          </ion-tab>
+        </ion-tabs>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

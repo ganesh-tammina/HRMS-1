@@ -1,28 +1,34 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { RouteReuseStrategy, provideRouter } from '@angular/router';
+import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules, withInMemoryScrolling } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { environment } from './environments/environment';
-import { authInterceptor } from './app/core/interceptors/auth.interceptor';
+import { addIcons } from 'ionicons';
+import * as allIcons from 'ionicons/icons';
 
-// Import services to ensure they're compiled
-import { BirthdaysService } from './app/core/services/birthdays.service';
-import { NotificationsService } from './app/core/services/notifications.service';
-import { ReportsService } from './app/core/services/reports.service';
+import { QuillModule } from 'ngx-quill';
+import { importProvidersFrom } from '@angular/core';
+import { employeeInterceptor } from './app/services/employee-interceptor.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
-if (environment.production) {
-  enableProdMode();
-}
+addIcons(allIcons);
 
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideIonicAngular({
+      mode: 'md'
+    }),
+    provideHttpClient(
+      withInterceptors([employeeInterceptor]),
+    ),
+    provideAnimations(),
+    provideRouter(routes, withPreloading(PreloadAllModules), 
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
+    ),
+    importProvidersFrom(QuillModule.forRoot()),
+    provideCharts(withDefaultRegisterables())
   ],
 });

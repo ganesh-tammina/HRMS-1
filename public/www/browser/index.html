@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ✅ CRITICAL: Run print-media fix IMMEDIATELY before any stylesheets load -->
+  <script>
+    // IMMEDIATE: Force visibility on document elements
+    document.documentElement.style.opacity = '1';
+    document.documentElement.style.visibility = 'visible';
+    document.documentElement.style.display = 'block';
+    
+    // Suppress known Ionic popover warnings related to deferred DOM rendering
+    window.ionicWarningHandler = function(message) {
+      return;
+    };
+    
+    // Override console methods to suppress specific warnings
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      const message = args[0]?.toString?.() || '';
+      // Suppress popover trigger warnings - we handle these with *ngIf
+      if (message.includes('ion-popover') && message.includes('trigger element')) {
+        return;
+      }
+      return originalWarn.apply(console, args);
+    };
+    
+    // Intercept and fix print media stylesheets BEFORE they're processed
+    (function() {
+      const originalCreateElement = document.createElement.bind(document);
+      document.createElement = function(tagName) {
+        const element = originalCreateElement(tagName);
+        if (tagName.toLowerCase() === 'link') {
+          const originalSetAttribute = element.setAttribute.bind(element);
+          element.setAttribute = function(name, value) {
+            // Convert print media to all immediately
+            if (name === 'media' && value === 'print') {
+              return originalSetAttribute.call(this, name, 'all');
+            }
+            // Ensure rel and href are set properly
+            if (name === 'rel' && value.includes('stylesheet')) {
+              // Force immediate load, don't lazy load
+              element.removeAttribute('noprefetch');
+            }
+            return originalSetAttribute.call(this, name, value);
+          };
+        }
+        return element;
+      };
+      
+      // Also intercept onload/readyState to ensure styles apply immediately
+      const originalCreateElementOriginal = originalCreateElement;
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && node.tagName === 'LINK') {
+              if (node.media === 'print') {
+                node.media = 'all';
+              }
+            }
+          });
+        });
+      });
+      
+      // Start observing for new link tags
+      observer.observe(document.head, {
+        childList: true,
+        subtree: true
+      });
+    })();
+  </script>
+
+  <meta charset="utf-8"/>
+  <title>Tammina</title>
+
+  <base href="/"/>
+
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="msapplication-tap-highlight" content="no"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="https://www.techtammina.com/wp-content/themes/shounder/favicon.ico"/>
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+  <!-- add to homescreen for ios -->
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>  
+  <!-- ✅ MINIMAL VISIBILITY FIX: Only force visibility, let Ionic handle layout -->
+  <style>
+    /* MINIMAL: Only ensure visibility, don't override Ionic's layout */
+    html, body {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    app-root {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block;
+    }
+    
+    /* Override Ionic's page hiding during transitions */
+    .ion-page-invisible {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+  </style>  
+  <!-- ✅ FIX: Force immediate CSS loading (override Angular's print media optimization) -->
+  <script>
+    // Force all stylesheets with media="print" to load as "all" immediately
+    function fixPrintMediaStylesheets() {
+      const stylesheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
+      stylesheets.forEach(link => {
+        link.media = 'all';
+        link.onload = null;
+      });
+    }
+    
+    // Run immediately on page load
+    window.addEventListener('DOMContentLoaded', fixPrintMediaStylesheets, { once: true });
+    
+    // Also run on document interactive
+    if (document.readyState === 'loading') {
+      document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'interactive') {
+          fixPrintMediaStylesheets();
+        }
+      }, { once: true });
+    }
+    
+    // Watch for dynamically added stylesheets
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.tagName === 'LINK' && node.media === 'print') {
+              node.media = 'all';
+            }
+          });
+        }
+      });
+    });
+    
+    observer.observe(document.head, { childList: true, subtree: true });
+  </script>
+<link rel="stylesheet" href="styles-LFVXS2B3.css"></head>
+
+<body>
+  <app-root></app-root>
+  
+  <!-- ✅ MINIMAL FAILSAFE: Only remove visibility-blocking classes and media="print" -->
+  <script>
+    // Monitor to remove Ionic's visibility-blocking class only (don't force other styles)
+    (function monitorVisibility() {
+      // Only fix what breaks visibility, not layout
+      const removeInvisibilityClass = () => {
+        document.querySelectorAll('.ion-page-invisible').forEach((el) => {
+          el.classList.remove('ion-page-invisible');
+        });
+      };
+      
+      // Fix media="print" stylesheets
+      const fixPrintMedia = () => {
+        document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+          if (link.media === 'print') {
+            link.media = 'all';
+          }
+        });
+      };
+      
+      // Run immediately
+      removeInvisibilityClass();
+      fixPrintMedia();
+      
+      // Monitor for changes (for edge cases)
+      const observer = new MutationObserver(() => {
+        removeInvisibilityClass();
+        fixPrintMedia();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'media']
+      });
+      
+      // Stop monitoring after Angular bootstraps
+      setTimeout(() => observer.disconnect(), 2000);
+    })();
+  </script>
+<link rel="modulepreload" href="chunk-REV7FFDQ.js"><link rel="modulepreload" href="chunk-NHVKK37O.js"><link rel="modulepreload" href="chunk-PAGXE5F4.js"><link rel="modulepreload" href="chunk-QUJFQN2Y.js"><link rel="modulepreload" href="chunk-BJRNMJT7.js"><link rel="modulepreload" href="chunk-H3TRNUDP.js"><link rel="modulepreload" href="chunk-MBJ4HXMZ.js"><link rel="modulepreload" href="chunk-2LIQ2TF2.js"><link rel="modulepreload" href="chunk-MZPOKBGF.js"><link rel="modulepreload" href="chunk-Y5KMWVCG.js"><script src="polyfills-6BIPK22E.js" type="module"></script><script src="main-WZ65763A.js" type="module"></script></body>
+
+</html>

@@ -1,0 +1,109 @@
+<ion-header translucent="true">
+    <app-create-offer-header (continueClick)="sendpreview()"></app-create-offer-header>
+  </ion-header>
+  
+  <ion-content [fullscreen]="true" class="offer-container ion-padding">
+  
+    <ion-button fill="clear" class="back-btn">
+      <ion-icon name="chevron-back-outline"></ion-icon>Back
+    </ion-button>
+  
+    <h1 class="ion-padding">Offer Details</h1>
+  
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+  
+          <!-- Template Selection -->
+          <ion-card *ngIf="selectedOption === 'template'" class="dropdown-section">
+            <div>
+              <ion-label>Select offer letter template</ion-label>
+              <ion-select
+                class="custom-dropdown"
+                toggleIcon="chevron-down"
+                expandedIcon="chevron-up"
+                [value]="selectedTemplate"
+                (ionChange)="onTemplateChange($event)"
+                interface="popover">
+                <ion-select-option value="SVS">SVS Towers</ion-select-option>
+                <ion-select-option value="TechTammina">Tech Tammina</ion-select-option>
+              </ion-select>
+            </div>
+          </ion-card>
+  
+          <!-- Radio options -->
+          <ion-card>
+            <ion-list>
+              <h3 class="pb-8">Template Options</h3>
+              <ion-radio-group [value]="selectedOption" (ionChange)="onOptionChange($event)">
+                <ion-radio value="template" labelPlacement="end">
+                  <div class="row-space-between">
+                    <div>
+                      <p>Default Template</p>
+                      <p>Standard Offer letter Format</p>
+                    </div>
+                    <ion-img src="../../../assets/document.svg" width="18"></ion-img>
+                  </div>
+                </ion-radio>
+                <ion-radio value="custom" labelPlacement="end">
+                  <div class="row-space-between">
+                    <div>
+                      <p>Custom Template</p>
+                      <p>Upload custom offer letter</p>
+                    </div>
+                    <ion-img src="../../../assets/pen.svg" width="18"></ion-img>
+                  </div>
+                </ion-radio>
+              </ion-radio-group>
+            </ion-list>
+          </ion-card>
+  
+          <!-- File Upload -->
+          <ion-card *ngIf="selectedOption === 'custom'">
+            <div class="upload-section">
+              <h3 class="pb-8">Upload Offer Letter</h3>
+              <input type="file" class="ion-padding" (change)="onFileUpload($event)" />
+              <p *ngIf="uploadedFileName">Uploaded: {{ uploadedFileName }}</p>
+            </div>
+          </ion-card>
+  
+          <!-- Workflow Info -->
+          <ion-card>
+            <div class="workflow">
+              <h3>Offer letter Workflow</h3>
+              <p class="p-8">Workflow is not required</p>
+            </div>
+          </ion-card>
+  
+        </ion-col>
+  
+        <!-- Preview & Editor -->
+        <ion-col size="8">
+          <ion-card class="template-preview card">
+            <div class="offer-header row-space-between">
+              <p>Offer Letter</p>
+              <ion-img (click)="hideShow()" src="../../assets/pen.svg"></ion-img>
+            </div>
+  
+            <h2 class="company-logo">
+              <ion-img src="../../../assets/tammina-blue-logo.svg"></ion-img>
+            </h2>
+  
+            <!-- Preview -->
+            <div *ngIf="!viewEditor" class="template-text" [innerHTML]="editorControl.value"></div>
+  
+            <!-- Editor -->
+            <div class="editor-container" *ngIf="viewEditor">
+              <quill-editor
+                [formControl]="editorControl"
+                [modules]="modules"
+                placeholder="Write something awesome...">
+              </quill-editor>
+            </div>
+  
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+  

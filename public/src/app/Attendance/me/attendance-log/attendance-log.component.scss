@@ -1,0 +1,262 @@
+@import '../../../../global.scss';
+// attendance-log
+ 
+  //table start
+    .attendance-table {
+      background-color: #fff;
+      padding: 0;
+      margin-top: 15px;
+      border-radius: 6px;
+   
+      .table-header {
+        @include normal-text-unbold();
+        padding: 0 12px;
+        height: 52px;
+        display: flex;
+          align-items: center;
+      }
+   
+      .table-row {
+        @include normal-text-unbold();
+        padding: 0 12px;
+        height: 50px;
+        ion-col {
+          padding-right: 24px;
+          display: flex;
+          align-items: center;
+          @include normal-text-unbold();
+          height: 50px;
+        }
+        ion-icon {
+          font-size: 18px;
+          margin-right: 5px;
+        }
+        ion-progress-bar {
+          height: 10px;
+          width: 80%;
+          border-radius: 6px;
+          --background: #E4E4E4;
+          --progress-background: #3498db;
+        }
+        &.weekoff-row {
+          background: #f0f0f0;
+          ion-col {
+            color: #000000;
+          }
+        }
+        &.leave-row {
+          background: #f0f0f0;
+          ion-col {
+            color: #ABABAB;
+          }
+        }
+      }
+    }
+ 
+ 
+  .custom-link {
+    @include normal-text();
+    text-transform: capitalize;
+  }
+ 
+  .popover-content {
+    padding: 15px;
+    p{
+      @include body-text();
+    }
+    .clock-logs {
+      // display: flex;
+      width: 100%;
+      p{
+        @include body-text();
+        float: left;
+      }
+      img {
+        padding-right: 5px;
+      }
+    }
+   
+  }
+ 
+  /* Hide scrollbar in popover */
+  ion-popover {
+    ion-content {
+      --overflow: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+     
+      &::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+      }
+    }
+   
+    .popover-content {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+     
+      &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+      }
+    }
+  }
+ 
+.popover-content {
+  max-height: 70vh;     /* Important */
+  overflow-y: auto;     /* Enable scrolling */
+  padding: 15px;
+}
+ 
+.card-title{
+    margin: 0 20px;
+}
+.clockin-out{
+  p{
+    font-weight: bold;
+  }
+  h4{
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 11px;
+    padding: 10px 45px;
+    border: 1px solid #cccc;
+  }
+  .clockin-img{
+    display: flex;
+    ion-img {
+      width: 20px;
+      position: relative;
+      left: 10px;
+      border-radius: 20px;
+      padding: 4px;
+      height: 25px;
+      margin-top: 7px;
+      background: #D1FAE5;
+    }
+  }
+    .clockout-img{
+    display: flex;
+    ion-img {
+      width: 23px;
+      position: relative;
+      left: 10px;
+      border-radius: 20px;
+      padding: 4px;
+      height: 25px;
+      margin-top: 7px;
+      background: #FFEBD2;
+    }
+  }
+}
+.on-office{
+  div{
+   display: flex;
+   align-items: center;
+   gap: 10px;
+  }
+  h2{
+    margin: 0; border-radius:20px; border: 1px solid #1F74BB; padding: 5px 15px; color: #1F74BB; font-size: 15px;
+                    font-weight: bold;
+  }
+}
+.clock-flex{
+border-radius: 12px;
+padding: 0;
+margin-bottom: 0;
+h2{
+  margin: 0;
+  border-radius:20px;
+  border: 1px solid #1F74BB;
+  padding: 5px 15px;
+  color: #1F74BB;
+  font-size: 15px;
+  font-weight: bold;
+  background: #E6F4FF;
+ 
+}
+}
+.no-log {
+  align-items: center;
+  p {
+    width: 100%;
+    text-align: center;
+    // background: #e4e4e4;
+    padding: 8px 0px;
+    border-radius: 8px;
+  }
+}
+ 
+/* ==========================================================================
+   Keka-style Monthly Filter (Scoped)
+   ========================================================================== */
+.filters {
+  display: flex;
+  align-items: center;
+ 
+  .filter-block {
+    display: flex;
+    background: #F1F5F9; /* Light slate background */
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+    border: 1px solid #E2E8F0;
+ 
+    .btn-secondry {
+      padding: 6px 14px;
+      background: transparent;
+      border: none !important;
+      color: #64748B;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      margin: 0;
+      box-shadow: none !important;
+ 
+      &.active {
+        background: #1F74BB !important;
+        color: #fff !important;
+        box-shadow: 0 1px 3px rgba(31, 116, 187, 0.3) !important;
+      }
+ 
+      &:hover:not(.active) {
+        background: rgba(31, 116, 187, 0.05);
+        color: #1F74BB;
+      }
+    }
+  }
+ 
+  .outline-btns {
+    margin-left: 12px;
+    display: flex;
+    gap: 8px;
+ 
+    .btn-secondry {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      color: #64748B;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 0;
+ 
+      ion-icon {
+        font-size: 18px;
+      }
+ 
+      &.active {
+        background: #F1F5F9;
+        color: #1F74BB;
+        border-color: #CBD5E0;
+      }
+    }
+  }
+}

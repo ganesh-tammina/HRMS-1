@@ -1,0 +1,219 @@
+<ion-content class="ion-padding client-form">
+
+  <h2 class="title">🗓️ Client Time Sheet</h2>
+
+  <form [formGroup]="sheetForm" class="form-container">
+    <div class="scroll-container">
+    <!-- BASIC DETAILS -->
+    <div class="section-card">
+      <h3 class="section-title">Consultant Details</h3>
+     <ion-row>
+       <ion-col size="6">
+          
+              <ion-input formControlName="time_sheet_month" label="Time Sheet Month" 
+              label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+          
+       </ion-col>
+       <ion-col size="6">
+          
+              <ion-input formControlName="project_name" label="Project Name" 
+              label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>        
+        
+        </ion-col>
+        <ion-col size="6">
+            
+                <ion-input formControlName="consultant_name" label="Consultant Name" 
+                label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>  
+          
+          </ion-col>
+          <ion-col size="6">
+              
+                  <ion-input formControlName="consultant_temp_id" label="Consultant Temp ID" 
+                  label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>         
+            
+            </ion-col>
+            <ion-col size="6">
+                
+                    <ion-input formControlName="manager_name" label="Manager Name" 
+                    label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+              
+              </ion-col>
+              <ion-col size="6">
+                  
+                      <ion-input formControlName="business_unit" label="Business Unit" 
+                      label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+                
+                </ion-col>
+                <ion-col size="6">
+                    
+                        <ion-input formControlName="location" label="Location" 
+                        label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+                  
+                  </ion-col>     
+                  <ion-col size="6">                      
+                          <ion-input formControlName="start_date_of_consultant"
+                          label-placement="floating" fill="outline" label="Select Date" 
+                            placeholder="Select Date"
+                            [value]="formattedDate"
+                            readonly
+                            (click)="openDatePicker()">
+                          </ion-input>                      
+                        
+                    <!-- Hidden datetime trigger -->
+                    <!-- <ion-datetime-button datetime="dtPicker"></ion-datetime-button> -->
+                    
+                    <ion-modal #dateModal [keepContentsMounted]="true" class="date-modal">
+                      <ng-template>
+                        <ion-datetime
+                          id="dtPicker"
+                          (ionChange)="dateChanged($event)"
+                          presentation="date"
+                        ></ion-datetime>
+                      </ng-template>
+                    </ion-modal>
+                </ion-col>       
+     </ion-row>
+    
+
+    </div>
+
+    <!-- DAYS GRID -->
+    <div class="section-card">
+      <h3 class="section-title">📅 Daily Status (1 - 31)</h3>
+
+      <div class="days-grid">
+        <div class="day-box" *ngFor="let d of daysArray">
+          <label class="day-label">Day {{ d }}</label>
+
+          <ion-select formControlName="day{{d}}" interface="popover" toggleIcon="chevron-down"
+          expandedIcon="chevron-up">
+            <ion-select-option value="P">Present</ion-select-option>
+            <ion-select-option value="V">Weekend</ion-select-option>
+            <ion-select-option value="L">Leave</ion-select-option>
+            <ion-select-option value="C">Comp Off</ion-select-option>
+            <ion-select-option value="H">Holiday</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="section-card">
+      <h3 class="section-title">📊 Summary</h3>
+
+      <div class="summary-grid">
+
+        <div class="summary-box">
+          <label>Worked</label>
+          <ion-input formControlName="days_worked" readonly></ion-input>
+        </div>
+
+        <div class="summary-box">
+          <label>Leaves</label>
+          <ion-input formControlName="leaves" readonly></ion-input>
+        </div>
+
+        <div class="summary-box">
+          <label>Comp Offs</label>
+          <ion-input formControlName="comp_offs" readonly></ion-input>
+        </div>
+
+        <div class="summary-box">
+          <label>Holidays</label>
+          <ion-input formControlName="holidays" readonly></ion-input>
+        </div>
+
+        <div class="summary-box">
+          <label>Weekends</label>
+          <ion-input formControlName="weekends" readonly></ion-input>
+        </div>
+
+      </div>  
+    </div>
+    <ion-row>
+        <ion-col size="6">                  
+            <ion-input formControlName="total_pay" label="Total Pay" type="number"
+            label-placement="floating" fill="outline" placeholder="Enter Number"></ion-input>      
+      </ion-col>
+      <ion-col size="6">       
+          <ion-textarea formControlName="remarks" label="Remarks" 
+          label-placement="floating" fill="outline" placeholder="Enter text"></ion-textarea>             
+        </ion-col> 
+     </ion-row> 
+    <!-- SIGNATURE SECTION -->
+    <div class="section-card">
+      <h3 class="section-title">✍️ Signatures</h3>
+      <ion-row>
+          <ion-col size="6">
+                    
+              <ion-input formControlName="consultant_signature" label="Consultant Signature" 
+              label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+        
+        </ion-col>     
+        <ion-col size="6">                      
+                <ion-input formControlName="consultant_sign_date"
+                label-placement="floating" fill="outline" label="Consultant Sign Date" 
+                  placeholder="Select Date"
+                  [value]="formattedDate2"
+                  readonly
+                  (click)="openDatePicker2()">
+                </ion-input>                      
+              
+          <!-- Hidden datetime trigger -->
+          <!-- <ion-datetime-button datetime="dtPicker"></ion-datetime-button> -->
+          
+          <ion-modal #dateModal2 [keepContentsMounted]="true" class="date-modal">
+            <ng-template>
+              <ion-datetime
+                id="dtPicker"
+                (ionChange)="dateChanged2($event)"
+                presentation="date"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+          </ion-col>
+          <ion-col size="6">
+                    
+              <ion-input formControlName="manager_signature" label="Manager Signature" 
+              label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
+        
+        </ion-col>     
+        <ion-col size="6">                      
+                <ion-input formControlName="manager_sign_date"
+                label-placement="floating" fill="outline" label="Manager Sign Date" 
+                  placeholder="Select Date"
+                  [value]="formattedDate1"
+                  readonly
+                  (click)="openDatePicker1()">
+                </ion-input>                      
+              
+          <!-- Hidden datetime trigger -->
+          <!-- <ion-datetime-button datetime="dtPicker"></ion-datetime-button> -->
+          
+          <ion-modal #dateModal1 [keepContentsMounted]="true" class="date-modal">
+            <ng-template>
+              <ion-datetime
+                id="dtPicker"
+                (ionChange)="dateChanged1($event)"
+                presentation="date"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+          </ion-col>
+      </ion-row>
+    </div>
+  </div>
+    <!-- BUTTONS -->
+    <div class="row-right border-top">
+      <ion-button class="primary-rounded-btn" (click)="submit()" [disabled]="sheetForm.invalid">
+        Submit
+      </ion-button>
+
+      <ion-button class="danger-btn" (click)="close()">
+        Cancel
+      </ion-button>
+    </div>
+
+  </form>
+
+</ion-content>

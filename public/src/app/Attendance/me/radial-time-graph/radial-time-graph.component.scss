@@ -1,0 +1,20 @@
+.radial-clock {
+  width: 130px;
+  height: 130px;
+  position: relative;
+
+  .time-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+}

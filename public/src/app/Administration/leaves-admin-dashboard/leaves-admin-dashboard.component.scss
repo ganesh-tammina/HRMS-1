@@ -1,0 +1,70 @@
+ion-content{
+p{
+    margin-top: 0;  
+    margin-bottom: 5px;
+}
+}
+.page-title{
+    color: #333333;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    margin-left: 15px;
+}
+.sub-text{
+    color: #707070;
+    margin: 0px 15px;
+}
+.leaves-config{
+    h2{
+        margin: 0 15px;
+    }
+        margin-top: 15px;
+}
+.summary-card{
+    background: #122E44;
+    margin: 0;
+    border-radius: 12px;
+    height: 95px;
+    margin-top: 8px;
+    ion-card-title{
+        font-size: 30px;
+        color: #fff;
+        font-weight: 550;
+        margin-top: -5px;
+    }
+    ion-card-subtitle{
+        color: #fff;
+        font-size: 14px;
+    }
+    .txt-img{
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.leave-cards{
+    ion-col{
+        padding:0px 10px 0px 10px;
+    }
+}
+.calendar-img {
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
+}
+.leavedata{
+    border-radius: 10px;
+    margin: 15px 5px;
+    .leave-head{
+        ion-card-title{
+            font-weight: bold;
+        }
+        padding:0;
+        display: flex;
+        justify-content: space-between;
+    }
+    p{
+        margin-top: -10px;
+    }
+}
+

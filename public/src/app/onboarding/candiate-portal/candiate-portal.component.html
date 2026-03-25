@@ -1,0 +1,36 @@
+<ion-segment>
+  <ion-segment-button value="first" content-id="first">
+    <ion-label>Home</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="second" content-id="second">
+    <ion-label>Offer</ion-label>
+  </ion-segment-button>
+</ion-segment>
+<ion-segment-view>
+  <ion-segment-content id="first">
+     <div class="header-container">
+    <img src="../../../assets/techtammina.webp" alt="Tech Tammina Logo" class="company-logo" />
+    <div class="candidate-info">
+      <div class="avatar">N</div>
+      <div class="candidate-name">Name of candidate</div>
+    </div>
+  </div>
+  <ion-card class="welcome-card">
+    <ion-card-content>
+      <h1 class="welcome-title">
+        Welcome, <span class="highlight">Candidate_Name!</span>
+      </h1>
+      <p class="message-text">
+        It was great interacting with you as part of our interview process.
+        We are quite excited about the possibilities of working together.
+        Just a few steps remain to get you onboard!
+      </p>
+      <p class="regards-text">
+        Regards,<br />
+        HR
+      </p>
+    </ion-card-content>
+  </ion-card>
+  </ion-segment-content>
+  <ion-segment-content id="second">Second</ion-segment-content>
+</ion-segment-view>

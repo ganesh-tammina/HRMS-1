@@ -1,0 +1,216 @@
+<ion-content class="page-containerOn project-wrapper ion-padding">
+    <p class="page-header mb-8">
+        <a routerLink="/admin" (click)="adminManagement()">Admin Management /</a>
+        Projects
+       </p>
+     
+  <!-- ======= TOP BAR ======= -->
+  <div class="top-bar">
+    <div>
+      <h1>Projects</h1>
+      <p>Track and manage organizational projects</p>
+    </div>
+
+    <ion-button shape="round" color="primary" (click)="openCreateForm()">
+      <ion-icon name="add" slot="start"></ion-icon>
+      New Project
+    </ion-button>
+  </div>
+
+  <!-- ======= CREATE PROJECT MODAL ======= -->
+  <ion-modal [isOpen]="showCreateForm" cssClass="create-project-modal side-custom-popup" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ isEditMode ? 'Edit Project' : 'Create Project' }}</ion-title>
+
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="cancelCreate()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding form-block ">
+        <form [formGroup]="projectForm" (ngSubmit)="submit()">
+
+          <div lines="none" class="form-grid form-continer">
+            <div>
+              <label>Project Code</label>
+              <ion-input formControlName="project_code"></ion-input>
+            </div>
+
+            <div>
+              <ion-label>Project Name</ion-label>
+              <ion-input formControlName="project_name"></ion-input>
+            </div>
+
+            <div>
+              <ion-label>Client Name</ion-label>
+              <ion-input formControlName="client_name"></ion-input>
+            </div>
+            <div class="row-left pr-15">
+              <div>
+                <ion-label>Start Date</ion-label>
+                <ion-input type="date" formControlName="start_date"></ion-input>
+              </div>
+
+              <div>
+                <ion-label>End Date</ion-label>
+                <ion-input type="date" formControlName="end_date"></ion-input>
+              </div>
+            </div>
+
+
+            <div>
+              <ion-label>Status</ion-label>
+              <ion-select formControlName="status" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                <ion-select-option value="active">Active</ion-select-option>
+                <ion-select-option value="on_hold">On Hold</ion-select-option>
+                <ion-select-option value="completed">Completed</ion-select-option>
+                <ion-select-option value="cancelled">Cancelled</ion-select-option>
+              </ion-select>
+            </div>
+
+            <div>
+              <ion-label>Project Manager</ion-label>
+              <div style="position: relative;">
+                <ion-input [(ngModel)]="managerSearchTerm" [ngModelOptions]="{standalone: true}"
+                  (ionInput)="onManagerSearch($event)" placeholder="Search by name, employee number, or email"
+                  [clearInput]="true"></ion-input>
+
+                <!-- Selected Manager Display -->
+                  <!-- <div *ngIf="selectedManager"> -->
+                <!-- <div *ngIf="selectedManager"
+                  style="display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 8px; background: #e8f5e9; border-radius: 4px;">
+                  <ion-icon name="person-circle-outline" style="font-size: 24px; color: #4caf50;"></ion-icon>
+                  <div style="flex: 1;">
+                    <strong>{{ selectedManager.FirstName }} {{ selectedManager.LastName }}</strong>
+                    <small style="display: block; color: #666;">{{ selectedManager.EmployeeNumber }} • {{
+                      selectedManager.WorkEmail }}</small>
+                  </div>
+                  <ion-button fill="clear" size="small" (click)="clearManagerSelection()">
+                    <ion-icon name="close-circle" slot="icon-only" color="danger"></ion-icon>
+                  </ion-button>
+                </div> -->
+
+                <!-- Dropdown Results -->
+                <div class="projectmanager" *ngIf="filteredManagers.length > 0">
+                  <ion-list lines="full">
+                    <ion-item button *ngFor="let emp of filteredManagers" (click)="selectManager(emp)">
+                      <ion-icon name="person-circle-outline" slot="start" color="primary"></ion-icon>
+                      <ion-label>
+                        <h4>{{ emp.FirstName }} {{ emp.LastName }}</h4>
+                        <p>{{ emp.EmployeeNumber }} • {{ emp.WorkEmail }}</p>
+                      </ion-label>
+                    </ion-item>
+                  </ion-list>
+                </div>
+              </div>
+            </div>
+
+            <div class="full">
+              <ion-label>Description</ion-label>
+              <ion-textarea rows="3" formControlName="description"></ion-textarea>
+            </div>
+          </div>
+
+          <div class="row-right form-footer">
+            <ion-button class="primary-outline-btn" (click)="cancelCreate()">
+              Cancel
+            </ion-button>
+
+            <ion-button type="submit" class="primary-btn" [disabled]="submitting">
+              {{ submitting ? (isEditMode ? 'Updating…' : 'Creating…') : (isEditMode ? 'Update Project' : 'Create
+              Project') }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- ======= PROJECT LIST ======= -->
+
+<div class="table-list-block">
+   <!-- ================= FILTER BAR ================= -->
+    <ion-grid class="filter-card">
+        <ion-row class="row-left">
+          <ion-col  size="12" size-md="4">
+              <p class="title">Project List <small>{{ projects.length }}</small></p>
+          </ion-col>
+           
+          <ion-col size="12" size-md="4">
+            <ion-searchbar placeholder="Search by name, email, employee ID" >
+            </ion-searchbar>
+          </ion-col>
+    
+          <ion-col size="12" size-md="4" class="row-right pr-15">
+            <ion-select  placeholder="Filter by role"
+              toggleIcon="chevron-down" expandedIcon="chevron-up" interface="popover">
+              <ion-select-option value="all">All Roles</ion-select-option>
+              <ion-select-option value="employee">Employee</ion-select-option>
+              <ion-select-option value="hr">HR</ion-select-option>
+              <ion-select-option value="manager">Manager</ion-select-option>
+              <ion-select-option value="admin">Admin</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-spinner *ngIf="loadingProjects"></ion-spinner>
+          
+          <ion-grid class="table-block" *ngIf="!loadingProjects && projects.length">
+            <ion-row class="table-header">
+              <ion-col size="2.5">
+                <p>Project</p>
+              </ion-col>
+              <ion-col size="2.5">
+                <p>Client</p>
+              </ion-col>
+              <ion-col size="2">
+                <p>Status</p>
+              </ion-col>
+              <ion-col size="3">
+                <p>Duration</p>
+              </ion-col>
+              <ion-col size="2">
+                <p>Actions</p>
+              </ion-col>
+            </ion-row>
+    
+            <ion-row class="table-row-list" *ngFor="let project of projects">
+              <ion-col size="2.5" (click)="navigateToDetails(project)" style="cursor: pointer;">
+                <p> {{ project.project_name }}
+                  (<small>({{ project.project_code }})</small>)</p>
+    
+              </ion-col>
+    
+              <ion-col size="2.5" (click)="navigateToDetails(project)" style="cursor: pointer;">
+                <p>{{ project.client_name }}</p>
+              </ion-col>
+    
+              <ion-col size="2" class="status" (click)="navigateToDetails(project)" style="cursor: pointer;">
+                <p [ngClass]="project.status.toLowerCase()">
+                  {{ project.status }}</p>
+              </ion-col>
+    
+              <ion-col size="3" (click)="navigateToDetails(project)" style="cursor: pointer;">
+                <p>{{ project.start_date | date }} - {{ project.end_date | date }}</p>
+              </ion-col>
+    
+              <ion-col size="2">
+                <ion-button fill="clear" size="small" (click)="openEditForm(project)">
+                  <ion-img src="../../../../assets/Icons/pencil.svg"></ion-img>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+    
+          <p *ngIf="!loadingProjects && !projects.length" class="empty">
+            No projects created yet.
+          </p>
+</div>
+ 
+
+</ion-content>

@@ -1,0 +1,301 @@
+<!-- Beautiful Loading Overlay (outside ion-content for proper z-index) -->
+<div class="upload-loading-overlay" *ngIf="isUploading">
+  <div class="loading-content">
+    <div class="spinner-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+    <h2>Uploading Employees</h2>
+    <p>Please wait while we process your file...</p>
+    <div class="progress-dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</div>
+<ion-content [fullscreen]="true" class="admin-dashboard ion-padding">
+
+  <p class="page-header mb-8">
+    <a routerLink="/admin" (click)="adminManagement()">Admin Management /</a>
+    All Employees
+  </p>
+  <div class="top-bar">
+    <h1>Employees List </h1>
+    <p>Monitor and maintain employee records</p>
+  </div>
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <!-- ================= EMPLOYEES ================= -->
+      <ion-col size="12">
+        <ion-card>
+
+          <ion-card-header class="row-space-between">
+            <ion-card-title>Employees <small>{{totalEmployees}}</small></ion-card-title>
+            <!-- *ngIf="isHR" -->
+            <ion-searchbar *ngIf="isHR" [(ngModel)]="searchTerm" (ionInput)="currentPage = 1; loadEmployees()"
+              placeholder="Search Employees, Employee ID or Department " showCancelButton="never">
+            </ion-searchbar>
+            <ion-card-subtitle>
+              <div class="row-right">
+                <ion-button class="primary-btn" id="open-upload-modal">
+                  <ion-icon name="add-circle-outline" class="pr-5"></ion-icon>
+                  Upload Employees
+                </ion-button>
+              </div>
+
+              <!-- Upload Modal -->
+              <ion-modal class="upload-main-block" trigger="open-upload-modal" #modal>
+                <ng-template>
+                  <ion-content class="ion-padding">
+
+                    <div class="upload-block" (click)="EmployeeInput.click()">
+                      <ion-icon name="folder-open-outline" class="folder-icon"></ion-icon>
+                      <p><strong>Upload a file</strong></p>
+                      <p>Attach the file below</p>
+
+                      <div class="drag-drop-area">
+                        <ion-icon name="arrow-down-circle-outline" class="upload-icon"></ion-icon>
+                        <p>Drag file(s) here to upload.</p>
+                        <p>
+                          Alternatively, select a file by
+                          <label style="visibility: hidden;" class="select-file-link">
+                            clicking here
+                            <input style="visibility: hidden;" type="file" #EmployeeInput accept=".xlsx,.xls"
+                              (change)="EmployeeSelected($event)" id="file-upload-input" />
+                          </label>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="modal-actions">
+                      <ion-button fill="outline" color="medium" (click)="modal.dismiss()">Cancel</ion-button>
+                      <ion-button class="primary-btn" (click)="EmployeesUpload()" [disabled]="!EmployeeselectedFile">
+                        Upload File
+                      </ion-button>
+                    </div>
+
+                  </ion-content>
+                </ng-template>
+              </ion-modal>
+            </ion-card-subtitle>
+          </ion-card-header>
+
+          <!-- ================= EMPLOYEE TABLE ================= -->
+          <ion-card-content>
+
+            <ion-grid class="table-block">
+
+              <!-- Header -->
+              <ion-row class="table-header">
+                <ion-col size="0.8">
+                  <p>Emp ID</p>
+                </ion-col>
+                <ion-col size="1.2">
+                  <p>Emp Number</p>
+                </ion-col>
+                <ion-col size="1.8">
+                  <p>Name</p>
+                </ion-col>
+                <ion-col size="2.3">
+                  <p>Email ID</p>
+                </ion-col>
+                <ion-col size="1.5">
+                  <p>Department</p>
+                </ion-col>
+                <ion-col size="1.4">
+                  <p>Designation</p>
+                </ion-col>
+                <ion-col size="1">
+                  <p>Joined Date</p>
+                </ion-col>
+                <ion-col size="1">
+                  <p>Status</p>
+                </ion-col>
+                <ion-col *ngIf="isHR" size="1">
+                  <p>Actions</p>
+                </ion-col>
+              </ion-row>
+
+              <!-- Rows -->
+              <ion-row class="table-row-list" *ngFor="let candidate of pagedCandidates">
+                <ion-col size="0.8">
+                  <p>{{ candidate.id }} </p>
+                </ion-col>
+                <ion-col size="1.2">
+                  <p>{{ candidate.EmployeeNumber || '-' }}</p>
+                </ion-col>
+                <ion-col size="1.8">
+                  <p>{{ candidate.FullName || '-' }}</p>
+                </ion-col>
+                <ion-col size="2.3">
+                  <p>{{ candidate.WorkEmail || '-' }}</p>
+                </ion-col>
+                <ion-col size="1.5">
+                  <p>{{ candidate.department_name || '-' }}</p>
+                </ion-col>
+                <ion-col size="1.4">
+                  <p>{{ candidate.designation_name || '-' }}</p>
+                </ion-col>
+                <ion-col size="1">
+                  <p>{{ (candidate.DateJoined | date:'MMM d, y') || '-' }}</p>
+                </ion-col>
+                <ion-col size="1">
+                  <ion-badge [color]="candidate.EmploymentStatus === 'Working' ? 'success' : 'medium'">
+                    {{ candidate.EmploymentStatus || '-' }}
+                  </ion-badge>
+                </ion-col>
+                <ion-col size="1" *ngIf="isHR">
+                  <ion-button fill="clear" size="small" (click)="selectEmployee(candidate)">
+                    <img src="../../../../assets/Icons/pencil.svg">
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+
+              <!-- Update Employee Profile Modal for HR -->
+              <ion-modal *ngIf="isHR && selectedEmployee" [isOpen]="!!selectedEmployee"
+                (didDismiss)="selectedEmployee = null" class="side-custom-popup custom-popup checkinInfo-popup">
+                <ng-template>
+                  <ion-content class="ion-padding">
+                    <ion-title>Update Employee Profile <br>
+                      (<small>{{selectedEmployee.FullName}}</small>)</ion-title>
+                    <div class="form-block">
+                      <!-- <ion-item>
+                          <ion-label position="stacked">Reporting Manager</ion-label>
+                          <ion-input [value]="selectedEmployee?.reporting_manager_name || '-'" readonly></ion-input>
+                        </ion-item> -->
+                      <ion-list lines="none" class="form-container">
+                        <!-- Reporting Manager: Inline searchable field -->
+                        <div class="manager-field-wrapper">
+                          <ion-label class="manager-field-label">Reporting Manager</ion-label>
+
+                          <!-- Trigger row -->
+                          <div class="manager-trigger" (click)="toggleManagerDropdown()">
+                            <ion-icon name="person-circle-outline" class="trigger-icon"></ion-icon>
+                            <span class="trigger-text">{{ getManagerName(updateData.reporting_manager_id) }}</span>
+                            <ion-icon [name]="managerDropdownOpen ? 'chevron-up-outline' : 'chevron-down-outline'"
+                              class="trigger-chevron"></ion-icon>
+                          </div>
+
+                          <!-- Inline expanded panel (no absolute positioning) -->
+                          <div class="manager-panel" *ngIf="managerDropdownOpen">
+                            <ion-searchbar [(ngModel)]="managerSearchTerm" (ionInput)="filterManagers()"
+                              placeholder="Search by name..." [debounce]="150" showCancelButton="never"
+                              class="manager-search">
+                            </ion-searchbar>
+                            <div class="manager-list">
+                              <!-- No Manager option -->
+                              <div class="manager-option clear-option" (click)="selectManager(null)">
+                                <ion-icon name="close-circle-outline"></ion-icon>
+                                <span>No Manager</span>
+                              </div>
+                              <!-- Employee options -->
+                              <div class="manager-option" *ngFor="let emp of filteredManagers"
+                                (click)="selectManager(emp.id)"
+                                [class.is-selected]="updateData.reporting_manager_id === emp.id">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <span>{{ emp.FullName }}</span>
+                                <ion-icon name="checkmark" class="check-icon"
+                                  *ngIf="updateData.reporting_manager_id === emp.id"></ion-icon>
+                              </div>
+                              <!-- Empty state -->
+                              <div class="manager-option empty-msg" *ngIf="filteredManagers.length === 0">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <span>No employees match "{{ managerSearchTerm }}"</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <ion-item>
+                          <ion-label position="stacked">Department</ion-label>
+                          <ion-select [(ngModel)]="updateData.DepartmentId" interface="popover"
+                            placeholder="Select Department" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                            <ion-select-option *ngFor="let dep of departments" [value]="dep.id">
+                              {{dep.name}}
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-item>
+
+                        <ion-item>
+                          <ion-label position="stacked">Leave Plan</ion-label>
+                          <ion-select [(ngModel)]="updateData.leave_plan_id" interface="popover"
+                            placeholder="Select Leave Plan" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                            <ion-select-option *ngFor="let plan of leavePlans" [value]="plan.id">
+                              {{plan.name}}
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label position="stacked">Shift Policy</ion-label>
+                          <ion-select [(ngModel)]="updateData.shift_policy_id" interface="popover"
+                            placeholder="Select Shift Policy" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                            <ion-select-option *ngFor="let policy of shiftPolicies" [value]="policy.id">
+                              {{policy.name}} ({{policy.start_time}} - {{policy.end_time}})
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label position="stacked">Attendance Policy</ion-label>
+                          <ion-select [(ngModel)]="updateData.attendance_policy_id" interface="popover"
+                            placeholder="Select Attendance Policy" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                            <ion-select-option *ngFor="let policy of attendancePolicies" [value]="policy.id">
+                              {{policy.name}}
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label position="stacked">Weekly Off Policy</ion-label>
+                          <ion-select [(ngModel)]="updateData.weekly_off_policy_id" interface="popover"
+                            placeholder="Select Weekly Off Policy" toggleIcon="chevron-down" expandedIcon="chevron-up">
+                            <ion-select-option *ngFor="let policy of weeklyOffPolicies" [value]="policy.id">
+                              {{policy.name}}
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-item>
+                        <!-- <ion-item>
+                          <ion-label position="stacked">Pay Grade ID</ion-label>
+                          <ion-input type="number" [(ngModel)]="updateData.PayGradeId"></ion-input>
+                        </ion-item> -->
+                      </ion-list>
+                      <div class="ion-padding-top form-footer">
+                        <ion-button class="primary-outline-btn" (click)="selectedEmployee = null">Cancel</ion-button>
+                        <ion-button class="primary-btn" (click)="updateEmployeeProfile()">Update</ion-button>
+                      </div>
+                    </div>
+                  </ion-content>
+                </ng-template>
+              </ion-modal>
+
+              <!-- No Records -->
+              <ion-row *ngIf="pagedCandidates.length === 0">
+                <ion-col size="12" class="ion-text-center">
+                  No employees found
+                </ion-col>
+              </ion-row>
+
+            </ion-grid>
+
+            <!-- ================= PAGINATION ================= -->
+            <div class="row-right ion-padding">
+
+              <ion-button fill="clear" (click)="prevPage()" [disabled]="currentPage === 1">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+              </ion-button>
+
+              <ion-text>
+                Page {{ currentPage }} of {{ totalPages }}
+              </ion-text>
+
+              <ion-button fill="clear" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+
+            </div>
+
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Remote Clock-In Request</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="close()"><ion-icon name="close-outline"></ion-icon></ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding ">
+    <form (ngSubmit)="submit()">
+        <div class="form-continer">
+            <p>Reason / Note</p>
+            <ion-textarea [(ngModel)]="reason" name="reason" required [disabled]="loading"></ion-textarea>
+        </div>
+        <div class="form-footer">
+            <ion-button class="primary-btn" type="submit" [disabled]="loading || !reason.trim()">
+                <ion-spinner *ngIf="loading" name="dots"></ion-spinner>
+                <span *ngIf="!loading">Submit Request</span>
+            </ion-button>
+        </div>
+    </form>
+</ion-content>

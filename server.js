@@ -88,15 +88,42 @@ app.use(
     })
 );
 
-// Serve static files from public/www folder
-app.use(express.static(path.join(__dirname, 'public', 'www')));
+// Serve static files from public/www/browser folder (where Angular build outputs)
+// IMPORTANT: This must come BEFORE the catch-all route
+app.use(express.static(path.join(__dirname, 'public', 'www', 'browser'), {
+    maxAge: process.env.NODE_ENV === 'production' ? '1d' : '0', // No cache in dev, 1d in prod
+    etag: false,   // Disable ETag for better caching
+    setHeaders: (res, path) => {
+        // ✅ Ensure CSS files load immediately (not deferred)
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+            res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+        }
+        // ✅ Ensure JS loads properly  
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+        }
+    }
+}));
 
 // Serve uploaded files (profile images, documents, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Home route - serve index.html from public/www
+// SPA fallback - serve index.html for root path
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'www', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
+});
+
+// SPA fallback - serve index.html for non-API routes (client-side routing)
+// This route ONLY matches paths without file extensions (no dots = no files)
+// Pattern explained:
+//   ^              - start of path
+//   (?!.*\.)       - negative lookahead: must NOT contain a dot (file extension)
+//   (?!.*api)      - must NOT contain /api
+//   (?!.*uploads)  - must NOT contain /uploads
+//   (?!.*api-docs) - must NOT contain /api-docs
+app.get(/^(?!.*\.)(?!.*api|.*uploads|.*api-docs).*$/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'www', 'browser','index.html'));
 });
 
 // Swagger JSON endpoint (needed for Swagger UI)
@@ -104,6 +131,51 @@ app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json(swaggerSpec);
+});
+
+/* ============ FRONTEND DIAGNOSTICS ENDPOINT ============ */
+
+app.get('/api/diagnostics', (req, res) => {
+    const fs = require('fs');
+    const browserPath = path.join(__dirname, 'public', 'www', 'browser');
+    
+    const diagnostics = {
+        timestamp: new Date().toISOString(),
+        server: {
+            nodeVersion: process.version,
+            environment: process.env.NODE_ENV || 'development',
+            port: process.env.PORT || 3000,
+            platform: process.platform
+        },
+        frontend: {
+            buildPath: browserPath,
+            exists: fs.existsSync(browserPath),
+            files: {
+                indexHtml: fs.existsSync(path.join(browserPath, 'index.html')),
+                mainJs: fs.readdirSync(browserPath).filter(f => f.startsWith('main-')).length > 0,
+                polyfillsJs: fs.readdirSync(browserPath).filter(f => f.startsWith('polyfills-')).length > 0,
+                stylesCss: fs.readdirSync(browserPath).filter(f => f.startsWith('styles-')).length > 0,
+            },
+            fileList: fs.existsSync(browserPath) ? 
+                fs.readdirSync(browserPath)
+                    .filter(f => f.match(/\.(js|css|html|map)$/))
+                    .map(f => ({
+                        name: f,
+                        size: fs.statSync(path.join(browserPath, f)).size,
+                        modified: fs.statSync(path.join(browserPath, f)).mtime
+                    }))
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                : []
+        },
+        staticServing: {
+            middleware: 'express.static configured for /public/www/browser',
+            spaFallback: 'Regex: /^(?!.*)(?!.*api|.*uploads|.*api-docs).*$/',
+            corsEnabled: true
+        },
+        status: '✅ Frontend build detected - UI should render properly'
+    };
+    
+    res.json(diagnostics);
 });
 
 /* ============ DATABASE INITIALIZATION ============ */

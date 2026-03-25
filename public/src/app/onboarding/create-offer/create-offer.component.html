@@ -1,0 +1,165 @@
+<ion-header>
+  <!-- <app-header></app-header> -->
+  <app-create-offer-header (continueClick)="submitOfferForm()"></app-create-offer-header>
+</ion-header>
+
+<ion-content *ngIf="candidate" class="jobdetails-block ion-padding">
+
+  <h1 class="ion-padding ">Job Details</h1>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="8">
+        <ion-row>
+          <ion-col size="6">
+            <ion-item class="input-item">
+              <ion-label position="stacked">Legal Entity</ion-label>
+              <ion-input [value]="candidate.candidate_id" disabled></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Job Title</ion-label>
+              <ion-select class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+                [value]="candidate.JobTitle" interface="popover">
+                <ion-select-option value="{{candidate.JobTitle}}">{{candidate.JobTitle}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Department</ion-label>
+              <ion-select class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+                [value]="candidate.Department" interface="popover">
+                <ion-select-option
+                  value="{{candidate.department_name}}">{{candidate.department_name}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Reporting Manager (optional)</ion-label>
+              <ion-input value="Viswanatha Sastry Kaki" disabled></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Worker Type</ion-label>
+              <ion-select class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+                [value]="candidate?.WorkType" interface="popover">
+                <ion-select-option value="Perminent">Permanent</ion-select-option>
+                <ion-select-option value="Contract">Contract</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Location</ion-label>
+              <ion-select class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+                [value]="candidate.location_name" interface="popover">
+                <ion-select-option value="{{candidate.location_name}}">{{candidate.location_name}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+
+        <!-- OFFER DETAILS -->
+        <h1>Offer Details</h1>
+        <form [formGroup]="offerForm">
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="stacked">Date of Joining</ion-label>
+                <ion-input id="date-input" placeholder="Select Date" formControlName="DOJ" [value]="selectedDate"
+                  readonly>
+                </ion-input>
+              </ion-item>
+
+              <ion-popover #datePopover trigger="date-input" show-backdrop="true">
+                <ng-template>
+                  <ion-datetime presentation="date" (ionChange)="onDateChange($event, datePopover)">
+                  </ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="stacked">Offer Validity (days)</ion-label>
+                <ion-select class="custom-dropdown" toggleIcon="chevron-down" expandedIcon="chevron-up"
+                  formControlName="offerValidity" placeholder="Select Validity" interface="popover">
+                  <ion-select-option value="2">2 Days</ion-select-option>
+                  <ion-select-option value="7">7 Days</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label position="stacked">Probation Period (months)</ion-label>
+                <ion-input type="number" formControlName="probationPeriod"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label position="stacked">Notice Period (months)</ion-label>
+                <ion-input type="number" formControlName="noticePeriod"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label position="stacked">Work Mode</ion-label>
+                <ion-select formControlName="workMode" interface="popover">
+                  <ion-select-option value="Hybrid">Hybrid</ion-select-option>
+                  <ion-select-option value="Remote">Remote</ion-select-option>
+                  <ion-select-option value="On-site">On-site</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-label position="stacked">Special Terms</ion-label>
+                <ion-input formControlName="specialTerms" placeholder="e.g. Relocation assistance"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-label position="stacked">Benefits</ion-label>
+                <ion-input formControlName="benefits" placeholder="e.g. Health insurance, meal coupons"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-row>
+                      <ion-col>
+                        <ion-button expand="block" type="submit">Save DOJ</ion-button>
+                      </ion-col>
+                    </ion-row> -->
+        </form>
+      </ion-col>
+
+      <ion-col size="4" class="employee-card">
+        <ion-card>
+          <h6>Employee Details</h6>
+          <ion-card-content>
+
+            <div class="candidate-header">
+              <!-- <div class="avatar">{{candidate?.personalDetails?.initials}}</div> -->
+              <ion-img src="../../../assets/user.svg" width="120"></ion-img>
+              <div class="text-center">
+                <h6>{{candidate?.FirstName}}</h6>
+                <p>Applied for {{candidate?.JobTitle}}</p>
+              </div>
+            </div>
+
+            <div class="candidate-info">
+              <p><strong>Email ID:</strong> {{candidate?.Email}}</p>
+              <p><strong>Phone Number:</strong> {{candidate?.phone}}</p>
+              <p><strong>Joining Date:</strong> {{candidate?.offerDetails?.DOJ}}</p>
+              <p><strong>Source:</strong>{{candidate?.recruitment_source}}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>

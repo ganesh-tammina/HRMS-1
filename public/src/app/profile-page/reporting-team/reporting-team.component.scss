@@ -1,0 +1,38 @@
+ @import '../../../global.scss';
+ .team-card {
+    .team-header {
+        @include card-sub-title();
+        color: $side-bar-color;
+        margin-top: 12px;
+        margin-bottom: 5px;
+    }
+    .team-count {
+        @include normal-text-unbold();
+        color: $Subtle-Text;
+    }
+    .member {
+        list-style: none;
+        padding: 0;
+        li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 4px;
+        }
+    }
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .name {
+       @include normal-text(); 
+    }
+
+    .role {
+        @include body-text();
+        color: #6b7280;
+        margin-top: 2px;
+    }
+    }

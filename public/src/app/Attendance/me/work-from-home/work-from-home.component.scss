@@ -1,0 +1,132 @@
+@import '../../../../global.scss';
+.custom-popup {
+ ion-content {
+  height: 80vh;
+ }
+ ion-input, ion-textarea {
+  border: 1px solid #C4C4C4;
+  height: auto;
+  border-radius: 4px;
+  padding: 0px 12px !important;
+ margin: 11px 0px;
+}
+
+.calendar-block {
+    padding: 12px;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 300px;
+    position: absolute;
+    z-index: 9;
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .weekdays, .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    
+    .calendar-grid span {
+      padding: 6px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .calendar-grid span:hover {
+      background: #dbeafe;
+    }
+    
+    .calendar-grid span.selected {
+      background: #2563eb;
+      color: white;
+    }    
+}
+  .date-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .date-box {
+      label {
+        margin-bottom: 8px;
+      }
+      p {
+        border: 1px solid #C4C4C4;
+        height: 40px;
+        border-radius: 4px;
+        padding: 8px 16px !important;
+        margin: 11px 0px;
+        text-align: left;
+        width: 210px;
+        cursor: pointer;
+      }
+    }
+   .day-count {
+    background: #1f74bb;
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: #fff;
+    height: max-content;
+    margin-top: 21px;
+   }
+  }
+  
+
+ 
+  
+  
+  .type-select {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    button {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      background: #f3f4f6;
+      @include normal-text();
+      &.active {
+        background: $secondry-color;
+        color: $white-color;
+      }
+    }
+  }
+  textarea, input {
+    margin-top: 12px;
+  }
+
+  
+  .custom-box {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px dashed #e5e7eb;
+    border-radius: 10px;
+  }
+  
+  .request-info {
+    background: var(--ion-bg-color);
+    margin-top: 15px;
+    @include normal-text();
+    color: $secondry-color;
+    border: 1px solid #1F74BB;
+    border-radius: 12px;
+    padding: 15px 12px;
+    display: flex;
+    img {
+      margin-right: 8px;
+    }
+}
+  
+  
+  .input-block {
+    margin-top: 10px;
+  }
+  
+
+}

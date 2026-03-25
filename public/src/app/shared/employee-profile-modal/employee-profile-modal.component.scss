@@ -1,0 +1,167 @@
+@import '../../../global.scss';
+
+.content-modal-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: #1a2b3c;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    ion-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    ion-button {
+      --color: #64748b;
+    }
+  }
+}
+
+.profile-modal-content {
+  --background: #f8fafc;
+}
+
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+
+  .avatar-wrapper {
+    position: relative;
+    .profile-main-avatar {
+      width: 90px;
+      height: 90px;
+      border: 3px solid #f1f5f9;
+      box-shadow: 0 0 0 2px #3b82f633;
+    }
+    .status-badge {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      &.is-in { background: #10b981; }
+      &.is-out { background: #ef4444; }
+    }
+  }
+
+  .profile-essentials {
+    flex: 1;
+    .emp-fullname {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .emp-job-title {
+      margin: 4px 0 12px 0;
+      color: #64748b;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .contact-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      .pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #f1f5f9;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: #475569;
+        ion-icon { font-size: 1rem; color: #3b82f6; }
+      }
+    }
+
+    .realtime-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ef4444;
+      &.clocked-in {
+        color: #059669;
+        .status-pulse { background: #10b981; }
+      }
+      .status-pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        position: relative;
+        &::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: inherit;
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+  }
+}
+
+.details-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    ion-icon { font-size: 1.4rem; color: #1e293b; }
+    h3 { margin: 0; font-size: 1.05rem; font-weight: 700; color: #1e293b; }
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    
+    .info-item {
+      label {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94a3b8;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #334155;
+        font-weight: 600;
+      }
+      &.full-width { grid-column: span 2; }
+      .emp-id-tag { color: #64748b; font-weight: 400; font-size: 0.85rem; }
+      .highlight-info { color: #3b82f6; }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  70% { transform: scale(2.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}

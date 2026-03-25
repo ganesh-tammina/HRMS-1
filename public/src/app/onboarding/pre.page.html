@@ -1,0 +1,126 @@
+<ion-header>
+    <!-- <app-header></app-header> -->
+  <!-- Main Navbar -->
+  <app-onboarding-mainheader></app-onboarding-mainheader>
+</ion-header>
+
+<ion-content class="page-containerOn pre-on-boarding-block" fullscreen>
+      <p class="page-header mb-8">
+    <a routerLink="/preonboarding-cards" (click)="org()">Org /</a>
+    <a routerLink="/pre-onboarding-setup" (click)="onboard()">Onboarding /</a>
+    Settings
+  </p>
+  <div class="page-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ion-list>
+        <ion-item class="active" (click)="openCard('personal')">
+          <ion-label>
+            <h3>Welcome Page</h3>
+            <p>Setup what employees see the first time...</p>
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="openCard('offer')">
+          <ion-label>
+            <h3>Offer templates</h3>
+            <p>List of all templates that are used to creat...</p>
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="openCard('Policy')">
+          <ion-label>
+            <h3>Candidate Portal</h3>
+            <p>Setup the candidate portal where...</p>
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="openCard('reason')">
+          <ion-label>
+            <h3>Archived / Declined reasons</h3>
+            <p>You can define reasons for archiving the...</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="employee-welcome" *ngIf="selectedCard === 'personal'">
+      <div class="header-row">
+        <div>
+          <h2>Employee welcome page</h2>
+          <p class="subtitle">
+            Setup what employees see the first time after being onboarded into Keka portal.
+          </p>
+        </div>
+        <ion-button class="btn-preview">Preview</ion-button>
+      </div>
+      <!-- Welcome Message Card -->
+       <div class="pre_onboarding_card">
+        <div>
+           <ion-card>
+        <ion-card-header>
+          <ion-card-title>Welcome message</ion-card-title>
+          <ion-button fill="clear" class="edit-btn" size="small">Edit</ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="card-subtitle">
+            Give a brief introduction to the onboarding employee about the organisation
+          </p>
+          <div class="inner-card">
+            We are so excited to join as in our team! We believe that you can use your
+            skills and talent in making our company reach new heights. Welcome aboard new buddy!
+          </div>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Employee introduction</ion-card-title>
+          <ion-button fill="clear" class="edit-btn" size="small">Edit</ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="card-subtitle">
+            Create interesting profile pages for your employees by asking them a maximum of 5 questions.
+          </p>
+        </ion-card-content>
+      </ion-card>
+      </div>
+      <div>
+        <ion-card>
+        <ion-card-header>
+          <ion-card-title>Onboarding reachouts</ion-card-title>
+          <ion-button fill="clear" class="add-btn" size="small">+Add</ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-icon name="people-outline" class="icon"></ion-icon>
+          <p>Assign people who will assist joinees during the onboarding process</p>
+        </ion-card-content>
+      </ion-card>
+            <ion-card>
+        <ion-card-header>
+          <ion-card-title>My Team</ion-card-title>
+          <ion-toggle checked></ion-toggle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="avatars">
+            <div class="avatar">SM</div>
+            <div class="avatar">HG</div>
+            <div class="avatar">DK</div>
+            <div class="avatar more">+2</div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      </div>
+       </div>
+   
+    </div>
+    <div class="offers-template" *ngIf="selectedCard === 'offer'">
+      <app-offer-template></app-offer-template>
+    </div>
+    <div class="" *ngIf="selectedCard === 'Policy'">
+      <app-candiate-portal></app-candiate-portal>
+    </div>
+        <div class="" *ngIf="selectedCard === 'reason'">
+       <app-decline-resons></app-decline-resons>
+    </div>
+    </div>
+  </div>
+</ion-content>

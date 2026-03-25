@@ -1,0 +1,98 @@
+<!-- Loading State -->
+<ion-content [fullscreen]="true" *ngIf="loading" class="centered-content">
+  <div class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Loading your offer details...</p>
+  </div>
+</ion-content>
+
+<!-- Error State -->
+<ion-content [fullscreen]="true" *ngIf="!loading && error">
+  <div class="error-container">
+    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+    <h2>Oops!</h2>
+    <p>{{ error }}</p>
+  </div>
+</ion-content>
+
+<!-- Main Offer Verification Screen -->
+<ion-content [fullscreen]="true" *ngIf="!loading && !error && !hideOffer">
+  <div class="sign-in-container">
+
+    <!-- Left Panel: Branding -->
+    <div class="sign-in-left">
+      <div class="logo-container">
+        <img src="./../../assets/techlogo.png" alt="Tech Tammina Logo" class="logo" />
+      </div>
+
+      <div class="welcome-message" *ngIf="candidate">
+        <div class="avatar-circle">
+          {{ candidate.FirstName?.charAt(0)?.toUpperCase() }}
+        </div>
+        <h2>Hi, {{ candidate.FullName || candidate.FirstName }}!</h2>
+        <p class="subtitle">You have a new offer waiting for you 🎉</p>
+
+        <div class="offer-info-pills">
+          <div class="pill" *ngIf="candidate.JobTitle">
+            <ion-icon name="briefcase-outline"></ion-icon>
+            <span>{{ candidate.JobTitle }}</span>
+          </div>
+          <div class="pill" *ngIf="candidate.Department">
+            <ion-icon name="business-outline"></ion-icon>
+            <span>{{ candidate.Department }}</span>
+          </div>
+          <div class="pill" *ngIf="candidate.joining_date">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Join by: {{ candidate.joining_date | date:'dd MMM yyyy' }}</span>
+          </div>
+          <div class="pill" *ngIf="candidate.offered_ctc">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span>CTC: ₹{{ candidate.offered_ctc | number }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="powered-by">
+        <p>Powered by <strong>Tech Tammina HRMS</strong></p>
+      </div>
+    </div>
+
+    <!-- Right Panel: Phone Verification -->
+    <div class="sign-in-right">
+      <div class="sign-in-card">
+        <div class="card-header">
+          <ion-icon name="shield-checkmark-outline" class="shield-icon"></ion-icon>
+          <h3>Verify Your Identity</h3>
+          <p>Enter the mobile number you registered with to view your offer letter.</p>
+        </div>
+
+        <form [formGroup]="onboardingForms" (ngSubmit)="submitOnboarding()" class="verify-form">
+          <div class="input-group">
+            <label>Mobile Number</label>
+            <div class="input-wrapper">
+              <ion-icon name="phone-portrait-outline" class="input-icon"></ion-icon>
+              <ion-input formControlName="PhoneNumber" type="tel" placeholder="Enter your registered mobile"
+                class="form-input" inputmode="numeric">
+              </ion-input>
+            </div>
+          </div>
+
+          <ion-button type="submit" expand="block" class="verify-btn" [disabled]="onboardingForms.invalid">
+            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            View My Offer Letter
+          </ion-button>
+        </form>
+
+        <div class="help-text">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>Having trouble? Contact HR at <a href="mailto:hr@techtammina.com">hr@techtammina.com</a></span>
+        </div>
+      </div>
+
+      <div class="footer-branding">
+        <p>Sree Tammina Software Solutions Pvt. Ltd.</p>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

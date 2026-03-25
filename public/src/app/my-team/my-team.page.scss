@@ -1,0 +1,716 @@
+@import '../../global.scss';
+/* ================= GRADIENT HEADER ================= */
+$border-colors: #1F74BB, #BB2C1F, #FFB24B, #00983D;
+
+.gradient-header {
+  --background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+  --color: white;
+  padding: 8px 0;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+
+.header-buttons {
+  word-wrap: break-word;
+
+  .primary-outline-btn {
+    --color: #1A2B3C;
+    --background-hover: rgba(255, 255, 255, 0.15);
+    --border-radius: 10px;
+    margin: 0 4px;
+    color: #1A2B3C;
+    font-size: 12px;
+    padding: 0px 4px;
+    height: 32px;
+    max-width: 180px;
+    background: transparent;
+    text-transform: capitalize;
+
+    ion-icon {
+      margin-right: 5px;
+    }
+
+    ion-img {
+      margin-right: 5px;
+    }
+  }
+}
+
+/* ================= CONTENT BACKGROUND ================= */
+ion-content {
+  --background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+/* ================= LOADING ================= */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+
+  ion-spinner {
+    --color: #667eea;
+    transform: scale(1.3);
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #555;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+
+/* ================= TEAM GRID ================= */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+/* ================= TEAM CARD WITH GRADIENTS ================= */
+.team-card {
+  background: #fff;
+  background-repeat: no-repeat;
+  width: 57.55395683453237vh;
+  background-position: top;
+  border-radius: 16px;
+  background-size: cover;
+  border-top: 5px solid;
+  margin: 10px;
+
+  @for $i from 1 through length($border-colors) {
+    &:nth-child(#{length($border-colors)}n + #{$i}) {
+      border-color: nth($border-colors, $i);
+    }
+  }
+
+  .avatar-section {
+    position: relative;
+    margin-right: 12px;
+
+    ion-img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: capitalize;
+      border-radius: 50%;
+      position: absolute;
+      left: 45px;
+      bottom: -1px;
+      color: #fff;
+      padding: 0;
+      width: 18px;
+      height: 18px;
+
+      &.badge-out {
+        background: var(--ion-color-danger);
+      }
+
+      &.badge-in {
+        background: $success-color;
+      }
+    }
+  }
+
+  .member-name {
+    text-align: left;
+    @include text-style-bold();
+    margin-top: 8px;
+    color: #333333;
+  }
+
+  .member-role {
+    @include body-text();
+    font-size: 1.926618705vh !important;
+    color: #707070;
+    margin-top: 8px;
+  }
+
+  .contact-details {
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    .detail-text {
+      display: flex;
+
+      label {
+        color: var(--ion-color-primary);
+        margin-right: 8px;
+      }
+
+      @include normal-text();
+    }
+
+    p {
+      margin: 0;
+      margin-bottom: 8px;
+    }
+  }
+
+
+  //attandance status
+  .attendance-details {
+    .attendance-info {
+      text-align: right;
+      width: min-content;
+
+      ion-chip {
+        @include small-text-bold();
+        height: 22px;
+      }
+
+      .present {
+        background: #E6F4FF;
+        border: 0.34px solid #077B4B;
+        color: #077B4B;
+
+        &::before {
+          content: '';
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          position: relative;
+          left: -7px;
+          top: 0px;
+          z-index: 2;
+          background: #077B4B;
+        }
+      }
+
+      .absent {
+        background: #FFD8D8;
+        border: 0.5px solid #C80000;
+        color: #C80000;
+
+        &::before {
+          content: '';
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          position: relative;
+          left: -7px;
+          top: 0px;
+          z-index: 2;
+          background: #C80000;
+        }
+      }
+    }
+  }
+
+}
+
+/* HTML: <div class="ribbon">Your text content</div> */
+.ribbon {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.ribbon {
+  --f: 0.5em;
+  --r: 0.8em;
+  position: absolute;
+  top: 57px;
+  right: calc(-1 * var(--f));
+  padding-inline: 1em;
+  background: #122E44;
+  border-top: var(--f) solid #0005;
+  border-left: var(--r) solid #0000;
+  clip-path:
+    polygon(0 100%, 100% 100%, 100% var(--f), calc(100% - var(--f)) 0,
+      calc(100% - var(--f)) var(--f), 0 var(--f),
+      var(--r) calc(50% + var(--f)/2));
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* ================= EMPTY STATE ================= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 100px;
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 12px 0;
+  }
+
+  p {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin: 0;
+  }
+}
+
+/* ================= ATTENDANCE VIEW (Keep existing styles) ================= */
+
+.team-card:hover {
+  transform: translateY(-4px);
+}
+
+.profile {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+
+  img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #3880ff;
+  }
+}
+
+h3 {
+  margin: 6px 0 2px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.role {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.status {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.status.active {
+  background: #d4f8e8;
+  color: #0a7d44;
+}
+
+.status.leave {
+  background: #fff0d6;
+  color: #b26a00;
+}
+
+.email {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 60px;
+  color: #aaa;
+
+  ion-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+}
+
+/* ================= ATTENDANCE VIEW STYLES ================= */
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+
+  ion-chip {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    ion-icon {
+      font-size: 20px;
+      margin-right: 4px;
+    }
+
+    ion-label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}
+
+.team-reports-btn {
+  margin-left: 5px;
+  padding: 0 12px;
+
+  ion-select {
+    --padding-start: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  ion-icon {
+    margin-right: 4px;
+  }
+}
+
+.date-card {
+  border: 1px solid var(--ion-color-secondary);
+  padding: 8px 24px;
+  background: #f4f5f8;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  margin-top: 15px;
+
+  h2 {
+    margin: 8px 0;
+  }
+}
+
+.summary-cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .summary-card {
+    cursor: pointer;
+    width: 22%;
+    height: 80px;
+    padding: 8px 8px 0 8px;
+    border-radius: 10px;
+    border-width: 1px;
+    background: #122E44;
+    margin-right: 24px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: left;
+      align-items: self-start;
+      color: #fff;
+
+      ion-img {
+        margin-right: 8px;
+      }
+    }
+
+    .summary-label {
+      @include normal-text-unbold();
+    }
+
+    .summary-value {
+      @include card-sub-title();
+      margin: 0;
+    }
+  }
+
+  ion-card-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 !important;
+    height: 80px;
+  }
+}
+
+// .summary-card {
+//   margin: 0;
+//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+//   border-radius: 12px;
+//   transition: transform 0.2s ease;  
+//   &:hover {
+//     transform: translateY(-2px);
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+//   }
+
+//   ion-card-content {
+//     padding: 16px;
+//     cursor: pointer;
+//   }
+// }
+
+// .summary-item {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+
+//   ion-icon {
+//     font-size: 32px;
+//   }
+// }
+
+// .summary-text {
+//   flex: 1;
+
+//   .summary-label {
+//     margin: 0;
+//     font-size: 12px;
+//     color: var(--ion-color-medium);
+//     text-transform: uppercase;
+//     font-weight: 500;
+//   }
+
+//   .summary-value {
+//     margin: 4px 0 0;
+//     font-size: 24px;
+//     font-weight: 700;
+//     color: var(--ion-color-dark);
+//   }
+// }
+
+.attendance-list {
+  margin-top: 16px;
+}
+
+.attendance-item {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    --background: var(--ion-color-light);
+  }
+
+  ion-avatar {
+    width: 50px;
+    height: 50px;
+
+    img {
+      border: 2px solid var(--ion-color-primary);
+    }
+  }
+
+  ion-label {
+    h2 {
+      font-weight: 600;
+      color: var(--ion-color-dark);
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 13px;
+      color: var(--ion-color-medium);
+      margin: 2px 0;
+    }
+
+    .sub-text {
+      font-size: 12px;
+      color: var(--ion-color-medium-shade);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      ion-icon {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// .attendance-details {
+//   margin-top: 8px;
+// }
+
+// .attendance-info {
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 6px;
+//   margin-top: 8px;
+// }
+
+// .info-chip {
+//   height: 28px;
+//   font-size: 12px;
+//   --padding-start: 8px;
+//   --padding-end: 8px;
+
+//   ion-icon {
+//     font-size: 16px;
+//     margin-right: 4px;
+//   }
+
+//   ion-label {
+//     font-weight: 500;
+//   }
+// }
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 16px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+
+  ion-spinner {
+    transform: scale(1.5);
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+    font-weight: 500;
+  }
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+@media (max-width: 768px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .attendance-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-chip {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+// Popup styles
+ion-searchbar {
+  --background: var(--ion-background-color, #fff);
+  border-radius: 8px;
+  --box-shadow: none;
+  border: 1px solid #ABABAB;
+  --min-height: 36px;
+  height: 42px;
+  margin-left: 8px;
+  width: 95%;
+}
+
+.requests-container {
+  ion-card {
+    border-radius: 8px;
+    border: 0.74px solid #ABABAB;
+    box-shadow: none;
+    margin: 15px;
+
+    label {
+      color: #707070;
+      @include small-text();
+    }
+
+    p {
+      @include body-text();
+      color: #333333;
+      margin: 4px 0;
+    }
+
+    .info-row {
+      label {
+        color: #1F74BB;
+        @include body-text();
+      }
+
+      p {
+        @include normal-text-unbold();
+      }
+
+      background: #E6F4FF;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 15px 0px;
+      width: 100%;
+    }
+
+    ion-button {
+      min-height: 30px;
+      height: 36px;
+      @include body-text();
+      text-transform: capitalize;
+    }
+  }
+}
+
+.select-tag {
+  width: 100%;
+  margin-right: 10px;
+
+  ion-label {
+    width: max-content;
+    margin-right: 12px;
+  }
+
+  ion-select {
+    width: 150px;
+    border: 1px solid #ABABAB;
+    border-radius: 8px;
+    padding: 0 8px;
+  }
+}

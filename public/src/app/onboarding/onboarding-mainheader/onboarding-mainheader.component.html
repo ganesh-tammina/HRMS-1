@@ -1,0 +1,36 @@
+<!-- <ion-toolbar color="light" class="top-nav">
+  <ion-buttons slot="start" class="nav-links">
+    <ion-button fill="clear">Dashboard</ion-button>
+    <ion-button fill="clear">Employees</ion-button>
+    <ion-button fill="clear">Org Structure</ion-button>
+    <ion-button fill="clear" class="active">Onboarding</ion-button>
+    <ion-button fill="clear">Exits</ion-button>
+    <ion-button fill="clear">Expenses & Travel</ion-button>
+    <ion-button fill="clear">Documents</ion-button>
+    <ion-button fill="clear">Engage</ion-button>
+    <ion-button fill="clear">Assets</ion-button>
+    <ion-button fill="clear">Helpdesk</ion-button>
+    <ion-button fill="clear">Settings</ion-button>
+  </ion-buttons>
+</ion-toolbar> -->
+
+<!-- Sub Navbar -->
+<ion-toolbar color="light" class="sub-nav">
+  <ion-buttons slot="start" class="nav-links">
+    <ion-button fill="clear" (click)="navigate('setup')" [class.active-btn]="activeTab === 'setup'">Setup</ion-button>
+    <ion-button fill="clear" (click)="navigate('preOnboarding')"
+      [class.active-btn]="activeTab === 'preOnboarding'">Preboarding</ion-button>
+    <ion-button fill="clear" (click)="navigate('NewJoiner')" [class.active-btn]="activeTab === 'NewJoiner'">New
+      Joiners</ion-button>
+    <ion-button fill="clear" (click)="navigate('pastOffers')" [class.active-btn]="activeTab === 'pastOffers'">Past
+      Offers</ion-button>
+    <ion-button fill="clear" (click)="navigate('onboarding_Tasks')"
+      [class.active-btn]="activeTab === 'onboarding_Tasks'">Onboarding Tasks</ion-button>
+    <ion-button fill="clear" (click)="navigate('Task_Template')" [class.active-btn]="activeTab === 'Task_Template'">Task
+      Templates</ion-button>
+    <ion-button fill="clear">Background Verification</ion-button>
+    <ion-button fill="clear">Archived</ion-button>
+    <ion-button fill="clear" (click)="navigate('settings')"
+      [class.active-btn]="activeTab === 'settings'">Settings</ion-button>
+  </ion-buttons>
+</ion-toolbar>

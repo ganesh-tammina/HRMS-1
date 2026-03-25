@@ -1,0 +1,80 @@
+@import '../../../global.scss';
+.client-form {
+  .title {
+    @include card-header();
+    text-align: left;
+    border-bottom: 1px solid #ABABAB;
+    padding-bottom: 25px;
+  }
+  .section-card {
+    .section-title {
+      @include card-header-title();
+    }
+    ion-input {
+      height: 50px;  
+    }  
+    .days-grid {
+      display: flex;
+      flex-wrap: wrap;
+      .day-box {
+        display: flex;
+        align-items: center;
+        width: 30%;
+        border: 1px solid #ABABAB;
+        padding: 16px;
+        margin: 8px;
+        border-radius: 10px;
+        label {
+          white-space: nowrap;
+          @include normal-text();
+          padding-right: 12px;
+        }
+        ion-select {
+          @include normal-text-unbold();
+          &::part(icon) {
+           font-size: 24px;
+           fill: #333333;
+          }
+        }
+      }
+    }
+
+    .summary-grid {
+      display: flex;
+      padding: 12px;
+      .summary-box {        
+        width: 20%;
+        margin-right: 15px;
+        background: #d7d8dabf;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        @include normal-text();
+        &:last-child {
+          margin-right: 0;
+        }
+        label {
+          margin-top: 5px;
+        }
+        ion-input {
+          height: 35px;
+          min-height: 35px;
+        }
+      }
+    }
+    
+   
+  }
+  ion-textarea {
+    height: 50px; 
+  }
+  .border-top {
+    border-top: 1px solid $border-color;
+    margin-top: 21px;
+  }
+}
+.scroll-container {
+  max-height: calc(100vh - 182px);
+  overflow: auto;
+  @include scroll-style();
+}

@@ -1,0 +1,49 @@
+<div class="modal-backdrop">
+  <div class="modal shift-popup">
+    <h2>Enter Leave Details</h2>
+  <div class="row-left">
+      <div class="form-group">
+          <label>Start Year</label>
+          <input type="date" [(ngModel)]="leave_year_start" />
+      </div>
+      <div class="form-group">
+          <label>End Year</label>
+          <input type="date" [(ngModel)]="leave_year_end" />
+        </div>
+  </div>
+  
+      <div class="row-left">
+          <div class="form-group">
+              <label>Casual Leave Allocated</label>
+              <input type="number" [(ngModel)]="casual_leave_allocated" />
+            </div>
+   
+            <div class="form-group">
+                <label>Marriage Leave Allocated</label>
+                <input type="number" [(ngModel)]="marriage_leave_allocated" />
+              </div>
+        </div>
+        
+          <div class="row-left">
+              <div class="form-group">
+                  <label>Comp Offs Allocated</label>
+                  <input type="number" [(ngModel)]="comp_offs_allocated" />
+                </div>
+        
+            <div class="form-group">
+                <label>Sick Leave Allocated</label>
+                <input type="number" [(ngModel)]="medical_leave_allocated" />
+              </div>
+          </div>
+          <div class="form-group w-50">
+              <label>Paid Leave Allocated</label>
+              <input type="number" [(ngModel)]="paid_leave_allocated" />
+            </div>
+              
+
+    <div class="row-center">
+      <ion-button class="primary-outline-btn" (click)="onClose()">Cancel</ion-button>
+      <ion-button class="primary-btn" (click)="onSave()">Save</ion-button>
+    </div>
+  </div>
+</div>

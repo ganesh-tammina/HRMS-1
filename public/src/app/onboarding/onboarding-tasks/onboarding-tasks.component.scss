@@ -1,0 +1,53 @@
+@import '../preonboarding/preonboarding.component.scss';
+@import '../../../global.scss';
+
+.login-right {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  padding-bottom: 5px;
+  .primary-outline-btn{
+    padding: 0 7px;
+  }
+}
+.select-all{
+  padding-left: 5px;
+}
+
+.metrics {
+  margin-bottom: 12px;
+  .card {
+    border: 1px solid #D1D5DB;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    height: 125px;
+    ion-img {
+      width: 21px; 
+      margin-right: 5px;
+    }
+    ion-icon {
+      fill: #3498DB;
+    color: #3498DB;
+    font-size: 21px;
+    margin-right: 5px;
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      p {
+        @include text-style-bold();
+        margin: 0;
+      }
+    }
+    .value {
+     @include card-header-title();
+     margin-bottom: 15px;
+    }
+    .note {
+     @include normal-text-unbold();
+    }
+  }
+}

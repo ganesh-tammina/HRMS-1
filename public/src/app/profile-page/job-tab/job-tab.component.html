@@ -1,0 +1,120 @@
+<div class="row-left content-detail-block">
+  <!-- Job Information -->
+  <div class="ion-card">
+    <p class="header-text">Job Information</p>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <p>Job Title</p>
+            <h6>{{currentEmployee?.designation_name}}</h6>
+          </div>
+          <div>
+            <p>Department </p>
+            <h6>{{currentEmployee?.department_name}}</h6>
+          </div>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+  <!-- Employment Details -->
+  <div class="ion-card">
+    <p class="header-text">Employment Details</p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <p>Employment Status</p>
+            <h6>{{currentEmployee?.EmploymentStatus}}</h6>
+          </div>
+          <div>
+            <p>Contract Type</p>
+            <h6>{{currentEmployee?.time_type}}</h6>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div>
+            <p>Worker Type</p>
+            <h6>{{currentEmployee?.worker_type}}</h6>
+          </div>
+
+          <div>
+            <p>Status</p>
+            <h6> Default Notice period - 3months (3 Months)</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</div>
+
+<!-- Personal Details -->
+<div class="row-left content-detail-block">
+  <!-- Work Schedule -->
+  <div class="ion-card">
+    <p class="header-text">Work Schedule</p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <p>Work Shift</p>
+            <h6>{{currentEmployee?.business_unit}}</h6>
+          </div>
+          <div>
+            <p>Work Days </p>
+            <h6>{{currentEmployee?.job_title}}</h6>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div>
+            <p>Weekly Hours</p>
+            <h6>-</h6>
+          </div>
+
+          <div>
+            <p>Time Zone</p>
+            <h6>-</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+  <!-- Work Location -->
+  <div class="ion-card">
+    <p class="header-text">Work Location</p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <p>Primary Location</p>
+            <h6>{{currentEmployee?.location_name
+              }}</h6>
+          </div>
+          <div>
+            <p>Office Address</p>
+            <h6>{{currentEmployee?.worker_type}}</h6>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div>
+            <p>Work Mode</p>
+            <h6>{{currentEmployee?.worker_type}}</h6>
+          </div>
+
+          <div>
+            <p>Desk Number</p>
+            <h6> -</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="ion-padding reasons-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h2>Archived / Declined reasons</h2>
+    <p>You can define reasons for archiving the candidates or declining offers in Preboarding process.</p>
+    <ion-button class="add-reason-btn" size="small">
+      + Add reason
+    </ion-button>
+  </div>
+
+  <div class="cards-container">
+    <!-- Archive Candidate Reasons -->
+    <ion-card class="reasons-card">
+      <ion-card-header>
+        <ion-card-title>'Archive candidate' reasons (11)</ion-card-title>
+        <p>Reasons for the org team to pick from, when archiving a candidate</p>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="reason-item" *ngFor="let reason of ['Not Qualified', 'Not Suitable', 'Out of Budget', 'Failed in Background Verification', 'Declined Offer', 'Candidate backout']">
+          <span>{{ reason }}</span>
+          <div class="actions">
+            <ion-icon name="pencil-outline"></ion-icon>
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Decline Offer Reasons -->
+    <ion-card class="reasons-card">
+      <ion-card-header>
+        <ion-card-title>'Decline offer' reasons (6)</ion-card-title>
+        <p>Reasons for the candidates to pick from, when declining an offer</p>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="reason-item" *ngFor="let reason of ['Better compensation', 'Relocation issue', 'Found better role', 'Retained by current company', 'Remote working', 'Other']">
+          <span>{{ reason }}</span>
+          <div class="actions">
+            <ion-icon name="pencil-outline"></ion-icon>
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</div>
