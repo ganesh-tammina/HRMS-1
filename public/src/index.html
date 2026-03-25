@@ -52,7 +52,7 @@
       const originalCreateElementOriginal = originalCreateElement;
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node: any) => {
+          mutation.addedNodes.forEach((node) => {
             if (node.nodeType === 1 && node.tagName === 'LINK') {
               if (node.media === 'print') {
                 node.media = 'all';
@@ -87,86 +87,24 @@
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />  
-  <!-- ✅ CRITICAL: Load Ionic core styles immediately (not deferred) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/angular@latest/css/ionic.bundle.css">
-  
-  <!-- ✅ CRITICAL INLINE STYLES: Ensure layout is visible immediately -->
+  <!-- ✅ MINIMAL VISIBILITY FIX: Only force visibility, let Ionic handle layout -->
   <style>
-    /* Critical layout styles - must load before page renders */
+    /* MINIMAL: Only ensure visibility, don't override Ionic's layout */
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
       opacity: 1 !important;
       visibility: visible !important;
-      display: block !important;
     }
     
     app-root {
-      display: block !important;
-      width: 100%;
-      height: 100%;
       opacity: 1 !important;
       visibility: visible !important;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      display: block;
     }
     
-    ion-app {
-      width: 100%;
-      height: 100%;
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-    }
-    
-    ion-router-outlet {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-    }
-    
+    /* Override Ionic's page hiding during transitions */
     .ion-page-invisible {
       opacity: 1 !important;
       visibility: visible !important;
-      display: block !important;
-      pointer-events: auto !important;
-    }
-    
-    /* Prevent Ionic from hiding content */
-    ion-content {
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-    }
-  </style>
-    
-    ion-app {
-      display: block !important;
-      width: 100%;
-      height: 100%;
-    }
-    
-    ion-content {
-      display: block !important;
-    }
-    
-    ion-header {
-      display: block !important;
-    }
-    
-    ion-menu {
-      display: block !important;
-    }
-    
-    .ion-page-invisible {
-      opacity: 1 !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
     }
   </style>  
   <!-- ✅ FIX: Force immediate CSS loading (override Angular's print media optimization) -->
@@ -212,66 +150,45 @@
 <body>
   <app-root></app-root>
   
-  <!-- ✅ CRITICAL FAILSAFE: Ensure visibility before Angular bootstraps -->
+  <!-- ✅ MINIMAL FAILSAFE: Only remove visibility-blocking classes and media="print" -->
   <script>
-    // Run immediately when DOM body is loaded (before Angular)
-    (function ensureVisibility() {
-      // Force everything visible RIGHT NOW
-      const html = document.documentElement;
-      const body = document.body;
-      const appRoot = document.querySelector('app-root');
-      
-      html.style.opacity = '1';
-      html.style.visibility = 'visible';
-      html.style.display = 'block';
-      
-      body.style.opacity = '1';
-      body.style.visibility = 'visible';
-      body.style.display = 'block';
-      body.style.overflow = 'hidden';
-      
-      if (appRoot) {
-        appRoot.style.opacity = '1';
-        appRoot.style.visibility = 'visible';
-        appRoot.style.display = 'block';
-        appRoot.style.width = '100%';
-        appRoot.style.height = '100%';
-      }
-      
-      // Fix any print media styles that slipped through
-      const links = document.querySelectorAll('link[rel="stylesheet"]');
-      links.forEach((link: any) => {
-        if (link.media === 'print') {
-          link.media = 'all';
-        }
-      });
-      
-      // Remove any ion-page-invisible classes
-      document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
-        el.classList.remove('ion-page-invisible');
-        el.style.opacity = '1';
-        el.style.visibility = 'visible';
-      });
-      
-      // Continuous monitoring until Angular is ready
-      const checkInterval = setInterval(() => {
-        // Keep removing ion-page-invisible if it gets re-added
-        document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
+    // Monitor to remove Ionic's visibility-blocking class only (don't force other styles)
+    (function monitorVisibility() {
+      // Only fix what breaks visibility, not layout
+      const removeInvisibilityClass = () => {
+        document.querySelectorAll('.ion-page-invisible').forEach((el) => {
           el.classList.remove('ion-page-invisible');
-          el.style.opacity = '1';
-          el.style.visibility = 'visible';
         });
-        
-        // Keep checking print media
-        document.querySelectorAll('link[rel="stylesheet"]').forEach((link: any) => {
+      };
+      
+      // Fix media="print" stylesheets
+      const fixPrintMedia = () => {
+        document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
           if (link.media === 'print') {
             link.media = 'all';
           }
         });
-      }, 10);
+      };
       
-      // Stop checking after Angular bootstraps (max 2 seconds)
-      setTimeout(() => clearInterval(checkInterval), 2000);
+      // Run immediately
+      removeInvisibilityClass();
+      fixPrintMedia();
+      
+      // Monitor for changes (for edge cases)
+      const observer = new MutationObserver(() => {
+        removeInvisibilityClass();
+        fixPrintMedia();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'media']
+      });
+      
+      // Stop monitoring after Angular bootstraps
+      setTimeout(() => observer.disconnect(), 2000);
     })();
   </script>
 </body>

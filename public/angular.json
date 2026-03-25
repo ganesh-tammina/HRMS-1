@@ -23,7 +23,10 @@
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "optimization": true,
+            "optimization": {
+              "scripts": true,
+              "styles": false
+            },
             "sourceMap": false,
             "assets": [
               {
@@ -50,7 +53,10 @@
                   "maximumError": "4mb"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": false
+              },
               "sourceMap": false,
               "extractLicenses": true,
               "namedChunks": false,

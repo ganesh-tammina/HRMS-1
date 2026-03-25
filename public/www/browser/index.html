@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-beasties-container>
+<html lang="en">
 
 <head>
   <!-- ✅ CRITICAL: Run print-media fix IMMEDIATELY before any stylesheets load -->
@@ -52,7 +52,7 @@
       const originalCreateElementOriginal = originalCreateElement;
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node: any) => {
+          mutation.addedNodes.forEach((node) => {
             if (node.nodeType === 1 && node.tagName === 'LINK') {
               if (node.media === 'print') {
                 node.media = 'all';
@@ -70,104 +70,42 @@
     })();
   </script>
 
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <title>Tammina</title>
 
-  <base href="/">
+  <base href="/"/>
 
-  <meta name="color-scheme" content="light dark">
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="msapplication-tap-highlight" content="no"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/png" href="https://www.techtammina.com/wp-content/themes/shounder/favicon.ico">
+  <link rel="icon" type="image/png" href="https://www.techtammina.com/wp-content/themes/shounder/favicon.ico"/>
   <script src="https://cdn.lordicon.com/lordicon.js"></script>
 
   <!-- add to homescreen for ios -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">  
-  <!-- ✅ CRITICAL: Load Ionic core styles immediately (not deferred) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/angular@latest/css/ionic.bundle.css">
-  
-  <!-- ✅ CRITICAL INLINE STYLES: Ensure layout is visible immediately -->
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>  
+  <!-- ✅ MINIMAL VISIBILITY FIX: Only force visibility, let Ionic handle layout -->
   <style>
-    /* Critical layout styles - must load before page renders */
+    /* MINIMAL: Only ensure visibility, don't override Ionic's layout */
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
       opacity: 1 !important;
       visibility: visible !important;
-      display: block !important;
     }
     
     app-root {
-      display: block !important;
-      width: 100%;
-      height: 100%;
       opacity: 1 !important;
       visibility: visible !important;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      display: block;
     }
     
-    ion-app {
-      width: 100%;
-      height: 100%;
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-    }
-    
-    ion-router-outlet {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-    }
-    
+    /* Override Ionic's page hiding during transitions */
     .ion-page-invisible {
       opacity: 1 !important;
       visibility: visible !important;
-      display: block !important;
-      pointer-events: auto !important;
     }
-    
-    /* Prevent Ionic from hiding content */
-    ion-content {
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-    }
-  </style>
-    
-    ion-app {
-      display: block !important;
-      width: 100%;
-      height: 100%;
-    }
-    
-    ion-content {
-      display: block !important;
-    }
-    
-    ion-header {
-      display: block !important;
-    }
-    
-    ion-menu {
-      display: block !important;
-    }
-    
-    .ion-page-invisible {
-      opacity: 1 !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
-    }
-    
+  </style>  
   <!-- ✅ FIX: Force immediate CSS loading (override Angular's print media optimization) -->
   <script>
     // Force all stylesheets with media="print" to load as "all" immediately
@@ -206,73 +144,52 @@
     
     observer.observe(document.head, { childList: true, subtree: true });
   </script>
-<style>:root{--ion-color-primary:#0054e9;--ion-color-primary-rgb:0, 84, 233;--ion-color-primary-contrast:#fff;--ion-color-primary-contrast-rgb:255, 255, 255;--ion-color-primary-shade:#004acd;--ion-color-primary-tint:#1a65eb;--ion-color-secondary:#0163aa;--ion-color-secondary-rgb:1, 99, 170;--ion-color-secondary-contrast:#fff;--ion-color-secondary-contrast-rgb:255, 255, 255;--ion-color-secondary-shade:#015796;--ion-color-secondary-tint:#1a73b3;--ion-color-tertiary:#6030ff;--ion-color-tertiary-rgb:96, 48, 255;--ion-color-tertiary-contrast:#fff;--ion-color-tertiary-contrast-rgb:255, 255, 255;--ion-color-tertiary-shade:#542ae0;--ion-color-tertiary-tint:#7045ff;--ion-color-success:#2dd55b;--ion-color-success-rgb:45, 213, 91;--ion-color-success-contrast:#000;--ion-color-success-contrast-rgb:0, 0, 0;--ion-color-success-shade:#28bb50;--ion-color-success-tint:#42d96b;--ion-color-warning:#ffc409;--ion-color-warning-rgb:255, 196, 9;--ion-color-warning-contrast:#000;--ion-color-warning-contrast-rgb:0, 0, 0;--ion-color-warning-shade:#e0ac08;--ion-color-warning-tint:#ffca22;--ion-color-danger:#c5000f;--ion-color-danger-rgb:197, 0, 15;--ion-color-danger-contrast:#fff;--ion-color-danger-contrast-rgb:255, 255, 255;--ion-color-danger-shade:#ad000d;--ion-color-danger-tint:#cb1a27;--ion-color-light:#f4f5f8;--ion-color-light-rgb:244, 245, 248;--ion-color-light-contrast:#000;--ion-color-light-contrast-rgb:0, 0, 0;--ion-color-light-shade:#d7d8da;--ion-color-light-tint:#f5f6f9;--ion-color-medium:#636469;--ion-color-medium-rgb:99, 100, 105;--ion-color-medium-contrast:#fff;--ion-color-medium-contrast-rgb:255, 255, 255;--ion-color-medium-shade:#57585c;--ion-color-medium-tint:#737478;--ion-color-dark:#222428;--ion-color-dark-rgb:34, 36, 40;--ion-color-dark-contrast:#fff;--ion-color-dark-contrast-rgb:255, 255, 255;--ion-color-dark-shade:#1e2023;--ion-color-dark-tint:#383a3e}html{--ion-dynamic-font:-apple-system-body;--ion-font-family:var(--ion-default-font)}body{background:var(--ion-background-color);color:var(--ion-text-color)}@supports (padding-top: 20px){html{--ion-safe-area-top:var(--ion-statusbar-padding)}}@supports (padding-top: env(safe-area-inset-top)){html{--ion-safe-area-top:env(safe-area-inset-top);--ion-safe-area-bottom:env(safe-area-inset-bottom);--ion-safe-area-left:env(safe-area-inset-left);--ion-safe-area-right:env(safe-area-inset-right)}}*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}html{width:100%;height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;margin:0;padding:0;position:fixed;width:100%;max-width:100%;height:100%;max-height:100%;transform:translateZ(0);text-rendering:optimizeLegibility;overflow:hidden;touch-action:manipulation;-webkit-user-drag:none;-ms-content-zooming:none;word-wrap:break-word;overscroll-behavior-y:none;-webkit-text-size-adjust:none;text-size-adjust:none}html{font-family:var(--ion-font-family)}@supports (-webkit-touch-callout: none){html{font:var(--ion-dynamic-font, 16px var(--ion-font-family))}}@media (prefers-color-scheme: dark){:root{--ion-color-primary:#4d8dff;--ion-color-primary-rgb:77, 141, 255;--ion-color-primary-contrast:#000;--ion-color-primary-contrast-rgb:0, 0, 0;--ion-color-primary-shade:#447ce0;--ion-color-primary-tint:#5f98ff;--ion-color-secondary:#46b1ff;--ion-color-secondary-rgb:70, 177, 255;--ion-color-secondary-contrast:#000;--ion-color-secondary-contrast-rgb:0, 0, 0;--ion-color-secondary-shade:#3e9ce0;--ion-color-secondary-tint:#59b9ff;--ion-color-tertiary:#8482fb;--ion-color-tertiary-rgb:132, 130, 251;--ion-color-tertiary-contrast:#000;--ion-color-tertiary-contrast-rgb:0, 0, 0;--ion-color-tertiary-shade:#7472dd;--ion-color-tertiary-tint:#908ffb;--ion-color-success:#2dd55b;--ion-color-success-rgb:45, 213, 91;--ion-color-success-contrast:#000;--ion-color-success-contrast-rgb:0, 0, 0;--ion-color-success-shade:#28bb50;--ion-color-success-tint:#42d96b;--ion-color-warning:#ffce31;--ion-color-warning-rgb:255, 206, 49;--ion-color-warning-contrast:#000;--ion-color-warning-contrast-rgb:0, 0, 0;--ion-color-warning-shade:#e0b52b;--ion-color-warning-tint:#ffd346;--ion-color-danger:#f24c58;--ion-color-danger-rgb:242, 76, 88;--ion-color-danger-contrast:#000;--ion-color-danger-contrast-rgb:0, 0, 0;--ion-color-danger-shade:#d5434d;--ion-color-danger-tint:#f35e69;--ion-color-light:#222428;--ion-color-light-rgb:34, 36, 40;--ion-color-light-contrast:#fff;--ion-color-light-contrast-rgb:255, 255, 255;--ion-color-light-shade:#1e2023;--ion-color-light-tint:#383a3e;--ion-color-medium:#989aa2;--ion-color-medium-rgb:152, 154, 162;--ion-color-medium-contrast:#000;--ion-color-medium-contrast-rgb:0, 0, 0;--ion-color-medium-shade:#86888f;--ion-color-medium-tint:#a2a4ab;--ion-color-dark:#f4f5f8;--ion-color-dark-rgb:244, 245, 248;--ion-color-dark-contrast:#000;--ion-color-dark-contrast-rgb:0, 0, 0;--ion-color-dark-shade:#d7d8da;--ion-color-dark-tint:#f5f6f9}}app-root{opacity:1!important;visibility:visible!important}html,body{font-family:Open Sans;font-size:2.0143884892vh;line-height:2.7338129496vh;font-weight:400;letter-spacing:.2px;scrollbar-width:thin;scrollbar-color:rgba(31,116,187,.4) transparent}body::-webkit-scrollbar{width:6px!important;height:6px!important}body::-webkit-scrollbar-track{background:transparent;border-radius:10px}body::-webkit-scrollbar-thumb{background:#1f74bb33;border-radius:10px;transition:background .3s ease}body::-webkit-scrollbar-thumb:hover{background:#1f74bb99}body::-webkit-scrollbar-button{display:none}*{scrollbar-width:thin;scrollbar-color:rgba(31,116,187,.4) transparent}*::-webkit-scrollbar{width:6px!important;height:6px!important}*::-webkit-scrollbar-track{background:transparent;border-radius:10px}*::-webkit-scrollbar-thumb{background:#1f74bb33;border-radius:10px;transition:background .3s ease}*::-webkit-scrollbar-thumb:hover{background:#1f74bb99}*::-webkit-scrollbar-button{display:none}:root{--ion-color-secondary-shade:#015796;--ion-color-primary:#1F74BB;--ion-color-secondary:#3498DB;--ion-color-success:#28A745;--ion-color-warning:#ffc409;--ion-color-danger:#bb4b72;--ion-bg-color:#E6F1FF;--ion-text-color:#333333;--ion-border-color:#ABABAB;--ion-subtle-text:#707070;--ion-white-color:#FFFFFF;--ion-side-bar-color:#122E44;--ion-bg-color-primary:#f4f5f8}body{color:#333}</style><link rel="stylesheet" href="styles-WJHBGRVH.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-WJHBGRVH.css"></noscript></head>
+<link rel="stylesheet" href="styles-LFVXS2B3.css"></head>
 
 <body>
   <app-root></app-root>
   
-  <!-- ✅ CRITICAL FAILSAFE: Ensure visibility before Angular bootstraps -->
+  <!-- ✅ MINIMAL FAILSAFE: Only remove visibility-blocking classes and media="print" -->
   <script>
-    // Run immediately when DOM body is loaded (before Angular)
-    (function ensureVisibility() {
-      // Force everything visible RIGHT NOW
-      const html = document.documentElement;
-      const body = document.body;
-      const appRoot = document.querySelector('app-root');
-      
-      html.style.opacity = '1';
-      html.style.visibility = 'visible';
-      html.style.display = 'block';
-      
-      body.style.opacity = '1';
-      body.style.visibility = 'visible';
-      body.style.display = 'block';
-      body.style.overflow = 'hidden';
-      
-      if (appRoot) {
-        appRoot.style.opacity = '1';
-        appRoot.style.visibility = 'visible';
-        appRoot.style.display = 'block';
-        appRoot.style.width = '100%';
-        appRoot.style.height = '100%';
-      }
-      
-      // Fix any print media styles that slipped through
-      const links = document.querySelectorAll('link[rel="stylesheet"]');
-      links.forEach((link: any) => {
-        if (link.media === 'print') {
-          link.media = 'all';
-        }
-      });
-      
-      // Remove any ion-page-invisible classes
-      document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
-        el.classList.remove('ion-page-invisible');
-        el.style.opacity = '1';
-        el.style.visibility = 'visible';
-      });
-      
-      // Continuous monitoring until Angular is ready
-      const checkInterval = setInterval(() => {
-        // Keep removing ion-page-invisible if it gets re-added
-        document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
+    // Monitor to remove Ionic's visibility-blocking class only (don't force other styles)
+    (function monitorVisibility() {
+      // Only fix what breaks visibility, not layout
+      const removeInvisibilityClass = () => {
+        document.querySelectorAll('.ion-page-invisible').forEach((el) => {
           el.classList.remove('ion-page-invisible');
-          el.style.opacity = '1';
-          el.style.visibility = 'visible';
         });
-        
-        // Keep checking print media
-        document.querySelectorAll('link[rel="stylesheet"]').forEach((link: any) => {
+      };
+      
+      // Fix media="print" stylesheets
+      const fixPrintMedia = () => {
+        document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
           if (link.media === 'print') {
             link.media = 'all';
           }
         });
-      }, 10);
+      };
       
-      // Stop checking after Angular bootstraps (max 2 seconds)
-      setTimeout(() => clearInterval(checkInterval), 2000);
+      // Run immediately
+      removeInvisibilityClass();
+      fixPrintMedia();
+      
+      // Monitor for changes (for edge cases)
+      const observer = new MutationObserver(() => {
+        removeInvisibilityClass();
+        fixPrintMedia();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'media']
+      });
+      
+      // Stop monitoring after Angular bootstraps
+      setTimeout(() => observer.disconnect(), 2000);
     })();
   </script>
-<link rel="modulepreload" href="chunk-REV7FFDQ.js"><link rel="modulepreload" href="chunk-NHVKK37O.js"><link rel="modulepreload" href="chunk-PAGXE5F4.js"><link rel="modulepreload" href="chunk-QUJFQN2Y.js"><link rel="modulepreload" href="chunk-BJRNMJT7.js"><link rel="modulepreload" href="chunk-H3TRNUDP.js"><link rel="modulepreload" href="chunk-MBJ4HXMZ.js"><link rel="modulepreload" href="chunk-2LIQ2TF2.js"><link rel="modulepreload" href="chunk-MZPOKBGF.js"><link rel="modulepreload" href="chunk-Y5KMWVCG.js"><script src="polyfills-6BIPK22E.js" type="module"></script><script src="main-PEJ3LX26.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-REV7FFDQ.js"><link rel="modulepreload" href="chunk-NHVKK37O.js"><link rel="modulepreload" href="chunk-PAGXE5F4.js"><link rel="modulepreload" href="chunk-QUJFQN2Y.js"><link rel="modulepreload" href="chunk-BJRNMJT7.js"><link rel="modulepreload" href="chunk-H3TRNUDP.js"><link rel="modulepreload" href="chunk-MBJ4HXMZ.js"><link rel="modulepreload" href="chunk-2LIQ2TF2.js"><link rel="modulepreload" href="chunk-MZPOKBGF.js"><link rel="modulepreload" href="chunk-Y5KMWVCG.js"><script src="polyfills-6BIPK22E.js" type="module"></script><script src="main-WZ65763A.js" type="module"></script></body>
 
 </html>

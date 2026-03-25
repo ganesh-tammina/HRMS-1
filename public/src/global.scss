@@ -41,15 +41,6 @@
 .ion-page-invisible {
   opacity: 1 !important;
   visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Ensure app root and main content is visible */
-app-root,
-ion-app,
-ion-router-outlet {
-  opacity: 1 !important;
-  visibility: visible !important;
 }
 
 
