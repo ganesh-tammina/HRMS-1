@@ -38,6 +38,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   profileImageUrl: string = 'assets/user.svg';
   env: string = '';
   isAdmin: boolean = false;
+  isAuthenticated: boolean = false;  // ✅ NEW: Check if user is logged in before rendering popovers
 
   private destroy$ = new Subject<void>();
 
@@ -62,6 +63,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.env = environment.apiURL.startsWith('http') ? environment.apiURL : `http://${environment.apiURL}`;
     this.isAdmin = this.routeGuardService.userRole?.toLowerCase() === 'admin';
+    
+    // ✅ Check current URL to determine if we should initialize authenticated components
+    const currentUrl = this.router.url;
+    const isLoginPage = currentUrl.includes('/login') || currentUrl.includes('/candidate');
+    
+    // ✅ CRITICAL: Only check authentication if NOT on login page
+    if (isLoginPage) {
+      this.isAuthenticated = false;
+      return;
+    }
+    
+    this.isAuthenticated = this.routeGuardService.isLoggedIn;
 
     // Listen for general profile image changes (e.g. from candidate service)
     this.candidateService.profileImage$
@@ -89,6 +102,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
               this.employeeService.setEmployeeId(res.reporting_manager_id);
             }
           }
+        },
+        error: (err) => {
+          // Skip error handling if user is not authenticated
+          if (err?.status === 401) {
+            console.warn('Header: User not authenticated, skipping profile load');
+            return;
+          }
+          console.error('Header: Failed to load profile', err);
         }
       });
 

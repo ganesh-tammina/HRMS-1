@@ -9,7 +9,6 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HeaderComponent } from '../shared/header/header.component';
 import { CreateOfferHeaderComponent } from '../onboarding/create-offer-header/create-offer-header.component';
 import { CandidateDetailsService } from '../services/candidate-details-service.service';
 
@@ -22,7 +21,6 @@ import { CandidateDetailsService } from '../services/candidate-details-service.s
     CommonModule,
     FormsModule,
     IonicModule,
-    HeaderComponent,
     CreateOfferHeaderComponent,
     ReactiveFormsModule,
   ],

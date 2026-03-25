@@ -1,17 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../shared/header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, PopoverController, ToastController } from '@ionic/angular';
 import { CandidateService } from '../services/pre-onboarding.service';
 import { AboutusComponent } from './aboutus/aboutus.component';
 import { ProfileComponent } from './profile/profile.component';
 import { JobTabComponent } from './job-tab/job-tab.component';
-import { DocumentTabComponent } from './document-tab/document-tab.component';
-import { AssetsTabComponent } from './assets-tab/assets-tab.component';
 import { RouteGuardService } from '../services/route-guard/route-service/route-guard.service';
 import { environment } from 'src/environments/environment';
-import { LeaveRequestsComponent } from '../leave-requests/leave-requests.component';
 import { Subject, takeUntil, interval, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
@@ -30,10 +26,6 @@ import { EmployeeService } from '../services/employee.service';
     AboutusComponent,
     ProfileComponent,
     JobTabComponent,
-    DocumentTabComponent,
-    AssetsTabComponent,
-    HeaderComponent,
-    LeaveRequestsComponent,
   ],
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {

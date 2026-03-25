@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CreateOfferHeaderComponent } from '../create-offer-header/create-offer-header.component';
-import { HeaderComponent } from 'src/app/shared/header/header.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CandidateDetailsService, OfferPayload } from 'src/app/services/candidate-details-service.service';
 import { EmailService } from 'src/app/services/email.service';
@@ -17,8 +16,7 @@ import { EmailService } from 'src/app/services/email.service';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    CreateOfferHeaderComponent,
-    HeaderComponent]
+    CreateOfferHeaderComponent]
 })
 export class PreviewSendComponent implements OnInit {
   @Input() candidate: any = {};

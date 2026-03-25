@@ -91,8 +91,19 @@ app.use(
 // Serve static files from public/www/browser folder (where Angular build outputs)
 // IMPORTANT: This must come BEFORE the catch-all route
 app.use(express.static(path.join(__dirname, 'public', 'www', 'browser'), {
-    maxAge: '1d', // Cache static assets for 1 day
-    etag: false   // Disable ETag for better caching
+    maxAge: process.env.NODE_ENV === 'production' ? '1d' : '0', // No cache in dev, 1d in prod
+    etag: false,   // Disable ETag for better caching
+    setHeaders: (res, path) => {
+        // ✅ Ensure CSS files load immediately (not deferred)
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+            res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+        }
+        // ✅ Ensure JS loads properly  
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+        }
+    }
 }));
 
 // Serve uploaded files (profile images, documents, etc.)

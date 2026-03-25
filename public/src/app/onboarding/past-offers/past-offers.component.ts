@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { OnboardingMainheaderComponent } from '../onboarding-mainheader/onboarding-mainheader.component';
-import { HeaderComponent } from 'src/app/shared/header/header.component';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -9,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './past-offers.component.html',
   styleUrls: ['./past-offers.component.scss'],
   standalone: true,
-  imports: [OnboardingMainheaderComponent, IonicModule, HeaderComponent]
+  imports: [OnboardingMainheaderComponent, IonicModule]
 })
 export class PastOffersComponent implements OnInit {
 

@@ -133,33 +133,36 @@
               </ion-item>
             </ion-menu-toggle>
 
-            <ion-menu-toggle auto-hide="false" id="menu-finances">
-              <ion-item routerDirection="root" lines="none" detail="false" routerLinkActive="selected"
-                [ngClass]="(currentUrl=='/payslip') ? 'selected ion-activatable' : ''">
-                <div class="row-left">
-                  <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:#94a3b8"
-                    class="inactive-menu" title="My Finances"></lord-icon>
-                  <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="loop" colors="primary:#ffffff"
-                    class="active-menu" title="My Finances"></lord-icon>
-                  <ion-label>My Finances</ion-label>
-                </div>
-              </ion-item>
-            </ion-menu-toggle>
-            <ion-popover trigger="menu-finances" [dismissOnSelect]="true" class="menu-dropdown" side="right">
-              <ng-template>
-                <ion-content>
-                  <ion-menu-toggle auto-hide="false">
-                    <ion-item routerDirection="root" routerLink="/MyPay" lines="none" detail="false">
-                      <ion-label>My Pay</ion-label>
-                    </ion-item>
-                    <ion-item routerDirection="root" *ngIf="isAdminOnly()" routerLink="/finance-admin" lines="none"
-                      detail="false">
-                      <ion-label>Finance Admin</ion-label>
-                    </ion-item>
-                  </ion-menu-toggle>
-                </ion-content>
-              </ng-template>
-            </ion-popover>
+            <!-- ✅ Only render menu-finances button and popover when NOT on login page -->
+            <ng-container *ngIf="!isLoginPage">
+              <ion-menu-toggle auto-hide="false" id="menu-finances">
+                <ion-item routerDirection="root" lines="none" detail="false" routerLinkActive="selected"
+                  [ngClass]="(currentUrl=='/payslip') ? 'selected ion-activatable' : ''">
+                  <div class="row-left">
+                    <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:#94a3b8"
+                      class="inactive-menu" title="My Finances"></lord-icon>
+                    <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="loop" colors="primary:#ffffff"
+                      class="active-menu" title="My Finances"></lord-icon>
+                    <ion-label>My Finances</ion-label>
+                  </div>
+                </ion-item>
+              </ion-menu-toggle>
+              <ion-popover trigger="menu-finances" [dismissOnSelect]="true" class="menu-dropdown" side="right">
+                <ng-template>
+                  <ion-content>
+                    <ion-menu-toggle auto-hide="false">
+                      <ion-item routerDirection="root" routerLink="/MyPay" lines="none" detail="false">
+                        <ion-label>My Pay</ion-label>
+                      </ion-item>
+                      <ion-item routerDirection="root" *ngIf="isAdminOnly()" routerLink="/finance-admin" lines="none"
+                        detail="false">
+                        <ion-label>Finance Admin</ion-label>
+                      </ion-item>
+                    </ion-menu-toggle>
+                  </ion-content>
+                </ng-template>
+              </ion-popover>
+            </ng-container>
 
             <ion-menu-toggle auto-hide="false">
               <ion-item routerDirection="root" (click)="logout()" lines="none" detail="false">

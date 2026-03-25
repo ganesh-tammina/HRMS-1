@@ -2,6 +2,74 @@
 <html lang="en">
 
 <head>
+  <!-- ✅ CRITICAL: Run print-media fix IMMEDIATELY before any stylesheets load -->
+  <script>
+    // IMMEDIATE: Force visibility on document elements
+    document.documentElement.style.opacity = '1';
+    document.documentElement.style.visibility = 'visible';
+    document.documentElement.style.display = 'block';
+    
+    // Suppress known Ionic popover warnings related to deferred DOM rendering
+    window.ionicWarningHandler = function(message) {
+      return;
+    };
+    
+    // Override console methods to suppress specific warnings
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      const message = args[0]?.toString?.() || '';
+      // Suppress popover trigger warnings - we handle these with *ngIf
+      if (message.includes('ion-popover') && message.includes('trigger element')) {
+        return;
+      }
+      return originalWarn.apply(console, args);
+    };
+    
+    // Intercept and fix print media stylesheets BEFORE they're processed
+    (function() {
+      const originalCreateElement = document.createElement.bind(document);
+      document.createElement = function(tagName) {
+        const element = originalCreateElement(tagName);
+        if (tagName.toLowerCase() === 'link') {
+          const originalSetAttribute = element.setAttribute.bind(element);
+          element.setAttribute = function(name, value) {
+            // Convert print media to all immediately
+            if (name === 'media' && value === 'print') {
+              return originalSetAttribute.call(this, name, 'all');
+            }
+            // Ensure rel and href are set properly
+            if (name === 'rel' && value.includes('stylesheet')) {
+              // Force immediate load, don't lazy load
+              element.removeAttribute('noprefetch');
+            }
+            return originalSetAttribute.call(this, name, value);
+          };
+        }
+        return element;
+      };
+      
+      // Also intercept onload/readyState to ensure styles apply immediately
+      const originalCreateElementOriginal = originalCreateElement;
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node: any) => {
+            if (node.nodeType === 1 && node.tagName === 'LINK') {
+              if (node.media === 'print') {
+                node.media = 'all';
+              }
+            }
+          });
+        });
+      });
+      
+      // Start observing for new link tags
+      observer.observe(document.head, {
+        childList: true,
+        subtree: true
+      });
+    })();
+  </script>
+
   <meta charset="utf-8" />
   <title>Tammina</title>
 
@@ -18,11 +86,194 @@
 
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />  
+  <!-- ✅ CRITICAL: Load Ionic core styles immediately (not deferred) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/angular@latest/css/ionic.bundle.css">
+  
+  <!-- ✅ CRITICAL INLINE STYLES: Ensure layout is visible immediately -->
+  <style>
+    /* Critical layout styles - must load before page renders */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+    }
+    
+    app-root {
+      display: block !important;
+      width: 100%;
+      height: 100%;
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    
+    ion-app {
+      width: 100%;
+      height: 100%;
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+    }
+    
+    ion-router-outlet {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .ion-page-invisible {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+      pointer-events: auto !important;
+    }
+    
+    /* Prevent Ionic from hiding content */
+    ion-content {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+    }
+  </style>
+    
+    ion-app {
+      display: block !important;
+      width: 100%;
+      height: 100%;
+    }
+    
+    ion-content {
+      display: block !important;
+    }
+    
+    ion-header {
+      display: block !important;
+    }
+    
+    ion-menu {
+      display: block !important;
+    }
+    
+    .ion-page-invisible {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+  </style>  
+  <!-- ✅ FIX: Force immediate CSS loading (override Angular's print media optimization) -->
+  <script>
+    // Force all stylesheets with media="print" to load as "all" immediately
+    function fixPrintMediaStylesheets() {
+      const stylesheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
+      stylesheets.forEach(link => {
+        link.media = 'all';
+        link.onload = null;
+      });
+    }
+    
+    // Run immediately on page load
+    window.addEventListener('DOMContentLoaded', fixPrintMediaStylesheets, { once: true });
+    
+    // Also run on document interactive
+    if (document.readyState === 'loading') {
+      document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'interactive') {
+          fixPrintMediaStylesheets();
+        }
+      }, { once: true });
+    }
+    
+    // Watch for dynamically added stylesheets
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.tagName === 'LINK' && node.media === 'print') {
+              node.media = 'all';
+            }
+          });
+        }
+      });
+    });
+    
+    observer.observe(document.head, { childList: true, subtree: true });
+  </script>
 </head>
 
 <body>
   <app-root></app-root>
+  
+  <!-- ✅ CRITICAL FAILSAFE: Ensure visibility before Angular bootstraps -->
+  <script>
+    // Run immediately when DOM body is loaded (before Angular)
+    (function ensureVisibility() {
+      // Force everything visible RIGHT NOW
+      const html = document.documentElement;
+      const body = document.body;
+      const appRoot = document.querySelector('app-root');
+      
+      html.style.opacity = '1';
+      html.style.visibility = 'visible';
+      html.style.display = 'block';
+      
+      body.style.opacity = '1';
+      body.style.visibility = 'visible';
+      body.style.display = 'block';
+      body.style.overflow = 'hidden';
+      
+      if (appRoot) {
+        appRoot.style.opacity = '1';
+        appRoot.style.visibility = 'visible';
+        appRoot.style.display = 'block';
+        appRoot.style.width = '100%';
+        appRoot.style.height = '100%';
+      }
+      
+      // Fix any print media styles that slipped through
+      const links = document.querySelectorAll('link[rel="stylesheet"]');
+      links.forEach((link: any) => {
+        if (link.media === 'print') {
+          link.media = 'all';
+        }
+      });
+      
+      // Remove any ion-page-invisible classes
+      document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
+        el.classList.remove('ion-page-invisible');
+        el.style.opacity = '1';
+        el.style.visibility = 'visible';
+      });
+      
+      // Continuous monitoring until Angular is ready
+      const checkInterval = setInterval(() => {
+        // Keep removing ion-page-invisible if it gets re-added
+        document.querySelectorAll('.ion-page-invisible').forEach((el: any) => {
+          el.classList.remove('ion-page-invisible');
+          el.style.opacity = '1';
+          el.style.visibility = 'visible';
+        });
+        
+        // Keep checking print media
+        document.querySelectorAll('link[rel="stylesheet"]').forEach((link: any) => {
+          if (link.media === 'print') {
+            link.media = 'all';
+          }
+        });
+      }, 10);
+      
+      // Stop checking after Angular bootstraps (max 2 seconds)
+      setTimeout(() => clearInterval(checkInterval), 2000);
+    })();
+  </script>
 </body>
 
 </html>

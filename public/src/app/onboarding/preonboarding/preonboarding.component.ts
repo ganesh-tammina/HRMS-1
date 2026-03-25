@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { OnboardingMainheaderComponent } from '../onboarding-mainheader/onboarding-mainheader.component';
-import { HeaderComponent } from 'src/app/shared/header/header.component';
 import { Router } from '@angular/router';
 import { CandiateCreateComponent } from '../candiate-create/candiate-create.component';
 import { CandidateService } from 'src/app/services/pre-onboarding.service';
@@ -20,7 +19,6 @@ import { CandidateDetailsService } from 'src/app/services/candidate-details-serv
     OnboardingMainheaderComponent,
     CommonModule,
     IonicModule,
-    HeaderComponent,
   ],
 })
 export class PreonboardingComponent implements OnInit {

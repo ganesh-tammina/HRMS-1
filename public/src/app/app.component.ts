@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public showCategories = false;
   showMenu = true;
   currentUser: Observable<Candidate | null>;
-  isLoginPage = false;
+  isLoginPage = true;  // ✅ SAFE DEFAULT: Hide header until we confirm we're NOT on login
   iscandiateofferPage = false;
   iscandiateofferLetterPage = false;
   CurrentuserType: string = '';
@@ -58,6 +58,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {
+    // ✅ Prevent Ionic rendering issues on initial load
+    // Set body visible explicitly to prevent hidden state
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    htmlEl.style.opacity = '1';
+    bodyEl.style.opacity = '1';
+    
     this.currentUser = this.candidateService.currentCandidate$;
     this.router.events.pipe(
       takeUntil(this.destroy$)
@@ -114,6 +121,12 @@ export class AppComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
+          // 401 means token is invalid/expired - force logout
+          if (err.status === 401) {
+            console.warn('Token expired during profile fetch - logging out');
+            this.routeGaurdService.logout();
+            return;
+          }
           console.error('Failed to load profile in AppComponent', err);
           this.userDesignation = 'N/A'; // Prevent infinite retries
         }
@@ -122,12 +135,83 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (!this.announcementsFetched && !this.isLoginPage && this.routeGaurdService.isLoggedIn) {
       this.announcementsFetched = true;
-      this.service.getAnnouncements().pipe(takeUntil(this.destroy$)).subscribe((r: any) => console.log('📢 Announcements:', r));
+      this.service.getAnnouncements().pipe(takeUntil(this.destroy$)).subscribe({
+        next: (r: any) => console.log('📢 Announcements:', r),
+        error: (err) => {
+          // 401 means token is invalid/expired - force logout silently
+          if (err.status === 401) {
+            console.warn('Token expired during announcements fetch - logging out');
+            this.routeGaurdService.logout();
+          }
+        }
+      });
     }
   }
 
   ngOnInit(): void {
     this.updateRoleInfo();
+    
+    // ✅ FIX: Ensure pages are visible after initialization
+    // Remove ion-page-invisible class that Ionic applies during initialization
+    setTimeout(() => {
+      const pages = document.querySelectorAll('.ion-page-invisible');
+      pages.forEach(page => {
+        page.classList.remove('ion-page-invisible');
+      });
+      
+      // Also check ion-app and app-root
+      const appRoot = document.querySelector('app-root') as HTMLElement;
+      const ionApp = document.querySelector('ion-app') as HTMLElement;
+      if (appRoot) {
+        appRoot.style.opacity = '1';
+        appRoot.style.visibility = 'visible';
+      }
+      if (ionApp) {
+        ionApp.style.opacity = '1';
+        ionApp.style.visibility = 'visible';
+      }
+      
+      // ✅ CRITICAL: Ensure stylesheets with media="print" are loaded
+      const printSheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
+      printSheets.forEach((link: any) => {
+        if (link.media === 'print') {
+          link.media = 'all';
+          link.onload = null; // Remove onload handler
+        }
+      });
+    }, 50);
+    
+    // ✅ CONTINUOUS FIX: Watch for any new ion-page-invisible classes being added
+    const observer = new MutationObserver(() => {
+      const pages = document.querySelectorAll('.ion-page-invisible');
+      if (pages.length > 0) {
+        pages.forEach(page => {
+          page.classList.remove('ion-page-invisible');
+          (page as HTMLElement).style.opacity = '1';
+          (page as HTMLElement).style.visibility = 'visible';
+        });
+      }
+      
+      // Also watch for print media sheets
+      const printSheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
+      printSheets.forEach((link: any) => {
+        if (link.media === 'print') {
+          link.media = 'all';
+        }
+      });
+    });
+    
+    const config = { 
+      attributes: true, 
+      attributeFilter: ['class', 'media'], 
+      subtree: true,
+      childList: true 
+    };
+    
+    const rootElement = document.querySelector('ion-app') || document.querySelector('app-root');
+    if (rootElement) {
+      observer.observe(rootElement, config);
+    }
   }
 
   private updateRoleInfo(): void {

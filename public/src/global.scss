@@ -37,6 +37,21 @@
 @import '@ionic/angular/css/palettes/dark.system.css';
 @import 'theme/variables.scss';
 
+/* ✅ FIX: Override Ionic's page invisibility during transitions */
+.ion-page-invisible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure app root and main content is visible */
+app-root,
+ion-app,
+ion-router-outlet {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 
 
 html.md {
