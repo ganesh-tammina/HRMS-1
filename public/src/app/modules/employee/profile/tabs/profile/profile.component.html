@@ -1,0 +1,154 @@
+<div class="row-left content-detail-block" *ngIf="currentEmployee">
+  <!-- Primary Details -->
+  <div class="ion-card">
+    <p class="header-text row-space-between">
+      Primary Details
+      <img src="../../../../assets/edit.jpg" (click)="isEditDetails()" alt="edit" width="50px" height="50px" />
+    </p>
+    <form (ngSubmit)="onSubmitDetails()">
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>First Name</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee.FullName}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.FullName" *ngIf="IsDetails" name="FullName"
+                class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Gender</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee?.Gender || '-'}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.Gender" *ngIf="IsDetails" name="Gender"
+                class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Marital Status</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee?.MaritalStatus || '-'}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.MaritalStatus" *ngIf="IsDetails" name="MaritalStatus"
+                class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Date of Birth</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee?.DateOfBirth || '-'}}</h6>
+              <ion-input type="date" [(ngModel)]="currentEmployee.DateOfBirth" *ngIf="IsDetails" name="DateOfBirth"
+                class="custom-input"></ion-input>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>Last Name</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee?.LastName || '-'}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.LastName" *ngIf="IsDetails" name="LastName"
+                class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Blood Group</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee.BloodGroup || '-'}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.BloodGroup" *ngIf="IsDetails" name="BloodGroup"
+                class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Physically Handicapped</p>
+              <h6 *ngIf="!IsDetails">{{currentEmployee?.PhysicallyHandicapped || '-'}}</h6>
+              <ion-input [(ngModel)]="currentEmployee.PhysicallyHandicapped" *ngIf="IsDetails"
+                name="PhysicallyHandicapped" class="custom-input"></ion-input>
+            </div>
+            <ion-button class="primary-btn row-right" type="submit" *ngIf="IsDetails">
+              Submit
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+
+  <!-- Contact Details -->
+  <div class="ion-card">
+    <p class="header-text row-space-between">
+      Contact Details
+      <ion-icon name="pencil-outline" (click)="isEditForm()" class="edit-icon"></ion-icon>
+    </p>
+    <form>
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>Work Email</p>
+              <h6 *ngIf="!Isedit">{{currentEmployee?.WorkEmail || '-'}}</h6>
+              <ion-input [value]="currentEmployee?.WorkEmail" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Aadhaar Number</p>
+              <h6 *ngIf="!Isedit">{{currentEmployee?.AadhaarNumber || '-'}}</h6>
+              <ion-input [value]="currentEmployee?.AadhaarNumber" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>Residence Number</p>
+              <h6 *ngIf="!Isedit">-</h6>
+              <ion-input [value]="currentEmployee?.ResidenceNumber" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>Personal Email</p>
+              <h6 *ngIf="!Isedit">{{currentEmployee?.Email || '-'}}</h6>
+              <ion-input [value]="currentEmployee?.Email" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>PF Number</p>
+              <h6 *ngIf="!Isedit">{{currentEmployee?.pf_number || '-'}}</h6>
+              <ion-input [value]="currentEmployee?.pf_number" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+            <div class="info-group">
+              <p>UAN Number</p>
+              <h6 *ngIf="!Isedit">{{currentEmployee?.uan_number || '-'}}</h6>
+              <ion-input [value]="currentEmployee?.uan_number" *ngIf="Isedit" class="custom-input"></ion-input>
+            </div>
+            <ion-button class="primary-btn row-right" type="submit" *ngIf="Isedit" (click)="Isedit = false">
+              Submit
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+</div>
+
+<div class="row-left content-detail-block address-section" *ngIf="currentEmployee">
+  <!-- Address Details -->
+  <div class="ion-card full-width">
+    <p class="header-text row-space-between">
+      Addresses
+      <ion-icon name="pencil-outline" (click)="isEditAddress()" class="edit-icon"></ion-icon>
+    </p>
+    <form>
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>Current Address</p>
+              <h6 *ngIf="!isAdress">{{currentEmployee?.current_address_line1 || '-'}}</h6>
+              <ion-textarea [value]="currentEmployee?.current_address_line1" *ngIf="isAdress"
+                class="custom-textarea"></ion-textarea>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="info-group">
+              <p>Permanent Address</p>
+              <h6 *ngIf="!isAdress">{{currentEmployee?.permanent_address_line1 || '-'}}</h6>
+              <ion-textarea [value]="currentEmployee?.permanent_address_line1" *ngIf="isAdress"
+                class="custom-textarea"></ion-textarea>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isAdress">
+          <ion-col>
+            <ion-button class="primary-btn row-right" type="submit" (click)="isAdress = false">
+              Submit
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+</div>

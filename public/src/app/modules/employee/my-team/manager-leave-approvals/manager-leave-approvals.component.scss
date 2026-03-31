@@ -1,0 +1,95 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  ion-spinner { margin-bottom: 16px; }
+  p { color: #555; font-size: 15px; }
+}
+
+.no-leaves {
+  margin-top: 40px;
+  img { width: 180px; opacity: 0.7; }
+  .no-data-text { color: #888; font-size: 14px; margin-top: 12px; }
+}
+
+.requests-container {
+  ion-card {
+    border-radius: 8px;
+    border: 0.74px solid #ABABAB;
+    box-shadow: none;
+    margin: 12px;
+
+    label { color: #707070; font-size: 12px; }
+    p { font-size: 14px; color: #333333; margin: 4px 0; }
+
+    .info-row {
+      label { color: #1F74BB; font-size: 14px; }
+      background: #E6F4FF;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 12px 0;
+      width: 100%;
+    }
+
+    ion-button {
+      min-height: 30px;
+      height: 36px;
+      font-size: 14px;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.primary-btn {
+  --background: #1F74BB;
+  --color: #fff;
+  --border-radius: 8px;
+  margin-left: 8px;
+}
+
+.primary-outline-btn {
+  --background: transparent;
+  --color: #1A2B3C;
+  --border-radius: 8px;
+  border: 1px solid #1A2B3C;
+}
+
+.action-btns { margin-top: 12px; }
+
+.reject { background: #FFD8D8; color: #C80000; border-radius: 8px; }
+.accept { background: #d4f8e8; color: #0a7d44; border-radius: 8px; }
+.pending { background: #fff3cd; color: #856404; border-radius: 8px; }
+.total-days { color: #1F74BB; font-weight: 600; }
+
+.select-tag {
+  width: 100%;
+  margin-right: 10px;
+  ion-label { width: max-content; margin-right: 12px; }
+  ion-select { width: 150px; border: 1px solid #ABABAB; border-radius: 8px; padding: 0 8px; }
+}
+
+.rejection-textarea {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 8px;
+  --background: #fafafa;
+}
+
+ion-searchbar {
+  --background: #fff;
+  border-radius: 8px;
+  --box-shadow: none;
+  border: 1px solid #ABABAB;
+  height: 42px;
+  margin-left: 8px;
+  width: 95%;
+}
+
+ion-card-title { font-size: 15px; font-weight: 600; }
+.employee-number { font-size: 12px; color: #888; margin: 0; }
+.row-space-between { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+.row-right { display: flex; justify-content: flex-end; align-items: center; }
+.row-left { display: flex; align-items: center; }
+.mr-8 { margin-right: 8px; }

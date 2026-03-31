@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-toolbar color="primary" class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/administration"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Leave Configuration Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-containerOn">
+  <div class="welcome-section">
+     <h1 class="page-title">Leaves Admin Dashboard</h1>
+     <p class="sub-text">Configure leave types, plans, and employee balances</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <ion-grid>
+    <ion-row class="leave-cards">
+      <ion-col size="6">
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <div class="card-top">
+              <span class="card-subtitle">Leave Types</span>
+              <ion-icon name="list-outline" class="card-icon"></ion-icon>
+            </div>
+            <h2 class="card-value">{{ totalLeaveTypes }}</h2>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card class="summary-card">
+          <ion-card-header>
+            <div class="card-top">
+              <span class="card-subtitle">Active Plans</span>
+              <ion-icon name="calendar-outline" class="card-icon"></ion-icon>
+            </div>
+            <h2 class="card-value">{{ totalLeavePlans }}</h2>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Dual Section Configuration -->
+  <ion-grid class="mt-20">
+    <ion-row>
+      <!-- Configuration Column -->
+      <ion-col size-sm="12" size-md="6">
+        <div class="section-title-block">
+           <h3>Leave Configuration</h3>
+           <p>Set up and manage leave categories</p>
+        </div>
+
+        <ion-card class="config-card">
+          <ion-item lines="none" class="interact-item">
+            <ion-icon name="options-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <h2>Manage Leave Types</h2>
+              <p>Categories like Casual, Sick, etc.</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="navigateTo('/administration/leave-types')">
+              <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="config-card">
+          <ion-item lines="none" class="interact-item">
+            <ion-icon name="bookmarks-outline" slot="start" color="secondary"></ion-icon>
+            <ion-label>
+              <h2>Manage Leave Plans</h2>
+              <p>Yearly plans and assignment rules</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="navigateTo('/administration/leave-plans')">
+              <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <!-- Administration Column -->
+      <ion-col size-sm="12" size-md="6">
+        <div class="section-title-block">
+           <h3>Leave Administration</h3>
+           <p>Manage employee balances & allocations</p>
+        </div>
+
+        <ion-card class="config-card">
+          <ion-item lines="none" class="interact-item">
+            <ion-icon name="add-circle-outline" slot="start" color="success"></ion-icon>
+            <ion-label>
+              <h2>Bulk Allocation</h2>
+              <p>Assign leaves to groups</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="openAllocationModal()">
+              <ion-icon name="open-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="config-card">
+          <ion-item lines="none" class="interact-item">
+            <ion-icon name="refresh-circle-outline" slot="start" color="warning"></ion-icon>
+            <ion-label>
+              <h2>Initialize Balance</h2>
+              <p>Set starting quotas for year</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="openInitializeModal()">
+              <ion-icon name="open-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="tip-banner mt-20">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>Configure leave types first before creating leave plans for accuracy.</p>
+  </div>
+</ion-content>

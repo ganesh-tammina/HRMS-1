@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar color="primary" class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/administration"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Roles & Access Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showCreateUser = !showCreateUser" class="primary-outline-btn">
+        <ion-icon slot="start" [name]="showCreateUser ? 'close-outline' : 'person-add-outline'"></ion-icon>
+        {{showCreateUser ? 'Cancel' : 'Create Login'}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchText" (ionInput)="applyFilter()" placeholder="Search by name, ID or username..." animated="true"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-containerOn">
+  <!-- Create User Form (Slide In) -->
+  <div class="create-user-container" *ngIf="showCreateUser">
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>Create New User Login</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="form-grid">
+          <ion-item lines="outline">
+            <ion-label position="floating">Email Address</ion-label>
+            <ion-input type="email" [(ngModel)]="newUser.email"></ion-input>
+          </ion-item>
+          <ion-item lines="outline">
+            <ion-label position="floating">Temporary Password</ion-label>
+            <ion-input type="password" [(ngModel)]="newUser.password"></ion-input>
+          </ion-item>
+          <ion-item lines="outline">
+            <ion-label>Target Role</ion-label>
+            <ion-select [(ngModel)]="newUser.role" interface="popover">
+              <ion-select-option value="employee">Employee</ion-select-option>
+              <ion-select-option value="manager">Manager</ion-select-option>
+              <ion-select-option value="hr">HR</ion-select-option>
+              <ion-select-option value="admin">Admin</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <ion-button expand="block" (click)="createUser()" class="primary-btn mt-20">
+          Create Access
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="role-filter">
+    <ion-segment [(ngModel)]="selectedRole" (ionChange)="applyFilter()">
+      <ion-segment-button value="all">All</ion-segment-button>
+      <ion-segment-button value="admin">Admins</ion-segment-button>
+      <ion-segment-button value="hr">HR</ion-segment-button>
+      <ion-segment-button value="manager">Managers</ion-segment-button>
+      <ion-segment-button value="employee">Employees</ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="table-block mt-20" *ngIf="!loading">
+    <div class="table-header">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4">Full Name</ion-col>
+          <ion-col size="3">Username/Email</ion-col>
+          <ion-col size="2">Current Role</ion-col>
+          <ion-col size="3">Actions</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="table-list-container">
+      <ion-grid>
+        <ion-row *ngFor="let user of filteredUsers" class="table-list-row">
+          <ion-col size="4">
+            <div class="user-cell">
+              <strong>{{user.full_name || 'N/A'}}</strong>
+              <small>ID: {{user.EmployeeNumber || 'N/A'}}</small>
+            </div>
+          </ion-col>
+          <ion-col size="3">{{user.username}}</ion-col>
+          <ion-col size="2">
+            <ion-badge [color]="user.role === 'admin' ? 'danger' : user.role === 'hr' ? 'tertiary' : user.role === 'manager' ? 'success' : 'primary'">
+              {{user.role | uppercase}}
+            </ion-badge>
+          </ion-col>
+          <ion-col size="3">
+            <ion-select [value]="user.role" (ionChange)="changeRole($event, user.id)" interface="popover" placeholder="Change Role" class="role-select">
+              <ion-select-option value="employee">Make Employee</ion-select-option>
+              <ion-select-option value="manager">Make Manager</ion-select-option>
+              <ion-select-option value="hr">Make HR</ion-select-option>
+              <ion-select-option value="admin">Make Admin</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="empty-state" *ngIf="filteredUsers.length === 0">
+      <ion-icon name="person-outline"></ion-icon>
+      <p>No users found matching your criteria</p>
+    </div>
+  </div>
+</ion-content>

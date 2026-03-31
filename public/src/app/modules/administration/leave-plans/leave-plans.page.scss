@@ -1,0 +1,65 @@
+.gradient-header {
+  --background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: #fff;
+}
+
+.page-containerOn {
+  --background: #f8f9fc;
+}
+
+.add-allocation-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  ion-item {
+    flex: 1;
+  }
+}
+
+.allocation-list {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e1e8ed;
+}
+
+.allocation-header {
+  background: #f1f4f9;
+  font-weight: 700;
+  padding: 5px;
+}
+
+.allocation-row {
+  padding: 5px;
+  border-bottom: 1px solid #f1f4f9;
+  align-items: center;
+}
+
+.plan-card {
+  margin: 10px 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.plan-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}

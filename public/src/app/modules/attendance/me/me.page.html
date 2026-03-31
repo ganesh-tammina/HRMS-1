@@ -1,0 +1,181 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>My Attendance</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-no-padding">
+    <div class="dashboard">
+      <ion-row class="attendance-block">
+        <!-- Attendance Status Card -->
+        <ion-col size="12" size-sm="12" size-md="6" size-lg="4" size-xl="4">
+          <ion-card class="attendance-status">
+            <ion-card-header>
+              <ion-card-title>Attendance Status - {{ currentMonthName }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="today-status">
+                Status today:
+                <ion-badge [color]="status === 'Present' ? 'success' : 'danger'">
+                  {{ status }}
+                </ion-badge>
+              </div>
+
+              <div class="monthly-stats">
+                <ion-row>
+                  <ion-col size="3" class="text-center">
+                    <p class="stat-label">Present</p>
+                    <p class="stat-value text-success">{{ monthlySummary.present_days }}</p>
+                  </ion-col>
+                  <ion-col size="3" class="text-center">
+                    <p class="stat-label">Absent</p>
+                    <p class="stat-value text-danger">{{ monthlySummary.absent_days }}</p>
+                  </ion-col>
+                  <ion-col size="3" class="text-center">
+                    <p class="stat-label">Leaves</p>
+                    <p class="stat-value text-info">{{ monthlySummary.leave_days }}</p>
+                  </ion-col>
+                  <ion-col size="3" class="text-center">
+                    <p class="stat-label">Half Days</p>
+                    <p class="stat-value text-warning">{{ monthlySummary.half_days }}</p>
+                  </ion-col>
+                </ion-row>
+              </div>
+
+              <div class="today-summary">
+                <div class="label-box">
+                  <span class="l-l">Today:</span>
+                </div>
+                <div class="label-box">
+                  <span class="l-l">Gross:</span>
+                  <span class="l-v">{{ grossHours }}</span>
+                </div>
+                <div class="label-box">
+                  <span class="l-l">Effective:</span>
+                  <span class="l-v">{{ effectiveHours }}</span>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Timings Card -->
+        <ion-col size="12" size-sm="12" size-md="6" size-lg="4" size-xl="4">
+          <ion-card class="timings-card">
+            <ion-card-header>
+              <ion-card-title>Timings</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="shift-info" *ngIf="shift_policy">
+                {{ shift_policy.shift_name }} : ( {{ shift_policy.start_time | timeFormat }} - {{ shift_policy.end_time | timeFormat }} )
+              </div>
+
+              <div class="days-grid-wrapper">
+                <ion-row>
+                  <ion-col *ngFor="let day of days; trackBy: trackByDate" class="ion-text-center">
+                    <div class="day-container" [ngClass]="{
+                        'highlight-today': isToday(day),
+                        'highlight-weekoff': isWeekOffDay(day)
+                    }">
+                      <p class="day-of-week">{{ day | date:'E' }}</p>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+
+              <p class="today-label">
+                Today
+                <strong *ngIf="shift_policy">
+                  ( {{ shift_policy.start_time | timeFormat }} - {{ shift_policy.end_time | timeFormat }} )
+                </strong>
+              </p>
+
+              <ion-progress-bar [value]="progressValue"></ion-progress-bar>
+              
+              <div class="duration-info">
+                <span>Duration: {{ shiftDuration || '9h 0m' }}</span>
+                <span>Break: {{ breakMinutes || 60 }}m</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Actions Card -->
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="4" size-xl="4">
+          <ion-card class="actions">
+            <ion-card-header>
+              <ion-card-title>Today's Activity & Actions</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <!-- Today's Chart Section -->
+              <div class="today-logs-status">
+                <div class="chart-wrapper">
+                  <canvas #attendanceChart></canvas>
+                </div>
+              </div>
+
+              <ion-row class="actions-buttons-row">
+                <ion-col size="4">
+                  <app-clock-button (statusChanged)="onClockStatusChanged($event)"></app-clock-button>
+                </ion-col>
+                <ion-col size="8">
+                  <div class="action-grid-buttons">
+                    <ion-button (click)="openRemoteClockinModal()" fill="clear" class="clear-action" [disabled]="clockButton?.isClockedIn">
+                      <ion-icon name="wifi-outline" slot="start"></ion-icon>
+                      Remote
+                    </ion-button>
+                    <ion-button (click)="wfhClockIn()" fill="clear" class="clear-action" [disabled]="clockButton?.isClockedIn">
+                      <ion-icon name="home-outline" slot="start"></ion-icon>
+                      WFH
+                    </ion-button>
+                    <ion-button (click)="openWFHModal()" fill="clear" class="clear-action">
+                      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                      Req WFH
+                    </ion-button>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-grid>
+
+  <!-- Logs & Requests Tabs -->
+  <div class="attendance-log-card">
+    <h2>Logs &amp; Requests</h2>
+    <div class="tabs-container custom-tabs">
+      <button [class.active]="activeTab === 'log'" (click)="setTab('log')">
+        Attendance Log
+      </button>
+      <button [class.active]="activeTab === 'calendar'" (click)="setTab('calendar')">
+        Calendar
+      </button>
+      <button [class.active]="activeTab === 'requests'" (click)="setTab('requests')">
+        Attendance Requests
+      </button>
+    </div>
+
+    <!-- Attendance Log Tab -->
+    <div *ngIf="activeTab === 'log'">
+      <app-attendance-log [refreshTrigger]="attendanceRefresh"></app-attendance-log>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div *ngIf="activeTab === 'calendar'">
+      <app-calendar></app-calendar>
+    </div>
+
+    <!-- Attendance Requests Tab -->
+    <div *ngIf="activeTab === 'requests'">
+      <app-attendance-request></app-attendance-request>
+    </div>
+  </div>
+</ion-content>

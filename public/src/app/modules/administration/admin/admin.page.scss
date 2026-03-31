@@ -1,0 +1,143 @@
+@use '../../../../global.scss' as *;
+
+.admin-dashboard {
+  --background: var(--ion-background-color, #f4f5f8);
+
+  .top-bar {
+    padding: 24px 16px;
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    h1 {
+      @include card-header();
+      margin: 0 0 8px 0;
+      color: var(--ion-color-dark);
+    }
+
+    p {
+      @include normal-text-unbold();
+      color: var(--ion-color-medium);
+      margin: 0;
+    }
+  }
+
+  .manage-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+
+    .clickable-card {
+      margin: 0;
+      width: calc(33.33% - 14px);
+      min-width: 300px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #1F74BB 0%, #0E3555 100%);
+      border: none;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        
+        &::after {
+            opacity: 0.1;
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      ion-card-header {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .card-icon-wrapper {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+
+        img {
+          display: block;
+          filter: brightness(0) invert(1);
+          
+          &.blue-img {
+            filter: none;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+          }
+        }
+      }
+
+      ion-card-title {
+        @include card-sub-title();
+        color: white;
+        margin-bottom: 12px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      p {
+        @include text-style-normal();
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0 0 20px 0;
+        line-height: 1.5;
+        flex-grow: 1;
+      }
+
+      .card-btn {
+        padding: 0;
+        font-weight: 600;
+        font-size: 14px;
+        --color: white;
+        margin: 0;
+        
+        ion-icon {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+      }
+
+      &:hover .card-btn ion-icon {
+          transform: translateX(4px);
+      }
+    }
+  }
+}
+
+/* Responsive Grid */
+@media (max-width: 1200px) {
+  .admin-dashboard .manage-block .clickable-card {
+    width: calc(50% - 10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard .manage-block .clickable-card {
+    width: 100%;
+  }
+  
+  .admin-dashboard .top-bar {
+      text-align: center;
+  }
+}

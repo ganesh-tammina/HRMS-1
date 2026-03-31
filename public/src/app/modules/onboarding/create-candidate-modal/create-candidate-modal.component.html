@@ -1,0 +1,196 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Create New Candidate</ion-title>
+        <ion-buttons slot="end">
+            <ion-spinner *ngIf="isLoadingMasterData" name="crescent" style="width: 30px; height: 30px;"></ion-spinner>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <form [formGroup]="candidateForm">
+        <!-- Personal Information -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Personal Information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="floating">First Name *</ion-label>
+                    <ion-input formControlName="first_name" type="text" placeholder="Enter first name">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Middle Name</ion-label>
+                    <ion-input formControlName="middle_name" type="text" placeholder="Enter middle name">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Last Name *</ion-label>
+                    <ion-input formControlName="last_name" type="text" placeholder="Enter last name">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Email *</ion-label>
+                    <ion-input formControlName="email" type="email" placeholder="Enter email address">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Phone *</ion-label>
+                    <ion-input formControlName="phone" type="tel"
+                        placeholder="Enter 10-digit number (e.g., 9876543210)">
+                    </ion-input>
+                </ion-item>
+                <div class="error-msg" *ngIf="f.phone.touched && f.phone.invalid">
+                    <span *ngIf="f.phone.errors?.required">Phone number is required</span>
+                    <span *ngIf="f.phone.errors?.pattern">Please enter a valid 10-digit number</span>
+                </div>
+
+                <ion-item>
+                    <ion-label position="floating">Alternate Phone</ion-label>
+                    <ion-input formControlName="alternate_phone" type="tel" placeholder="Enter 10-digit phone number">
+                    </ion-input>
+                </ion-item>
+                <ion-item id="dob-anchor">
+                    <ion-label position="stacked">Date of Birth *</ion-label>
+                    <ion-input [value]="f.date_of_birth.value | date:'dd MMM yyyy'" placeholder="Select date" readonly>
+                    </ion-input>
+                    <ion-icon name="calendar-outline" slot="end" color="primary"></ion-icon>
+                </ion-item>
+                <ion-popover trigger="dob-anchor" show-backdrop="false">
+                    <ng-template>
+                        <ion-datetime presentation="date" formControlName="date_of_birth" [showDefaultButtons]="true">
+                        </ion-datetime>
+                    </ng-template>
+                </ion-popover>
+                <div class="error-msg" *ngIf="f.date_of_birth.touched && f.date_of_birth.errors?.required">
+                    Date of Birth is required
+                </div>
+
+                <ion-item>
+                    <ion-label position="floating">Gender *</ion-label>
+                    <ion-select formControlName="gender">
+                        <ion-select-option *ngFor="let gender of genderOptions" [value]="gender">
+                            {{ gender }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Job Information -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Job Information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="floating">Position *</ion-label>
+                    <ion-input formControlName="position" type="text" placeholder="e.g., Software Engineer">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Designation *</ion-label>
+                    <ion-select formControlName="designation_id" [compareWith]="compareSelect"
+                        placeholder="Select designation">
+                        <ion-select-option *ngIf="isLoadingMasterData" disabled>Loading...</ion-select-option>
+                        <ion-select-option *ngFor="let des of designations" [value]="des">
+                            {{ des.name }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Department *</ion-label>
+                    <ion-select formControlName="department_id" [compareWith]="compareSelect"
+                        placeholder="Select department">
+                        <ion-select-option *ngIf="isLoadingMasterData" disabled>Loading...</ion-select-option>
+                        <ion-select-option *ngFor="let dept of departments" [value]="dept">
+                            {{ dept.name }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Location *</ion-label>
+                    <ion-select formControlName="location_id" [compareWith]="compareSelect"
+                        placeholder="Select location">
+                        <ion-select-option *ngIf="isLoadingMasterData" disabled>Loading...</ion-select-option>
+                        <ion-select-option *ngFor="let loc of locations" [value]="loc">
+                            {{ loc.name }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Reporting Manager</ion-label>
+                    <ion-select formControlName="reporting_manager_id" [compareWith]="compareSelect"
+                        placeholder="Select reporting manager">
+                        <ion-select-option [value]="null">No Manager</ion-select-option>
+                        <ion-select-option *ngIf="isLoadingMasterData" disabled>Loading...</ion-select-option>
+                        <ion-select-option *ngFor="let manager of reportingManagers" [value]="manager">
+                            {{ manager.full_name }} ({{ manager.employee_number }})
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Offered CTC *</ion-label>
+                    <ion-input formControlName="offered_ctc" type="number" placeholder="Enter CTC (Min 100,000)">
+                    </ion-input>
+                </ion-item>
+                <div class="error-msg" *ngIf="f.offered_ctc.touched && f.offered_ctc.invalid">
+                    <span *ngIf="f.offered_ctc.errors?.required">Offered CTC is required</span>
+                    <span *ngIf="f.offered_ctc.errors?.min">CTC must be at least 100,000</span>
+                </div>
+
+                <ion-item id="joining-anchor">
+                    <ion-label position="stacked">Joining Date *</ion-label>
+                    <ion-input [value]="f.joining_date.value | date:'dd MMM yyyy'" placeholder="Select date" readonly>
+                    </ion-input>
+                    <ion-icon name="calendar-outline" slot="end" color="primary"></ion-icon>
+                </ion-item>
+                <ion-popover trigger="joining-anchor" show-backdrop="false">
+                    <ng-template>
+                        <ion-datetime presentation="date" formControlName="joining_date" [showDefaultButtons]="true">
+                        </ion-datetime>
+                    </ng-template>
+                </ion-popover>
+                <div class="error-msg" *ngIf="f.joining_date.touched && f.joining_date.errors?.required">
+                    Joining date is required
+                </div>
+
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Recruitment Information -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Recruitment Information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="floating">Recruitment Source *</ion-label>
+                    <ion-select formControlName="recruitment_source">
+                        <ion-select-option *ngFor="let source of sources" [value]="source">
+                            {{ source }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Recruiter Name</ion-label>
+                    <ion-input formControlName="recruiter_name" type="text" placeholder="Enter recruiter name">
+                    </ion-input>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Submit Button -->
+        <ion-button expand="block" color="primary" (click)="onSubmit()"
+            [disabled]="isSubmitting || candidateForm.invalid" class="ion-margin">
+            <ion-spinner *ngIf="isSubmitting" name="dots"></ion-spinner>
+            <span *ngIf="!isSubmitting">Create Candidate</span>
+        </ion-button>
+    </form>
+</ion-content>

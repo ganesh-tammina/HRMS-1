@@ -1,10 +1,12 @@
 # Dependency directories
 node_modules/
+uploads/
+WWW/
 jspm_packages/
 # public/
 public/node_modules/
 public/.angular/
-# public/WWW/
+public/WWW/
 public/.vscode/
 public/.github/
 
@@ -41,3 +43,4 @@ build/
 
 *.md
 *.bat
+*.sh

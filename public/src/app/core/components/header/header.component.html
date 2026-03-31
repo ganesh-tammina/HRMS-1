@@ -1,0 +1,175 @@
+<ion-header class="custom-app-header">
+  <ion-toolbar class="header-toolbar">
+
+    <!-- Left side: Menu Button (if inside split-pane context) & Logo -->
+    <div slot="start" class="header-left">
+      <ion-menu-button *ngIf="isAuthenticated" color="light"></ion-menu-button>
+      <img width="165px" height="70px" src="https://techtammina.com/wp-content/uploads/2025/05/techlogo.png"
+        alt="Tech Tammina" class="brand-logo" *ngIf="!isAdmin" />
+      <img src="https://techtammina.com/wp-content/uploads/2025/05/techlogo.png" alt="Admin Logo" class="brand-logo"
+        *ngIf="isAdmin" />
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="search-container" *ngIf="isAuthenticated">
+      <ion-searchbar placeholder="Search employee by name" [(ngModel)]="searchQuery" (ionInput)="onSearch()"
+        showCancelButton="never" class="custom-searchbar">
+      </ion-searchbar>
+
+      <!-- Search Results Popover -->
+      <ion-popover [isOpen]="searchResults.length > 0" [keyboardClose]="false" [backdropDismiss]="true"
+        (didDismiss)="searchResults = []" class="custom-employee-popover">
+        <ng-template>
+          <ion-content class="dropdown-content">
+            <div class="search-results-header">Employees</div>
+            <ion-list lines="none" class="search-results-list">
+              <ion-item *ngFor="let emp of searchResults" button (click)="openEmployeeDetailsModal(emp)"
+                class="search-item">
+                <ion-avatar slot="start" class="search-avatar">
+                  <img [src]="emp.profile_image ? (env + emp.profile_image) : '../../assets/Profile_Picture.png'"
+                    (error)="handleImageError($event)" alt="Profile">
+                </ion-avatar>
+                <ion-label class="search-label">
+                  <div class="emp-name-row">
+                    <h2>{{ emp.FullName || (emp.FirstName + ' ' + emp.LastName) }}</h2>
+                    <span class="emp-designation">{{ emp.designation_name || emp.designation || 'Employee' }} | </span>
+                    <span class="emp-id" *ngIf="emp.EmployeeNumber || emp.id">#{{ emp.EmployeeNumber || emp.id }}</span>
+                  </div>
+                  <div class="emp-details-row">
+                    <span class="detail-item"><ion-icon name="person-outline"></ion-icon> {{
+                      getDepartmentName(emp.DepartmentId || emp.department_id, emp.department_name ||
+                      emp.department) }}</span>
+                    <span class="detail-item"><ion-icon name="mail-outline"></ion-icon> {{ emp.WorkEmail || emp.email ||
+                      'N/A' }}</span>
+                    <span class="detail-item" *ngIf="emp.location_name || emp.location"><ion-icon
+                        name="location-outline"></ion-icon> {{ emp.location_name || emp.location }}</span>
+                  </div>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+
+    <!-- Right side: Notifications & Profile -->
+    <div slot="end" class="header-right">
+      <div *ngIf="isAuthenticated" class="user-greeting">
+        <span class="user-name" *ngIf="isAdmin">Tammina Admin</span>
+        <!-- <span class="user-name" *ngIf="!isAdmin">{{ currentEmployee?.FirstName }}</span> -->
+      </div>
+
+      <ion-buttons *ngIf="isAuthenticated">
+        <ion-button color="light" class="nav-icon-btn">
+          <img src="../../assets/notifications.png" width="100%" height="100%" />
+          <!-- <ion-icon name="notifications-outline" class="nav-icon"></ion-icon> -->
+        </ion-button>
+
+        <ion-button id="profile-popover-trigger" class="profile-btn" fill="clear">
+          <img [src]="profileImageUrl" alt="Profile" class="profile-pic" />
+        </ion-button>
+      </ion-buttons>
+
+      <!-- Profile Popover -->
+      <ion-popover trigger="profile-popover-trigger" [dismissOnSelect]="true" class="profile-dropdown" side="bottom"
+        alignment="end">
+        <ng-template>
+          <ion-content>
+            <ion-list lines="none">
+              <ion-item button (click)="viewProfile()">
+                <ion-icon name="person-outline" slot="start"></ion-icon>
+                <ion-label>View Profile</ion-label>
+              </ion-item>
+              <ion-item button (click)="logout()" color="danger">
+                <ion-icon name="log-out-outline" slot="start"></ion-icon>
+                <ion-label>Logout</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+
+  </ion-toolbar>
+
+  <!-- Employee Details Modal -->
+  <ion-modal [isOpen]="isViewingEmployeeModal" (didDismiss)="closeEmployeeDetailsModal()"
+    class="wishes-modal employee-details-modal">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>Employee Details</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeEmployeeDetailsModal()">
+              <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding employee-modal-content-area" *ngIf="selectedEmployee">
+        <div class="employee-modal-content">
+          <div class="employee-modal-header">
+            <div class="avatar-block">
+              <img
+                [src]="selectedEmployee.profile_image ? (env + selectedEmployee.profile_image) : '../../assets/Profile_Picture.png'"
+                (error)="handleImageError($event)" alt="Profile" class="emp-modal-avatar">
+            </div>
+            <div class="employee-modal-info">
+              <h2 class="emp-modal-name">{{ selectedEmployee.FullName || (selectedEmployee.FirstName + ' ' +
+                selectedEmployee.LastName) }}</h2>
+              <p class="emp-modal-designation">{{ selectedEmployee.designation_name || selectedEmployee.designation ||
+                'Employee' }}</p>
+            </div>
+          </div>
+
+          <div class="employee-info-cards">
+            <div class="info-card">
+              <div class="icon-box"><ion-icon name="id-card-outline"></ion-icon></div>
+              <div class="info-text">
+                <span class="info-label">Employee ID</span>
+                <span class="info-value">#{{ selectedEmployee.EmployeeNumber || selectedEmployee.id || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <div class="info-card full-width">
+              <div class="icon-box"><ion-icon name="mail-outline"></ion-icon></div>
+              <div class="info-text">
+                <span class="info-label">Work Email</span>
+                <span class="info-value">{{ selectedEmployee.WorkEmail || selectedEmployee.email || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="icon-box"><ion-icon name="time-outline"></ion-icon></div>
+              <div class="info-text">
+                <span class="info-label">Attendance Status</span>
+                <span class="info-value attendance-status"
+                  [class.status-in]="selectedEmployee.attendance_status === 'In'">{{ selectedEmployee.attendance_status
+                  || 'Out' }}</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="icon-box"><ion-icon name="calendar-outline"></ion-icon></div>
+              <div class="info-text">
+                <span class="info-label">Shift Policy</span>
+                <span class="info-value">{{ selectedEmployee.shift_policy_name || selectedEmployee.shift_name ||
+                  'General Shift' }}</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="icon-box"><ion-icon name="business-outline"></ion-icon></div>
+              <div class="info-text">
+                <span class="info-label">Department</span>
+                <span class="info-value">{{ getDepartmentName(selectedEmployee.DepartmentId ||
+                  selectedEmployee.department_id, selectedEmployee.department_name || selectedEmployee.department)
+                  }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-header>

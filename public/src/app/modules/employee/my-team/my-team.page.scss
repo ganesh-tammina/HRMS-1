@@ -1,0 +1,497 @@
+.reports-container {
+  padding: 16px;
+  background: #f4f8ff;
+  min-height: 100%;
+}
+
+/* ═══════════════ MANAGER APPROVAL BAR ═══════════════ */
+
+.manager-approval-bar {
+  padding: 8px 0 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .approval-pills-container {
+    display: flex;
+    gap: 12px;
+    padding: 2px;
+    min-width: max-content;
+  }
+
+  .approval-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: 1.5px solid #1F74BB;
+    background: #ffffff;
+    color: #1F74BB;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(31, 116, 187, 0.08);
+
+    ion-icon {
+      font-size: 20px;
+      color: #1F74BB;
+    }
+
+    &.active {
+      background: #E6F1FF; // Light blue for currently selected 'pill'
+      border-color: #1F74BB;
+      // In user image, 'My Team' is highlighted but not necessarily distinct from others except being active.
+      // If the user wants a full blue background for active, they usually say so. 
+      // Based on image, they all look white with blue border.
+    }
+
+    &:hover {
+      background: #f0f7ff;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+}
+
+/* ═══════════════ HEADER CARD ═══════════════ */
+
+.reports-header-card {
+  background: #ffffff;
+  border: 1px solid #c2e0ff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .header-title-block {
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a2b3c;
+      }
+
+      .current-date-label {
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        color: #64748b;
+        font-weight: 500;
+
+        strong {
+          color: #1F74BB;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .date-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .reset-btn {
+      --padding-start: 12px;
+      --padding-end: 12px;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: none;
+      height: 36px;
+    }
+
+    .date-picker-wrapper {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 2px 12px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #1F74BB;
+        background: #fff;
+      }
+
+      ion-datetime-button {
+        --background: transparent;
+        --color: #334155;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+/* ═══════════════ PREMIUM SUMMARY GRID ═══════════════ */
+
+.summary-scroll-wrapper {
+  overflow-x: auto;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+}
+
+.premium-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  min-width: 1000px; // Ensure cards don't shrink too much
+
+  @media (max-width: 1100px) {
+    min-width: unset;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.premium-card {
+  height: 120px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 2;
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+
+  .card-info {
+    display: flex;
+    flex-direction: column;
+
+    .label {
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: 4px;
+    }
+  }
+
+  .card-illustration {
+    position: absolute;
+    right: -10px;
+    bottom: -15px;
+    opacity: 0.15;
+    z-index: 1;
+
+    ion-icon {
+      font-size: 120px;
+      color: #fff;
+    }
+  }
+
+  /* Specific card designs matching image */
+  &.total {
+    background: linear-gradient(135deg, #0f345a 0%, #1a4a7c 100%);
+  }
+
+  &.present {
+    background: linear-gradient(135deg, #104169 0%, #1e5a8d 100%);
+  }
+
+  &.absent {
+    background: linear-gradient(135deg, #124a7a 0%, #2067a5 100%);
+  }
+
+  &.leave {
+    background: linear-gradient(135deg, #14548c 0%, #2275bc 100%);
+  }
+
+  &.not-punched {
+    background: linear-gradient(135deg, #4b3d8f 0%, #6d5ecc 100%);
+  }
+
+  &.active {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4), 0 12px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-6px);
+    border: 2px solid #fff;
+  }
+}
+
+/* ═══════════════ TEAM LIST ═══════════════ */
+
+.team-section {
+  .section-actions {
+    margin-bottom: 24px;
+
+    .custom-searchbar {
+      --background: #fff;
+      --border-radius: 12px;
+      --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 0;
+    }
+  }
+}
+
+.premium-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.premium-emp-card {
+  background: #ffffff;
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    opacity: 0.8;
+  }
+
+  .card-body {
+    padding: 24px;
+  }
+
+  .body-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .profile-block {
+    display: flex;
+    gap: 16px;
+
+    .emp-avatar {
+      width: 68px;
+      height: 68px;
+      background: #f0f7ff;
+      border: 2px solid #e1efff;
+
+      img {
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    .emp-identity {
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+      }
+
+      p {
+        margin: 2px 0;
+        font-size: 13px;
+        color: #777;
+      }
+
+      .emp-dept {
+        color: #555;
+        font-weight: 500;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  /* ── Status Badge ── */
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    &.present {
+      background: #e6f9f0;
+      color: #10b981;
+      border: 1px solid #bbf7d0;
+
+      .dot {
+        background: #10b981;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+      }
+    }
+
+    &.absent {
+      background: #fff1f2;
+      color: #ef4444;
+      border: 1px solid #fecdd3;
+
+      .dot {
+        background: #ef4444;
+        box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+      }
+    }
+
+    &.leave-status {
+      background: #fff7ed;
+      color: #f97316;
+      border: 1px solid #fed7aa;
+
+      .dot {
+        background: #f97316;
+        box-shadow: 0 0 6px rgba(249, 115, 22, 0.6);
+      }
+    }
+
+    &.not-punched-status {
+      background: #eef2ff;
+      color: #6366f1;
+      border: 1px solid #e0e7ff;
+
+      .dot {
+        background: #6366f1;
+        box-shadow: 0 0 6px rgba(99, 102, 241, 0.6);
+      }
+    }
+  }
+
+  .body-bottom {
+    border-top: 1px solid #f0f5fa;
+    padding-top: 16px;
+
+    .info-row {
+      display: flex;
+      margin-bottom: 8px;
+      font-size: 13px;
+
+      .label {
+        color: #1F74BB;
+        font-weight: 700;
+        width: 70px;
+        flex-shrink: 0;
+      }
+
+      .value {
+        color: #555;
+        font-weight: 500;
+      }
+
+      .mail {
+        color: #555;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+/* ═══════════════ UTILITIES ═══════════════ */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+
+  p {
+    color: #666;
+    margin-top: 16px;
+    font-weight: 500;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #a0aec0;
+
+  ion-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+.section-actions {
+  padding: 23px 20px;
+  padding-bottom: 16px;
+  padding-top: 24px
+}

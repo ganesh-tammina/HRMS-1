@@ -1,0 +1,191 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="gradient-header">
+    <div class="section-actions">
+      <ion-searchbar (ionInput)="filterTeam($event)" [(ngModel)]="searchTerm" placeholder="Search employee..."
+        animated="true" class="custom-searchbar"></ion-searchbar>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="reports-container">
+    <!-- ═══════════ MANAGER APPROVAL BAR ═══════════ -->
+    <div class="manager-approval-bar" *ngIf="isManager">
+      <div class="approval-pills-container">
+        <button class="approval-pill" (click)="navigateToTimesheetApprovals()">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Timesheet Approval</span>
+        </button>
+        <button class="approval-pill" (click)="navigateToLeaveApprovals()">
+          <ion-icon name="airplane-outline"></ion-icon>
+          <span>Leaves Approval</span>
+        </button>
+        <button class="approval-pill" (click)="navigateToAttendanceApprovals()">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Attendance Approval</span>
+        </button>
+        <button class="approval-pill" (click)="navigateToTeamReports()">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          <span>Team Reports</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ ATTENDANCE REPORTS HEADER ═══════════ -->
+    <div class="reports-header-card">
+      <div class="header-main">
+        <div class="header-title-block">
+          <h2>Attendance Reports</h2>
+          <p class="current-date-label">Showing results for: <strong>{{ selectedDate | date:'fullDate' }}</strong></p>
+        </div>
+        <div class="date-selector">
+          <ion-button fill="clear" color="primary" class="reset-btn" (click)="resetToToday()"
+            *ngIf="!isTodaySelected()">
+            <ion-icon name="today-outline" slot="start"></ion-icon>
+            Back to Today
+          </ion-button>
+          <div class="date-picker-wrapper">
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime" presentation="date" [(ngModel)]="selectedDate" [max]="maxDate"
+                  (ionChange)="onDateChange($event)"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PREMIUM SUMMARY CARDS ═══════════ -->
+    <div class="summary-scroll-wrapper">
+      <div class="premium-summary-grid">
+        <!-- Total Team -->
+        <div class="premium-card total" (click)="setFilter('all')" [class.active]="currentFilter === 'all'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="people"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Total Team</span>
+              <span class="value">{{ counts.total || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="people-circle-outline"></ion-icon></div>
+        </div>
+
+        <!-- Present -->
+        <div class="premium-card present" (click)="setFilter('present')" [class.active]="currentFilter === 'present'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="person-add"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Present</span>
+              <span class="value">{{ counts.present || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="checkmark-done-circle-outline"></ion-icon></div>
+        </div>
+
+        <!-- Absent -->
+        <div class="premium-card absent" (click)="setFilter('absent')" [class.active]="currentFilter === 'absent'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="calendar-clear"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Absent</span>
+              <span class="value">{{ counts.absent || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="calendar-outline"></ion-icon></div>
+        </div>
+
+        <!-- On Leave -->
+        <div class="premium-card leave" (click)="setFilter('on_leave')" [class.active]="currentFilter === 'on_leave'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="airplane"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">On Leave</span>
+              <span class="value">{{ counts.onLeave || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="airplane-outline"></ion-icon></div>
+        </div>
+
+        <!-- Not Punched (Not Checked-In) -->
+        <div class="premium-card not-punched" (click)="setFilter('not_punched')"
+          [class.active]="currentFilter === 'not_punched'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="hand-right"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Not Punched</span>
+              <span class="value">{{ counts.notPunched || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="hand-right-outline"></ion-icon></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TEAM LIST GRID ═══════════ -->
+    <div class="team-section">
+
+
+      <div class="premium-team-grid" *ngIf="!isLoading; else loadingState">
+        <div class="employee-card-wrapper" *ngFor="let member of filteredTeam">
+          <div class="premium-emp-card">
+            <div class="card-accent" [style.background]="getAvatarColor(member.id)"></div>
+
+            <div class="card-body">
+              <div class="body-top">
+                <div class="profile-block">
+                  <ion-avatar class="emp-avatar">
+                    <img [src]="getProfileImage(member)" onerror="this.src='../../assets/Profile_Picture.png'" />
+                  </ion-avatar>
+                  <div class="emp-identity">
+                    <h3 class="emp-name">{{ member.FirstName }} {{ member.LastName }}</h3>
+                    <p class="emp-title">{{ member.EmployeeNumber || 'Employee' }}</p>
+                    <p class="emp-dept" *ngIf="member.ProcessName">{{ member.ProcessName }}</p>
+                  </div>
+                </div>
+
+                <!-- Status Badge -->
+                <div class="status-badge-container">
+                  <div class="status-badge" [ngClass]="getDisplayStatusClass(member.id)">
+                    <span class="dot"></span>
+                    <span class="text">{{ getDisplayStatusText(member.id) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="body-bottom">
+                <div class="info-row">
+                  <span class="label">Location:</span>
+                  <span class="value">{{ member.Location || 'Site 1 - TSN' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Mail:</span>
+                  <span class="value mail">{{ member.WorkEmail }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredTeam.length === 0 && !isLoading">
+        <ion-icon name="search-outline"></ion-icon>
+        <h3>No matches found</h3>
+        <p>Try refining your search keyword</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingState>
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Updating attendance list...</p>
+    </div>
+  </ng-template>
+</ion-content>

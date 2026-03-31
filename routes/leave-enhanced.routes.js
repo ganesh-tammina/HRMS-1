@@ -572,13 +572,36 @@ router.post("/initialize-my-balance", auth, async (req, res) => {
 });
 
 // Get Employee Leave Balance
+// Supports optional `employeeId` (or `employee_id`) query param for HR/Manager/Admin
 router.get("/balance", auth, async (req, res) => {
   try {
-    const emp = await findEmployeeByUserId(req.user.id);
-    if (!emp) return res.status(404).json({ error: "Employee not found" });
-
     const { year, leave_year } = req.query;
     const leaveYear = year || leave_year || new Date().getFullYear();
+
+    // Allow privileged roles to request another employee's balance via query param
+    const requestedEmpId = req.query.employeeId || req.query.employee_id;
+    let emp = null;
+
+    if (requestedEmpId) {
+      const role = String(req.user.role || '').toLowerCase();
+      if (!['hr', 'manager', 'admin'].includes(role)) {
+        return res.status(403).json({ error: 'Forbidden: insufficient role to query other employee balance' });
+      }
+
+      const ctemp = await db();
+      const [rows] = await ctemp.query('SELECT * FROM employees WHERE id = ? LIMIT 1', [requestedEmpId]);
+      await ctemp.end();
+      if (!rows || rows.length === 0) {
+        return res.status(404).json({ error: 'Employee not found for provided employeeId' });
+      }
+      emp = rows[0];
+    } else {
+      emp = await findEmployeeByUserId(req.user.id);
+    }
+
+    if (!emp) {
+      return res.status(404).json({ error: "Employee not found. If you're HR/Manager/Admin, provide 'employeeId' query parameter." });
+    }
 
     const c = await db();
     const [balances] = await c.query(

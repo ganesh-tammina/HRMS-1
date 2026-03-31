@@ -1,0 +1,250 @@
+<ion-header>
+  <ion-toolbar color="primary" class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/administration"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Organization Setup</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="activeTab" (ionChange)="setTab(activeTab)" scrollable="true" mode="md" class="premium-segment">
+      <ion-segment-button value="locations">Locations</ion-segment-button>
+      <ion-segment-button value="departments">Departments</ion-segment-button>
+      <ion-segment-button value="designations">Designations</ion-segment-button>
+      <ion-segment-button value="businessUnits">Business Units</ion-segment-button>
+      <ion-segment-button value="shifts">Shifts</ion-segment-button>
+      <ion-segment-button value="weeklyOff">Weekly Off</ion-segment-button>
+      <ion-segment-button value="announcements">Announcements</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-containerOn project-wrapper">
+  <div class="manage-main-block">
+    <div class="header-section mb-20">
+      <h2>Manage Data Lists</h2>
+      <p class="sub-text">Add, edit, or remove organizational fields used across the system.</p>
+    </div>
+
+    <!-- MAIN CONTENT GRID -->
+    <div class="tab-card-wrapper animate__animated animate__fadeIn">
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <!-- List Column (Left) -->
+          <ion-col size="12" size-lg="7.5" class="list-column pr-lg-20">
+            <div class="glass-table-card">
+              <div class="card-top-header">
+                <h3>{{ activeTab | titlecase }} <span>{{ getEntityList().length }}</span></h3>
+              </div>
+
+              <div class="table-responsive-wrapper">
+                <table class="premium-data-table">
+                  <thead>
+                    <tr *ngIf="activeTab !== 'shifts' && activeTab !== 'announcements' && activeTab !== 'weeklyOff'">
+                      <th>Name</th>
+                      <th class="ion-text-right">Actions</th>
+                    </tr>
+                    <tr *ngIf="activeTab === 'shifts'">
+                      <th>Name</th>
+                      <th>Time</th>
+                      <th>Type</th>
+                      <th class="ion-text-right">Actions</th>
+                    </tr>
+                    <tr *ngIf="activeTab === 'announcements'">
+                      <th>Title</th>
+                      <th>Duration</th>
+                      <th class="ion-text-right">Actions</th>
+                    </tr>
+                    <tr *ngIf="activeTab === 'weeklyOff'">
+                      <th>Policy</th>
+                      <th>Code</th>
+                      <th class="ion-text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Generic Entities -->
+                    <ng-container *ngIf="activeTab !== 'shifts' && activeTab !== 'announcements' && activeTab !== 'weeklyOff'">
+                      <tr *ngFor="let item of getPaginatedList()">
+                        <td><div class="name-cell">{{item.name}}</div></td>
+                        <td class="ion-text-right">
+                          <ion-button fill="clear" (click)="handleEdit(item)" *ngIf="isAdminOrHR" class="edit-btn-mini">
+                            <ion-icon name="create-outline"></ion-icon>
+                          </ion-button>
+                          <ion-button fill="clear" color="danger" (click)="handleDelete(item.id)" *ngIf="isAdminOrHR" class="delete-btn-mini">
+                            <ion-icon name="trash-outline"></ion-icon>
+                          </ion-button>
+                        </td>
+                      </tr>
+                    </ng-container>
+
+                    <!-- Shifts Specific -->
+                    <ng-container *ngIf="activeTab === 'shifts'">
+                      <tr *ngFor="let s of paginatedShifts">
+                        <td><strong>{{s.name}}</strong></td>
+                        <td><span class="time-tag">{{s.start_time}} - {{s.end_time}}</span></td>
+                        <td><ion-badge color="primary">{{s.shift_type}}</ion-badge></td>
+                        <td class="ion-text-right">
+                          <ion-button fill="clear" (click)="editShift(s)" *ngIf="isAdminOrHR"><ion-icon name="create-outline"></ion-icon></ion-button>
+                          <ion-button fill="clear" color="danger" (click)="deleteShift(s.id)" *ngIf="isAdminOrHR"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                        </td>
+                      </tr>
+                    </ng-container>
+
+                    <!-- Weekly Off Specific -->
+                    <ng-container *ngIf="activeTab === 'weeklyOff'">
+                      <tr *ngFor="let w of paginatedWeeklyOff">
+                        <td><strong>{{w.name}}</strong></td>
+                        <td><code>{{w.policy_code}}</code></td>
+                        <td class="ion-text-right">
+                          <ion-button fill="clear" (click)="editWeeklyOff(w)" *ngIf="isAdminOrHR"><ion-icon name="create-outline"></ion-icon></ion-button>
+                          <ion-button fill="clear" color="danger" (click)="deleteWeeklyOff(w.id)" *ngIf="isAdminOrHR"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                        </td>
+                      </tr>
+                    </ng-container>
+
+                    <!-- Announcements Specific -->
+                    <ng-container *ngIf="activeTab === 'announcements'">
+                      <tr *ngFor="let a of paginatedAnnouncements">
+                        <td><strong>{{a.title}}</strong></td>
+                        <td><small>{{a.starts_at | date:'shortDate'}} to {{a.ends_at | date:'shortDate'}}</small></td>
+                        <td class="ion-text-right">
+                          <ion-button fill="clear" (click)="editAnnouncement(a)" *ngIf="isAdminOrHR"><ion-icon name="create-outline"></ion-icon></ion-button>
+                          <ion-button fill="clear" color="danger" (click)="deleteAnnouncement(a.id)" *ngIf="isAdminOrHR"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination Footer -->
+              <div class="pagination-footer mt-15" *ngIf="totalPages[getTabKey()] > 1">
+                <ion-button fill="clear" (click)="prevPage(getTabKey())" [disabled]="currentPage[getTabKey()] === 1">
+                  <ion-icon name="chevron-back-circle-outline"></ion-icon>
+                </ion-button>
+                <div class="page-indicator">{{currentPage[getTabKey()]}} <span>/</span> {{totalPages[getTabKey()]}}</div>
+                <ion-button fill="clear" (click)="nextPage(getTabKey())" [disabled]="currentPage[getTabKey()] === totalPages[getTabKey()]">
+                  <ion-icon name="chevron-forward-circle-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </ion-col>
+
+          <!-- Form Column (Right) -->
+          <ion-col size="12" size-lg="4.5" class="form-column mt-md-20">
+            <div class="glass-form-card">
+              <div class="form-header-premium">
+                <h4>{{ isEditing() ? 'Update' : 'Add New' }} {{ activeTab | titlecase }}</h4>
+                <p>Ensure all organizational details are accurate before saving.</p>
+              </div>
+
+              <div class="form-body-premium">
+                <!-- Generic Name Inputs -->
+                <ng-container *ngIf="activeTab === 'locations'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Location Name*</ion-label>
+                    <ion-input [(ngModel)]="locationName" placeholder="Enter location name..."></ion-input>
+                  </ion-item>
+                </ng-container>
+                <ng-container *ngIf="activeTab === 'departments'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Department Name*</ion-label>
+                    <ion-input [(ngModel)]="departmentName" placeholder="Enter department name..."></ion-input>
+                  </ion-item>
+                </ng-container>
+                <ng-container *ngIf="activeTab === 'designations'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Designation Name*</ion-label>
+                    <ion-input [(ngModel)]="designationName" placeholder="Enter designation name..."></ion-input>
+                  </ion-item>
+                </ng-container>
+                <ng-container *ngIf="activeTab === 'businessUnits'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Business Unit Name*</ion-label>
+                    <ion-input [(ngModel)]="businessUnitName" placeholder="Enter business unit name..."></ion-input>
+                  </ion-item>
+                </ng-container>
+
+                <!-- Shifts Form -->
+                <ng-container *ngIf="activeTab === 'shifts'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Shift Name*</ion-label>
+                    <ion-input [(ngModel)]="shiftForm.name"></ion-input>
+                  </ion-item>
+                  <div class="form-row-flex">
+                    <ion-item lines="none" class="custom-premium-input flex-1">
+                      <ion-label position="stacked">Start Time*</ion-label>
+                      <ion-input type="time" [(ngModel)]="shiftForm.start_time"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none" class="custom-premium-input flex-1">
+                      <ion-label position="stacked">End Time*</ion-label>
+                      <ion-input type="time" [(ngModel)]="shiftForm.end_time"></ion-input>
+                    </ion-item>
+                  </div>
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Break (Mins)</ion-label>
+                    <ion-input type="number" [(ngModel)]="shiftForm.break_duration_minutes"></ion-input>
+                  </ion-item>
+                </ng-container>
+
+                <!-- Weekly Off Form -->
+                <ng-container *ngIf="activeTab === 'weeklyOff'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Policy Name*</ion-label>
+                    <ion-input [(ngModel)]="weeklyOffPolicyForm.name"></ion-input>
+                  </ion-item>
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Policy Code*</ion-label>
+                    <ion-input [(ngModel)]="weeklyOffPolicyForm.policy_code"></ion-input>
+                  </ion-item>
+                  
+                  <div class="week-pill-container mt-15">
+                    <p class="section-label">Select Week Off Days</p>
+                    <div class="week-pills">
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.sunday_off" (click)="weeklyOffPolicyForm.sunday_off = !weeklyOffPolicyForm.sunday_off">Sun</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.monday_off" (click)="weeklyOffPolicyForm.monday_off = !weeklyOffPolicyForm.monday_off">Mon</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.tuesday_off" (click)="weeklyOffPolicyForm.tuesday_off = !weeklyOffPolicyForm.tuesday_off">Tue</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.wednesday_off" (click)="weeklyOffPolicyForm.wednesday_off = !weeklyOffPolicyForm.wednesday_off">Wed</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.thursday_off" (click)="weeklyOffPolicyForm.thursday_off = !weeklyOffPolicyForm.thursday_off">Thu</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.friday_off" (click)="weeklyOffPolicyForm.friday_off = !weeklyOffPolicyForm.friday_off">Fri</div>
+                      <div class="week-pill" [class.active]="weeklyOffPolicyForm.saturday_off" (click)="weeklyOffPolicyForm.saturday_off = !weeklyOffPolicyForm.saturday_off">Sat</div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <!-- Announcements Form -->
+                <ng-container *ngIf="activeTab === 'announcements'">
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Title*</ion-label>
+                    <ion-input [(ngModel)]="announcementForm.title"></ion-input>
+                  </ion-item>
+                  <ion-item lines="none" class="custom-premium-input">
+                    <ion-label position="stacked">Message*</ion-label>
+                    <ion-textarea [(ngModel)]="announcementForm.body" rows="3"></ion-textarea>
+                  </ion-item>
+                  <div class="form-row-flex">
+                    <ion-item lines="none" class="custom-premium-input flex-1">
+                      <ion-label position="stacked">Starts At*</ion-label>
+                      <ion-input type="datetime-local" [(ngModel)]="announcementForm.starts_at"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none" class="custom-premium-input flex-1">
+                      <ion-label position="stacked">Ends At*</ion-label>
+                      <ion-input type="datetime-local" [(ngModel)]="announcementForm.ends_at"></ion-input>
+                    </ion-item>
+                  </div>
+                </ng-container>
+
+                <div class="form-actions-premium mt-30">
+                  <ion-button fill="clear" color="medium" (click)="handleCancel()" *ngIf="isEditing()" class="cancel-btn">Cancel</ion-button>
+                  <ion-button (click)="handleSave()" [disabled]="!canSave()" class="submit-btn-premium">
+                    <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+                    {{ isEditing() ? 'Update Changes' : 'Create New Entry' }}
+                  </ion-button>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,311 @@
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-margin main-block">
+    <ion-row>
+      <ion-col size="12" class="welcome-block">
+        <ion-card class="ion-padding">
+          <div class="card-pannel">
+            <ion-row class="actions-card row-space-between border-bottom">
+
+              <ion-col size="12" size-sm="8" size-md="8" size-lg="8" size-xl="8" class="row-left ion-align-items-start">
+                <ion-img *ngIf="currentEmployee" class="profile-img" [src]="profileImageUrl" width="46" alt="Profile">
+                </ion-img>
+
+                <div>
+                  <p class="greeting">{{ greeting }}</p>
+                  <p class="name" *ngIf="currentEmployee as emp">
+                    {{ emp.FullName }}
+                    <span *ngIf="getStatusLabel()" class="attendance_badge" [ngClass]="getStatusClass()">
+                      <span class="dot"></span>
+                      {{ getStatusLabel() }}
+                    </span>
+                  </p>
+
+                  <p class="date">
+                    <span>{{ todayDate }}</span>
+                    <span>
+                      <span *ngIf="currentEmployee as emp"> {{ emp.location_name }}</span>
+                    </span>
+                  </p>
+
+                  <ion-buttons>
+                    <ion-button *ngIf="!isCEO()" (click)="attendance()">
+                      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                      My Attendance
+                    </ion-button>
+
+                    <ion-button *ngIf="!isCEO()" (click)="leaves()">
+                      <ion-icon name="airplane-outline" slot="start"></ion-icon>
+                      Apply Leave
+                    </ion-button>
+
+                    <ion-button (click)="myteam()">
+                      <ion-icon name="people-outline" slot="start"></ion-icon>
+                      My Team
+                    </ion-button>
+                  </ion-buttons>
+                </div>
+              </ion-col>
+
+              <ion-col size="12" size-sm="4" size-md="4" size-lg="4" size-xl="4" class="time-block">
+                <p class="clock mb-30">Current Time</p>
+                <p class="time">{{ currentTime }}</p>
+                <app-clock-button *ngIf="!isCEO()"></app-clock-button>
+              </ion-col>
+
+            </ion-row>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-sm="12" size-md="12" size-lg="6" size-xl="6">
+        <!-- Today Overview card -->
+        <ion-card class="overview-block" *ngIf="monthlyAttendanceReport.length">
+          <div class="row-space-between border-bottom">
+            <div>
+              <h3 class="card-header">Today's Overview</h3>
+              <p class="card-dec">Your attendance, progress, and status at a glance</p>
+            </div>
+          </div>
+
+          <div class="card-content">
+            <ion-row>
+              <ion-col size="7">
+                <div class="row-space-between">
+                  <p class="label-test">Clock In</p>
+                  <p class="time">{{ (todayAttendance?.first_check_in | date:'h:mm a') || '--:--' }}</p>
+                </div>
+                <div class="row-space-between">
+                  <p class="label-test">Last Punch Out</p>
+                  <p class="time">{{ (todayAttendance?.last_check_out | date:'h:mm a') || '--:--' }}</p>
+                </div>
+                <div class="row-space-between">
+                  <p class="label-test">Status</p>
+                  <p class="status">{{ getStatusLabel() }}</p>
+                </div>
+              </ion-col>
+              <ion-col size="5">
+                <div class="row-space-between">
+                  <p class="label-test">Gross Hours</p>
+                  <p class="time">{{ todayAttendance?.gross_hours || '0h 0m' }}</p>
+                </div>
+                <div class="row-space-between">
+                  <p class="label-test">Effective Hours</p>
+                  <p class="time">{{ todayEffectivePercentage }}.00</p>
+                </div>
+                <div class="label" *ngIf="todayAttendance?.work_mode">
+                  <p class="w-auto">Mode: {{todayAttendance.work_mode}}</p>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-card>
+
+        <!-- Leave balance card -->
+        <ion-card class="overview-block">
+          <div class="row-space-between border-bottom">
+            <div>
+              <h3 class="card-header">Leave balance</h3>
+              <p class="card-dec">Quick view of your available time off</p>
+            </div>
+            <div class="label">
+              <p>Cycle : Mar - Feb</p>
+            </div>
+          </div>
+
+          <div class="p-8 card-content">
+            <ion-row lines="none">
+              <ion-col size="6" size-md="3" class="leave-chart-col"
+                *ngFor="let leave of leaveCards; trackBy: trackById">
+                <div class="leave-donut-wrapper">
+                  <div class="donut-chart"
+                    [style.background]="'conic-gradient(#ef4444 0% ' + leave.usedPercent + '%, #10b981 ' + leave.usedPercent + '% 100%)'">
+                    <div class="donut-hole">
+                      <span class="count">{{ leave.available }}</span>
+                      <span class="label">Left</span>
+                    </div>
+                  </div>
+                  <p class="leave-name">{{ leave.title }}</p>
+                  <div class="simple-stats">
+                    <span class="stat used">{{ leave.used }} Used</span>
+                    <span class="stat total">{{ leave.allocated_days }} Tot.</span>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+            <p class="note">Plan ahead: peak leave usage is expected during upcoming festival weeks.</p>
+          </div>
+        </ion-card>
+
+        <!-- Upcoming holidays card -->
+        <ion-card class="overview-block">
+          <div class="row-space-between border-bottom">
+            <div>
+              <h3 class="card-header">Holidays</h3>
+              <p class="card-dec">Next few company and regional holidays</p>
+            </div>
+            <div class="label">
+              <p>Location : Vizag</p>
+            </div>
+          </div>
+          <div class="holidays-coming-soon">
+            <div class="coming-soon-content">
+              <img src="https://media.tenor.com/_7n1_44wGisAAAAC/coming-soon-loading.gif" alt="Coming Soon GIF"
+                class="coming-soon-gif">
+              <h2 class="card-main-header">Upcoming Holidays</h2>
+              <p class="coming-soon-text">We're updating the festive list for you!</p>
+              <div class="glow-tag">COMING SOON</div>
+            </div>
+          </div>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size-sm="12" size-md="12" size-lg="6" size-xl="6">
+        <!-- Announcements card -->
+        <ion-card class="overview-block carousel-parent">
+          <div class="row-space-between border-bottom">
+            <div>
+              <h3 class="card-header">Announcements</h3>
+              <p class="card-dec">Stay updated with company news</p>
+            </div>
+            <div class="label" *ngIf="announcements.length > 0">
+              <p>{{ announcements.length }} latest</p>
+            </div>
+          </div>
+
+          <div class="card-content carousel-viewport">
+            <div *ngIf="announcements.length === 0" class="no-announcements">
+              <p>No new announcements at this time.</p>
+            </div>
+
+            <div class="carousel-track" *ngIf="announcements.length > 0"
+              [style.transform]="'translateX(-' + (currentAnnounceIndex * 100) + '%)'">
+              <div class="carousel-slide" *ngFor="let announce of announcements; let i = index">
+                <div class="Announcement-card">
+                  <div class="announce-icon">
+                    <ion-icon name="megaphone-outline" style="font-size:40px;color:#1870B9;"></ion-icon>
+                  </div>
+                  <div class="announce-body">
+                    <p class="title">{{ announce.title }}</p>
+                    <p class="body-text">{{ announce.body }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-indicators" *ngIf="announcements.length > 1">
+              <span *ngFor="let dot of announcements; let dotIdx = index" class="dot"
+                [class.active]="dotIdx === currentAnnounceIndex" (click)="setAnnounce(dotIdx)">
+              </span>
+            </div>
+          </div>
+        </ion-card>
+
+        <!-- Birthdays & Work Anniversaries card -->
+        <ion-card class="overview-block milestone-container">
+          <div class="row-space-between border-bottom pb-12">
+            <div>
+              <h3 class="card-header">Birthdays &amp; Work Anniversaries</h3>
+              <p class="card-dec">Celebrate your teammates' special moments</p>
+            </div>
+          </div>
+
+          <div class="card-content milestone-list">
+            <div *ngIf="birthdays.length === 0" class="empty-milestones">
+              <ion-icon name="sparkles-outline"></ion-icon>
+              <p>No milestones coming up this week. Keep the spirits high!</p>
+            </div>
+
+            <div class="milestone-item" *ngFor="let milestone of birthdays; trackBy: trackById"
+              [class.today]="milestone.isToday">
+              <div class="item-main">
+                <div class="avatar-block">
+                  <img [src]="milestone.fullImageUrl" [alt]="milestone.FirstName">
+                  <div class="event-icon-badge" [class.birthday-badge]="milestone.eventType === 'Birthday'"
+                    [class.anniversary-badge]="milestone.eventType === 'Anniversary'">
+                    <ion-icon [name]="milestone.eventType === 'Birthday' ? 'gift' : 'medal'"></ion-icon>
+                  </div>
+                </div>
+
+                <div class="info-block" (click)="$event.stopPropagation()">
+                  <div class="name-row">
+                    <span class="emp-name">{{ milestone.FirstName }} {{ milestone.LastName }}</span>
+                    <span class="today-tag" *ngIf="milestone.isToday">TODAY</span>
+                  </div>
+                  <p class="event-desc">
+                    <span class="event-type">{{ milestone.eventType }}</span>
+                    <span class="dot-separator">•</span>
+                    <span class="event-date">{{ milestone.originalDate | date:'MMM dd' }}</span>
+                    <span class="anniversary-years" *ngIf="milestone.eventType === 'Anniversary'">
+                      <span class="dot-separator">•</span>
+                      {{ milestone.years }} {{ milestone.years > 1 ? 'years' : 'year' }}
+                    </span>
+                  </p>
+                </div>
+
+                <div class="action-block" *ngIf="activeWishEmployeeId !== milestone.id">
+                  <ion-button fill="clear" (click)="viewWishes(milestone)" class="view-btn" title="View Wishes">
+                    <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button fill="clear" (click)="showWishInput(milestone.id)" class="wish-btn" title="Send Wish">
+                    <ion-icon slot="icon-only" name="paper-plane-outline"></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+
+              <!-- Inline Wish Input -->
+              <div class="wish-reveal-input" *ngIf="activeWishEmployeeId === milestone.id">
+                <ion-input [(ngModel)]="wishMessages[milestone.id]" placeholder="Write a warm note..."></ion-input>
+                <div class="reveal-actions">
+                  <ion-button fill="clear" color="medium" (click)="hideWishInput()">Cancel</ion-button>
+                  <ion-button fill="solid" class="send-small-btn" (click)="sendWish(milestone.id)">Send</ion-button>
+                </div>
+              </div>
+
+              <div class="mini-wish-list" *ngIf="milestone.isToday">
+                <div class="wish-count" (click)="viewWishes(milestone)">
+                  <ion-icon name="heart" color="danger"></ion-icon>
+                  <span>See celebration notes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-card>
+
+        <!-- View Wishes Modal -->
+        <ion-modal [isOpen]="isViewingWishes" (didDismiss)="closeWishesModal()" class="wishes-modal">
+          <ng-template>
+            <ion-header class="ion-no-border">
+              <ion-toolbar>
+                <ion-title>Wishes for {{ viewingMilestoneName }}</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="closeWishesModal()">
+                    <ion-icon slot="icon-only" name="close"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+              <div class="modal-wishes-list" *ngIf="wishesToView.length > 0; else noWishes">
+                <div class="wish-card-item" *ngFor="let wish of wishesToView">
+                  <div class="wish-header">
+                    <span class="sender">{{ wish.sender_name }}</span>
+                    <span class="time">{{ wish.created_at | date:'MMM dd, h:mm a' }}</span>
+                  </div>
+                  <p class="wish-text">{{ wish.message }}</p>
+                </div>
+              </div>
+              <ng-template #noWishes>
+                <div class="no-wishes-state">
+                  <ion-icon name="heart-dislike-outline"></ion-icon>
+                  <p>No celebrations yet. Be the first to send a note!</p>
+                </div>
+              </ng-template>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

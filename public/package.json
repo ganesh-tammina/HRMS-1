@@ -29,6 +29,7 @@
     "@capacitor/keyboard": "7.0.1",
     "@capacitor/status-bar": "7.0.1",
     "@ionic/angular": "^8.0.0",
+    "animate.css": "^4.1.1",
     "chart.js": "^4.5.1",
     "emailjs": "^4.0.3",
     "exceljs": "^4.4.0",

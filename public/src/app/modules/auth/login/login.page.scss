@@ -1,0 +1,524 @@
+.login-content {
+  --background: #0a1d2c;
+  --ion-background-color: #0a1d2c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 10% 20%, rgba(31, 116, 187, 0.2) 0%, rgba(0, 0, 0, 0) 40%),
+    radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.2) 0%, rgba(0, 0, 0, 0) 40%);
+  z-index: 0;
+}
+
+.login-page-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-section {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+
+  .brand-logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+  }
+
+  .brand-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    letter-spacing: -1px;
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .brand-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+}
+
+.login-form-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-glass-card {
+  width: 100%;
+  max-width: 450px;
+  min-height: 480px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  overflow: visible;
+  transition: transform 0.6s ease;
+
+  .card-faces {
+    padding: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .user-icon-circle {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(31, 116, 187, 0.3);
+      position: relative;
+      animation: icon-float 3s ease-in-out infinite;
+      opacity: 0;
+
+      ion-icon {
+        font-size: 36px;
+        color: #fff;
+      }
+
+      .status-dot {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 12px;
+        height: 12px;
+        background: #10B981;
+        border-radius: 50%;
+        border: 2px solid #0a1d2c;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        animation: status-pulse 1.5s infinite;
+      }
+    }
+
+    .form-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 0 0 6px 0;
+
+      &.accent-text {
+        background: linear-gradient(135deg, #ffffff 30%, #3498db 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .form-subtitle {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+  }
+
+  @keyframes icon-float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes status-pulse {
+    0% {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+    }
+
+    100% {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+  }
+
+  .input-list {
+    background: transparent;
+    padding: 0;
+  }
+
+  .custom-input-item {
+    --background: rgba(255, 255, 255, 0.03);
+    --border-radius: 12px;
+    --highlight-color-focused: #1F74BB;
+    --padding-start: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+
+    &.item-has-focus {
+      border-color: rgba(31, 116, 187, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(31, 116, 187, 0.1);
+    }
+
+    ion-icon {
+      color: rgba(255, 255, 255, 0.4);
+      margin-right: 12px;
+    }
+
+    ion-label {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+    }
+
+    ion-input {
+      --color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+  .login-button {
+    --background: linear-gradient(135deg, #1F74BB, #3498DB);
+    --border-radius: 12px;
+    --box-shadow: 0 8px 20px rgba(31, 116, 187, 0.3);
+    height: 52px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .create-button {
+    --border-color: rgba(255, 255, 255, 0.2);
+    --color: #fff;
+    --border-radius: 12px;
+    height: 52px;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  .form-footer {
+    text-align: center;
+    margin-top: 20px;
+
+    ion-button {
+      --color: rgba(255, 255, 255, 0.5);
+      text-transform: none;
+      font-size: 13px;
+
+      &:hover {
+        --color: #fff;
+      }
+    }
+  }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .login-page-container {
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .brand-section {
+    flex: 0;
+    padding: 40px 20px;
+    text-align: center;
+    align-items: center;
+
+    .brand-title {
+      font-size: 32px;
+    }
+
+    .brand-subtitle {
+      font-size: 16px;
+    }
+
+    .brand-logo {
+      width: 80px;
+    }
+  }
+
+  .login-form-section {
+    flex: 0;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .login-glass-card {
+    min-height: auto;
+
+    .card-faces {
+      padding: 30px 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-section {
+    display: none;
+    /* Hide brand on very small screens to fit form */
+  }
+
+  .login-content {
+    background: linear-gradient(180deg, #0a1d2c 0%, #17374d 100%);
+  }
+
+  .login-glass-card {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+/* ANIMATIONS */
+.animate__animated {
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate__fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+.animate__fadeInRight {
+  animation-name: fadeInRight;
+}
+
+
+.login-content {
+  --background: #0a1d2c;
+  --ion-background-color: #0a1d2c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 🔥 Animated Gradient Background */
+.login-content::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, #1f74bb, #3498db, #0a1d2c, #1f74bb);
+  animation: gradientMove 12s ease infinite;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+@keyframes gradientMove {
+  0% {
+    transform: translate(0%, 0%);
+  }
+
+  50% {
+    transform: translate(-25%, -25%);
+  }
+
+  100% {
+    transform: translate(0%, 0%);
+  }
+}
+
+/* 🔵 Floating Glow Orbs */
+.login-bg-overlay::before,
+.login-bg-overlay::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: floatOrb 10s infinite alternate ease-in-out;
+}
+
+.login-bg-overlay::before {
+  width: 300px;
+  height: 300px;
+  background: rgba(31, 116, 187, 0.5);
+  top: 10%;
+  left: 10%;
+}
+
+.login-bg-overlay::after {
+  width: 250px;
+  height: 250px;
+  background: rgba(52, 152, 219, 0.4);
+  bottom: 10%;
+  right: 10%;
+}
+
+@keyframes floatOrb {
+  from {
+    transform: translateY(0px);
+  }
+
+  to {
+    transform: translateY(-40px);
+  }
+}
+
+/* ✨ Glass Card Upgrade */
+.login-glass-card {
+  width: 100%;
+  max-width: 450px;
+  min-height: 520px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 🔥 Card Hover Lift & Glow */
+.login-glass-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(52, 152, 219, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(31, 116, 187, 0.2);
+}
+
+/* 🎯 Input Improvements */
+.custom-input-item {
+  --background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+}
+
+.custom-input-item:hover {
+  border-color: rgba(52, 152, 219, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.custom-input-item.item-has-focus {
+  border-color: #3498db;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(52, 152, 219, 0.25);
+  transform: scale(1.02);
+}
+
+/* 🚀 Buttons Upgrade */
+.login-button {
+  --background: linear-gradient(135deg, #1F74BB, #3498DB);
+  height: 56px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-size: 15px;
+
+  box-shadow: 0 12px 30px rgba(31, 116, 187, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.login-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(31, 116, 187, 0.6);
+}
+
+.login-button:active {
+  transform: translateY(-1px);
+}
+
+/* ✨ Brand Glow Effect */
+.brand-logo {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+}
+
+.brand-title {
+  font-size: 48px;
+  font-weight: 700;
+
+  background: linear-gradient(90deg, #ffffff, #9fd3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 🔥 Smooth Fade Animations */
+.animate__fadeInLeft,
+.animate__fadeInRight {
+  animation-duration: 1s;
+}

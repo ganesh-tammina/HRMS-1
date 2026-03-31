@@ -1,0 +1,141 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="gradient-header">
+    <div class="header-content">
+      <div class="title-block">
+        <ion-title>Candidate Onboarding</ion-title>
+        <p class="subtitle">Streamline your hiring process and candidate experience</p>
+      </div>
+      <div class="actions-block">
+        <button class="premium-btn" (click)="openCreateCandidateModal()">
+          <ion-icon name="person-add-outline"></ion-icon>
+          <span>New Candidate</span>
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="dashboard-wrap">
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-item total" (click)="navigateToPreonboarding('all')">
+        <div class="item-overlay"></div>
+        <div class="item-content">
+          <div class="icon-box">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <span class="label">Total Pipeline</span>
+            <span class="value" *ngIf="!isLoading">{{stats.total_candidates}}</span>
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          </div>
+        </div>
+        <div class="decoration">
+          <ion-icon name="people-circle-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="stat-item accepted" (click)="navigateToPreonboarding('offer_accepted')">
+        <div class="item-overlay"></div>
+        <div class="item-content">
+          <div class="icon-box">
+            <ion-icon name="mail-unread-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <span class="label">Offer Accepted</span>
+            <span class="value" *ngIf="!isLoading">{{stats.offer_accepted}}</span>
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          </div>
+        </div>
+        <div class="decoration">
+          <ion-icon name="mail-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="stat-item success" (click)="navigateToPreonboarding('ready_to_join')">
+        <div class="item-overlay"></div>
+        <div class="item-content">
+          <div class="icon-box">
+            <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <span class="label">Ready to Join</span>
+            <span class="value" *ngIf="!isLoading">{{stats.ready_to_join}}</span>
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          </div>
+        </div>
+        <div class="decoration">
+          <ion-icon name="rocket-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert / Action Required Section -->
+    <div class="action-section">
+      <div class="section-header">
+        <h2>Action Required</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="action-grid">
+        <div class="action-card warning" (click)="navigateToPreonboarding('documents_pending')">
+          <div class="card-icon">
+            <ion-icon name="document-text-outline"></ion-icon>
+          </div>
+          <div class="card-body">
+            <h3>Documents Pending</h3>
+            <p>Verification pending for {{stats.documents_pending}} candidates</p>
+            <div class="count-pill">{{stats.documents_pending}}</div>
+          </div>
+          <div class="card-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+
+        <div class="action-card danger" (click)="navigateToPreonboarding('bgv_pending')">
+          <div class="card-icon">
+            <ion-icon name="finger-print-outline"></ion-icon>
+          </div>
+          <div class="card-body">
+            <h3>BGV Pending</h3>
+            <p>Background verification required for {{stats.bgv_pending}} candidates</p>
+            <div class="count-pill">{{stats.bgv_pending}}</div>
+          </div>
+          <div class="card-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation / Features -->
+    <div class="quick-nav-section">
+      <div class="section-header">
+        <h2>Quick Access</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="nav-grid">
+        <div class="nav-tile" routerLink="/onboarding/preonboarding">
+          <div class="tile-icon pulse-blue">
+            <ion-icon name="list-outline"></ion-icon>
+          </div>
+          <span>Pre-Onboarding List</span>
+        </div>
+        <div class="nav-tile" (click)="openCreateCandidateModal()">
+          <div class="tile-icon pulse-green">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <span>Create New Candidate</span>
+        </div>
+        <div class="nav-tile disabled">
+          <div class="tile-icon">
+            <ion-icon name="settings-outline"></ion-icon>
+          </div>
+          <span>Onboarding Settings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

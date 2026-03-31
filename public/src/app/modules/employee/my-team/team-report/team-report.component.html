@@ -1,0 +1,127 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="report-header">
+    <ion-title>Team Attendance Reports</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Filters Row -->
+  <ion-toolbar class="filters-toolbar">
+    <div class="filter-container">
+      <div class="filter-item">
+        <ion-label>Member</ion-label>
+        <ion-select placeholder="Select Employee" (ionChange)="onEmployeeChange($event)" [value]="selectedEmployeeId"
+          interface="popover" class="custom-select">
+          <ion-select-option *ngFor="let member of teamMembers" [value]="member.id">
+            {{ member.FirstName }} {{ member.LastName }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+
+      <div class="filter-item short-item">
+        <ion-label>Month</ion-label>
+        <ion-select placeholder="Month" [(ngModel)]="month" (ionChange)="onDateChange()" interface="popover"
+          class="custom-select">
+          <ion-select-option [value]="1">January</ion-select-option>
+          <ion-select-option [value]="2">February</ion-select-option>
+          <ion-select-option [value]="3">March</ion-select-option>
+          <ion-select-option [value]="4">April</ion-select-option>
+          <ion-select-option [value]="5">May</ion-select-option>
+          <ion-select-option [value]="6">June</ion-select-option>
+          <ion-select-option [value]="7">July</ion-select-option>
+          <ion-select-option [value]="8">August</ion-select-option>
+          <ion-select-option [value]="9">September</ion-select-option>
+          <ion-select-option [value]="10">October</ion-select-option>
+          <ion-select-option [value]="11">November</ion-select-option>
+          <ion-select-option [value]="12">December</ion-select-option>
+        </ion-select>
+      </div>
+
+      <div class="filter-item short-item">
+        <ion-label>Year</ion-label>
+        <ion-select placeholder="Year" [(ngModel)]="year" (ionChange)="onDateChange()" interface="popover"
+          class="custom-select">
+          <ion-select-option *ngFor="let y of [2024, 2025, 2026]" [value]="y">{{ y }}</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="report-content">
+  <!-- Summary Cards -->
+  <div class="summary-section" *ngIf="summary && !isLoading">
+    <div class="summary-card total">
+      <span class="label">Total Days</span>
+      <span class="value">{{ summary.total_days }}</span>
+    </div>
+    <div class="summary-card present">
+      <span class="label">Present</span>
+      <span class="value">{{ summary.present_days }}</span>
+    </div>
+    <div class="summary-card absent">
+      <span class="label">Absent</span>
+      <span class="value">{{ summary.absent_days }}</span>
+    </div>
+    <div class="summary-card leave">
+      <span class="label">On Leave</span>
+      <span class="value">{{ summary.half_days }}</span>
+    </div>
+    <div class="summary-card total-hours">
+      <span class="label">Total Hours</span>
+      <span class="value">{{ summary.total_work_hours }}</span>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Generating report...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && (!reportData || reportData.length === 0)">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h3>No data found</h3>
+    <p>There are no attendance records for the selected period.</p>
+  </div>
+
+  <!-- Attendance Table -->
+  <div class="table-container" *ngIf="!isLoading && reportData && reportData.length > 0">
+    <div class="table-header">
+      <div class="col col-date">Date</div>
+      <div class="col col-status">Status</div>
+      <div class="col col-in">First In</div>
+      <div class="col col-out">Last Out</div>
+      <div class="col col-hours">Work Hours</div>
+      <div class="col col-mode">Mode</div>
+    </div>
+
+    <div class="table-body">
+      <div class="table-row" *ngFor="let row of reportData">
+        <div class="col col-date">
+          <span class="day">{{ row.attendance_date | date:'EEE' }}</span>
+          <span class="date">{{ row.attendance_date | date:'dd MMM' }}</span>
+        </div>
+        <div class="col col-status">
+          <span class="status-badge" [ngClass]="getStatusClass(row.status)">
+            {{ row.status | uppercase }}
+          </span>
+        </div>
+        <div class="col col-in">
+          {{ (row.first_check_in | date:'hh:mm a') || '--:--' }}
+        </div>
+        <div class="col col-out">
+          {{ (row.last_punch_time | date:'hh:mm a') || '--:--' }}
+        </div>
+        <div class="col col-hours">
+          {{ row.gross_hours || '0.00' }} hrs
+        </div>
+        <div class="col col-mode">
+          {{ row.work_mode || 'OFFICE' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

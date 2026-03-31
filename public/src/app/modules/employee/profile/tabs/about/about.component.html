@@ -1,0 +1,103 @@
+<div class="about-container" *ngIf="currentEmployee">
+  <div class="detail-row">
+    <!-- Personal Summary Card -->
+    <div class="details-card">
+      <div class="card-header">
+        Personal Summary
+        <ion-button fill="clear" (click)="isEditSummary()" color="medium">
+          <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="card-content">
+        <div class="editor-container" *ngIf="viewEditor">
+          <ion-textarea placeholder="Tell us about yourself..." class="custom-textarea"></ion-textarea>
+        </div>
+        <p *ngIf="!viewEditor" class="summary-text">
+          {{ currentEmployee?.personal_summary || 'Experienced professional with a passion for excellence and a track
+          record of success in corporate environments.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Organizational Details Card -->
+    <div class="details-card">
+      <div class="card-header">
+        Organizational Details
+        <ion-button fill="clear" (click)="isEditOrg()" color="medium">
+          <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="card-content">
+        <div class="org-details">
+          <div class="info-group">
+            <span class="label">Business Unit</span>
+            <span class="value" *ngIf="!IsOrg">{{ currentEmployee?.business_unit_name || '-' }}</span>
+            <ion-input *ngIf="IsOrg" [value]="currentEmployee?.business_unit_name" class="custom-input"></ion-input>
+          </div>
+          <div class="info-group border-separator">
+            <span class="label">Department</span>
+            <span class="value" *ngIf="!IsOrg">{{ currentEmployee?.department_name || '-' }}</span>
+            <ion-input *ngIf="IsOrg" [value]="currentEmployee?.department_name" class="custom-input"></ion-input>
+          </div>
+          <div class="info-group">
+            <span class="label">Reporting Manager</span>
+            <div class="manager-info" *ngIf="!IsOrg">
+              <ion-avatar class="small-avatar">
+                <img src="../assets/Profile_Picture.png" alt="Manager" />
+              </ion-avatar>
+              <span class="value">{{ currentEmployee?.manager_first_name }} {{ currentEmployee?.manager_last_name
+                }}</span>
+            </div>
+            <ion-input *ngIf="IsOrg"
+              [value]="currentEmployee?.manager_first_name + ' ' + currentEmployee?.manager_last_name"
+              class="custom-input"></ion-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-row">
+    <!-- Primary Details Card -->
+    <div class="details-card">
+      <div class="card-header">Primary Details</div>
+      <div class="card-content">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="4" class="info-group">
+              <span class="label">Employee ID</span>
+              <span class="value">{{ currentEmployee?.EmployeeNumber || '-' }}</span>
+            </ion-col>
+            <ion-col size="4" class="info-group">
+              <span class="label">Date of Birth</span>
+              <span class="value">{{ currentEmployee?.DateOfBirth || '-' }}</span>
+            </ion-col>
+            <ion-col size="4" class="info-group">
+              <span class="label">Gender</span>
+              <span class="value">{{ currentEmployee?.Gender || '-' }}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-margin-top">
+            <ion-col size="4" class="info-group">
+              <span class="label">Nationality</span>
+              <span class="value">{{ currentEmployee?.Nationality || '-' }}</span>
+            </ion-col>
+            <ion-col size="4" class="info-group">
+              <span class="label">Marital Status</span>
+              <span class="value">{{ currentEmployee?.MaritalStatus || '-' }}</span>
+            </ion-col>
+            <ion-col size="4" class="info-group">
+              <span class="label">Blood Group</span>
+              <span class="value">{{ currentEmployee?.BloodGroup || '-' }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+
+    <!-- Reporting Team Component -->
+    <div class="details-card no-border bg-transparent">
+      <app-reporting-team [currentEmployee]="currentEmployee"></app-reporting-team>
+    </div>
+  </div>
+</div>

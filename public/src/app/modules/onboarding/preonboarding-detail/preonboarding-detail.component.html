@@ -1,0 +1,420 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/onboarding/preonboarding"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Candidate Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isLoading" class="loading-wrap">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Loading candidate details...</p>
+  </div>
+
+  <div *ngIf="!isLoading && candidate" class="detail-wrap">
+    <!-- ═══════════ PROFILE HERO ═══════════ -->
+    <div class="profile-hero">
+      <div class="hero-main">
+        <div class="candidate-id-wrap">
+          <div class="avatar-wrap">
+            {{ candidate.full_name | slice:0:1 }}
+          </div>
+          <div class="info-block">
+            <h2>{{ candidate.full_name }}</h2>
+            <p class="position">{{ candidate.position }}</p>
+          </div>
+        </div>
+        <div class="premium-badge transition-all" [style.background-color]="getStatusColor(candidate.status) + '15'"
+          [style.color]="getStatusColor(candidate.status)">
+          <ion-icon name="ellipse" style="font-size: 8px; margin-right: 8px;"></ion-icon>
+          {{ candidate.status | uppercase | replace: '_':' ' }}
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="h-stat">
+          <span class="label">Department</span>
+          <span class="value">{{ candidate.department_name || candidate.department || 'N/A' }}</span>
+        </div>
+        <div class="h-stat">
+          <span class="label">Joining Date</span>
+          <span class="value">
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ candidate.joining_date | date: 'dd MMM, yyyy' }}
+          </span>
+        </div>
+        <div class="h-stat">
+          <span class="label">Contact Email</span>
+          <span class="value">
+            <ion-icon name="mail-outline"></ion-icon>
+            {{ candidate.email }}
+          </span>
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-meta">
+          <span>Onboarding Progress</span>
+          <strong>{{ getProgressPercentage() }}%</strong>
+        </div>
+        <div class="p-track">
+          <div class="p-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SEGMENT CONTROL ═══════════ -->
+    <div class="segment-container">
+      <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event)" mode="ios">
+        <ion-segment-button value="overview">
+          <ion-label>Overview</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="tasks">
+          <ion-label>Tasks</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="offers">
+          <ion-label>Offers</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="documents">
+          <ion-label>Documents</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="bgv">
+          <ion-label>BGV</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- ═══════════ TAB CONTENT ═══════════ -->
+    <div class="tab-pane">
+
+      <!-- OVERVIEW TAB -->
+      <ng-container *ngIf="selectedSegment === 'overview'">
+        <div class="content-card">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="person-outline"></ion-icon>
+              </div>
+              <h2>Candidate Information</h2>
+            </div>
+          </div>
+          <div class="info-stack">
+            <div class="stack-item">
+              <label>Phone Number</label>
+              <span>{{ candidate.phone }}</span>
+            </div>
+            <div class="stack-item">
+              <label>Designation</label>
+              <span>{{ candidate.designation_name || 'Not Provided' }}</span>
+            </div>
+            <div class="stack-item">
+              <label>Current Location</label>
+              <span>{{ candidate.location_name || 'Remote' }}</span>
+            </div>
+            <div class="stack-item">
+              <label>Offered Package (CTC)</label>
+              <span>₹{{ candidate.offered_ctc | number }}</span>
+            </div>
+            <div class="stack-item">
+              <label>Reporting Manager</label>
+              <span>{{ candidate.manager_name || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-board">
+          <div class="action-box">
+            <h3>Lifecycle Management</h3>
+            <p>Initiate the pre-onboarding workflow for this candidate.</p>
+            <div class="btn-wrap">
+              <ion-button expand="block" color="primary" (click)="startPreonboarding()">
+                <ion-icon name="play-circle" slot="start"></ion-icon>
+                Start Workflow
+              </ion-button>
+            </div>
+          </div>
+          <div class="action-box">
+            <h3>Final Decision</h3>
+            <p>Complete the hiring process once all criteria are met.</p>
+            <div class="btn-wrap">
+              <ion-button expand="block" color="success" (click)="hireAsEmployee()">
+                <ion-icon name="checkmark-done" slot="start"></ion-icon>
+                Hire Employee
+              </ion-button>
+              <ion-button expand="block" color="warning" fill="outline" (click)="putOnHold()">
+                <ion-icon name="pause-circle" slot="start"></ion-icon>
+                Hold Process
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- TASKS TAB -->
+      <ng-container *ngIf="selectedSegment === 'tasks'">
+        <div class="content-card">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="list-outline"></ion-icon>
+              </div>
+              <h2>Pre-onboarding Checklist</h2>
+            </div>
+            <div class="premium-pill-btn">Refresh List</div>
+          </div>
+
+          <div *ngFor="let task of preonboardingTasks" class="item-record">
+            <div class="record-info">
+              <div class="r-icon">
+                <ion-icon [name]="task.status === 'completed' ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+              </div>
+              <div class="r-text">
+                <h4>{{ task.task_name }}</h4>
+                <p>{{ task.task_category }}</p>
+              </div>
+            </div>
+            <div class="record-action">
+              <ion-badge *ngIf="task.is_mandatory" color="danger" mode="ios">Mandatory</ion-badge>
+              <ion-checkbox [checked]="task.status === 'completed'" (ionChange)="completeTask(task)"
+                color="primary"></ion-checkbox>
+            </div>
+          </div>
+
+          <div *ngIf="preonboardingTasks.length === 0" class="empty-list">
+            <ion-icon name="list-circle-outline"></ion-icon>
+            <p>No tasks assigned to this candidate yet.</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- OFFERS TAB -->
+      <ng-container *ngIf="selectedSegment === 'offers'">
+        <div class="content-card" *ngIf="!showOfferForm">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <h2>Offer Management</h2>
+            </div>
+          </div>
+
+          <div class="action-board" style="grid-template-columns: 1fr;">
+            <div class="action-box">
+              <h3>Generation</h3>
+              <p>Generate a new job offer with detailed salary breakup.</p>
+              <ion-button expand="block" color="primary" (click)="openOfferForm()">
+                <ion-icon name="add-circle" slot="start"></ion-icon>
+                Create New Offer
+              </ion-button>
+            </div>
+            <div class="action-box">
+              <h3>Communication</h3>
+              <p>Email the generated offer letter to the candidate.</p>
+              <ion-button expand="block" color="secondary" (click)="sendOffer()">
+                <ion-icon name="send" slot="start"></ion-icon>
+                Send to Candidate
+              </ion-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card" *ngIf="showOfferForm">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="create-outline"></ion-icon>
+              </div>
+              <h2>Generate Offer Letter</h2>
+            </div>
+          </div>
+
+          <div class="offer-form-stack">
+            <ion-list mode="md">
+              <ion-item class="ion-no-padding">
+                <ion-label position="floating">Designation Position</ion-label>
+                <ion-input [(ngModel)]="offerData.position" type="text" placeholder="Enter target position"></ion-input>
+              </ion-item>
+
+              <div class="form-grid"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <ion-item class="ion-no-padding">
+                  <ion-label position="floating">Annual CTC</ion-label>
+                  <ion-input [(ngModel)]="offerData.offered_ctc" type="number" placeholder="0.00"></ion-input>
+                </ion-item>
+                <ion-item class="ion-no-padding">
+                  <ion-label position="floating">Joining Date</ion-label>
+                  <ion-input [value]="offerData.joining_date | date: 'dd MMM yyyy'" readonly id="j-date-pick"></ion-input>
+                  <ion-popover trigger="j-date-pick" mode="ios">
+                    <ng-template>
+                      <ion-datetime [(ngModel)]="offerData.joining_date" presentation="date"
+                        [showDefaultButtons]="true"></ion-datetime>
+                    </ng-template>
+                  </ion-popover>
+                </ion-item>
+              </div>
+
+              <div class="salary-box" style="background: #f1f5f9; padding: 20px; border-radius: 16px; margin-bottom: 20px;">
+                <h4 style="margin: 0 0 15px; font-size: 14px; font-weight: 800; color: #475569;">MONTHLY BREAKUP</h4>
+                <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                  <ion-item class="ion-no-padding" style="--background: transparent;">
+                    <ion-label position="floating">Basic</ion-label>
+                    <ion-input [(ngModel)]="offerData.salary_breakup.basic" type="number"></ion-input>
+                  </ion-item>
+                  <ion-item class="ion-no-padding" style="--background: transparent;">
+                    <ion-label position="floating">HRA</ion-label>
+                    <ion-input [(ngModel)]="offerData.salary_breakup.hra" type="number"></ion-input>
+                  </ion-item>
+                  <ion-item class="ion-no-padding" style="--background: transparent;">
+                    <ion-label position="floating">Special</ion-label>
+                    <ion-input [(ngModel)]="offerData.salary_breakup.special" type="number"></ion-input>
+                  </ion-item>
+                </div>
+              </div>
+            </ion-list>
+
+            <div class="form-footer" style="padding-top: 20px; display: flex; gap: 15px;">
+              <ion-button expand="block" color="primary" (click)="createOffer()" style="flex: 1;">
+                Save and Generate
+              </ion-button>
+              <ion-button expand="block" color="medium" fill="outline" (click)="showOfferForm = false"
+                style="flex: 1;">
+                Cancel
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- DOCUMENTS TAB -->
+      <ng-container *ngIf="selectedSegment === 'documents'">
+        <div class="content-card">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="cloud-upload-outline"></ion-icon>
+              </div>
+              <h2>Document Repository</h2>
+            </div>
+          </div>
+
+          <div class="upload-zone" (click)="fileInput.click()">
+            <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none">
+            <div class="up-icon">
+              <ion-icon [name]="selectedFile ? 'checkmark-circle' : 'cloud-upload-outline'"></ion-icon>
+            </div>
+            <div class="up-text" *ngIf="!selectedFile">Click to upload new document</div>
+            <div class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</div>
+          </div>
+
+          <div class="upload-options" style="margin-top: 20px;">
+            <ion-item class="ion-no-padding" style="--border-color: #f1f5f9;">
+              <ion-label position="floating">Category</ion-label>
+              <ion-select [(ngModel)]="documentType" interface="popover">
+                <ion-select-option *ngFor="let type of documentTypes" [value]="type.value">
+                  {{ type.label }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-button expand="block" color="primary" style="margin-top: 20px;" (click)="uploadDocument()"
+              [disabled]="!selectedFile || uploadingDocument">
+              {{ uploadingDocument ? 'Uploading...' : 'Confirm Upload' }}
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box" style="background: #e0f2fe; color: #3b82f6;">
+                <ion-icon name="folder-open-outline"></ion-icon>
+              </div>
+              <h2>Uploaded Files</h2>
+            </div>
+          </div>
+
+          <div *ngFor="let doc of documents" class="item-record">
+            <div class="record-info">
+              <div class="r-icon">
+                <ion-icon name="document-attach-outline"></ion-icon>
+              </div>
+              <div class="r-text">
+                <h4>{{ doc.document_type | titlecase }}</h4>
+                <p>{{ doc.file_name }}</p>
+              </div>
+            </div>
+            <div class="record-action">
+              <div class="r-badge" [ngClass]="doc.verified ? 'verified' : 'pending'">
+                {{ doc.verified ? 'Verified' : 'Pending' }}
+              </div>
+              <ion-button *ngIf="!doc.verified" size="small" fill="outline" color="primary"
+                (click)="verifyDocument(doc.id)" mode="ios">
+                Verify
+              </ion-button>
+            </div>
+          </div>
+
+          <div *ngIf="!documents || documents.length === 0" class="empty-list"
+            style="text-align: center; padding: 30px; color: #94a3b8;">
+            <p>No documents available yet.</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- BGV TAB -->
+      <ng-container *ngIf="selectedSegment === 'bgv'">
+        <div class="content-card">
+          <div class="card-top">
+            <div class="title-set">
+              <div class="icon-box">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+              </div>
+              <h2>Background Verification Check</h2>
+            </div>
+          </div>
+
+          <div class="info-stack">
+            <div class="stack-item">
+              <label>Current Status</label>
+              <div class="premium-badge transition-all"
+                [style.background-color]="(progress?.bgv_status === 'completed' ? '#22c55e' : '#f59e0b') + '15'"
+                [style.color]="(progress?.bgv_status === 'completed' ? '#22c55e' : '#f59e0b')"
+                style="width: fit-content; margin-top: 5px;">
+                {{ (progress?.bgv_status || 'NOT INITIATED') | uppercase }}
+              </div>
+            </div>
+            <div class="stack-item">
+              <label>Date Started</label>
+              <span>{{ (progress?.bgv_initiated_date | date: 'dd MMM, yyyy') || 'N/A' }}</span>
+            </div>
+            <div class="stack-item">
+              <label>Date Completed</label>
+              <span>{{ (progress?.bgv_completed_date | date: 'dd MMM, yyyy') || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f1f5f9;">
+
+          <h3>Update Verification</h3>
+          <div class="action-board">
+            <div class="action-box">
+              <p>Start a new BGV check with external partners.</p>
+              <ion-button expand="block" color="warning" (click)="initiateBGV()">
+                Initiate BGV
+              </ion-button>
+            </div>
+            <div class="action-box">
+              <p>Upload investigation report and verify info.</p>
+              <ion-button expand="block" color="success" (click)="updateBGVStatus('completed')">
+                Mark Verified
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</ion-content>

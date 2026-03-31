@@ -1,0 +1,20 @@
+<div class="reporting-team-card" *ngIf="team && team.length > 0">
+  <div class="team-header">
+    Reporting Team <span class="team-count">({{teamCount}})</span>
+  </div>
+
+  <ion-list lines="none" class="team-list">
+    <ion-item *ngFor="let member of team" class="team-member-item">
+      <ion-avatar slot="start">
+        <img src="assets/user.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ member.full_name || (member.FirstName + ' ' + member.LastName) }}</h2>
+        <p>{{ member.job_title || member.designation_name }}</p>
+      </ion-label>
+      <ion-button fill="clear" slot="end" color="medium">
+        <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</div>

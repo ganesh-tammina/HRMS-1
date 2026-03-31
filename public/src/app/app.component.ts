@@ -1,288 +1,110 @@
-import { Component, OnInit, OnDestroy, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { Candidate, CandidateService } from './services/pre-onboarding.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { HeaderComponent } from './shared/header/header.component';
-import { RouteGuardService } from './services/route-guard/route-service/route-guard.service';
-import { NavController } from '@ionic/angular';
-import { EmployeeService } from './services/employee.service';
-import { AdminService } from './services/admin-functionality/admin.service.service';
-import { AuthService } from './services/login-services.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { RouteGuardService } from './core/services/route-guard.service';
+import { EmployeeService } from './core/services/employee.service';
+import { AuthService } from './core/services/auth.service';
+import { CustomIconService } from './core/services/custom-icon.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  standalone: true,
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    HeaderComponent,
-    CommonModule,
-    IonicModule,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  standalone: false,
 })
 export class AppComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  showIntro = true;
-  public showCategories = false;
-  showMenu = true;
-  currentUser: Observable<Candidate | null>;
-  isLoginPage = true;  // ✅ SAFE DEFAULT: Hide header until we confirm we're NOT on login
-  iscandiateofferPage = false;
-  iscandiateofferLetterPage = false;
-  CurrentuserType: string = '';
-  userType: string | null = null;
-  one: any;
-  isAdmin: boolean = false;
-  full_name: string = '';
-  currentTime: string = '';
-  allEmployees: any[] = [];
-  currentUrl: any; //get current page
-  isRefreshing = false;
+  showMenu = false;
+  isLoginPage = true;
   userRole: string | null = null;
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  isAdmin = false;
   userDesignation: string | null = null;
-  userDepartment: string | null = null;
+  currentUrl: string = '';
+
+  public appPages = [
+    { title: 'Home', url: '/Home', icon: 'home', roles: ['employee', 'manager', 'hr'] },
+    { title: 'Leave', url: '/leaves', icon: 'leave', roles: ['emplPre-onboarding Candidatesoyee', 'manager', 'hr'] },
+    { title: 'My Team', url: '/MyTeam', icon: 'team', roles: ['employee', 'manager', 'hr',] },
+    { title: 'Onboarding', url: '/onboarding', icon: 'onboarding', roles: ['admin', 'hr'] },
+    { title: 'Admin', url: '/administration', icon: 'admin', roles: ['admin', 'hr'] },
+    { title: 'Work Track', url: '/workTrack', icon: 'worktrack', roles: ['employee', 'manager', 'hr'] },
+  ];
 
   constructor(
     private router: Router,
-    private candidateService: CandidateService,
-    private routeGaurdService: RouteGuardService,
+    private routeGuardService: RouteGuardService,
     private employeeService: EmployeeService,
-    private service: AdminService,
-    private navCtrl: NavController,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private customIconService: CustomIconService
   ) {
-    // ✅ Prevent Ionic rendering issues on initial load
-    // Set body visible explicitly to prevent hidden state
-    const htmlEl = document.documentElement;
-    const bodyEl = document.body;
-    htmlEl.style.opacity = '1';
-    bodyEl.style.opacity = '1';
-    
-    this.currentUser = this.candidateService.currentCandidate$;
-    this.router.events.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((event) => {
+    this.router.events.pipe(takeUntil(this.destroy$)).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.urlAfterRedirects;
-        this.showMenu = !this.currentUrl.includes('/login');
         this.isLoginPage = this.currentUrl.includes('/login');
-        this.iscandiateofferPage = this.currentUrl.includes('/candidate_status');
-        this.iscandiateofferLetterPage = this.currentUrl.includes('/candidate-offer-letter');
-
-        this.userRole = this.routeGaurdService.userRole?.toLowerCase() || null;
+        this.showMenu = !this.isLoginPage;
+        this.userRole = this.routeGuardService.userRole;
         this.isAdmin = (this.userRole === 'admin' || this.userRole === 'hr');
-
-        this.handleIntroLogic();
         this.fetchProfileInfoIfNeeded();
-
-        // Ionic specific fix: Force a global layout recalculation after routing
-        // This permanently prevents the 'stuck scroll' or 'invisible overflow' issue
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-          this.cdr.detectChanges();
-        }, 200);
+        this.cdr.detectChanges();
       }
     });
-    this.currentUrl = this.router.url;
   }
 
-  private handleIntroLogic() {
-    const introSeen = localStorage.getItem('introSeen');
-    if (!introSeen || this.isLoginPage) {
-      this.showIntro = true;
-      // Use a slightly shorter timeout and ensure it's cleared if needed
-      setTimeout(() => {
-        if (this.showIntro) {
-          this.dismissIntro();
-          if (!introSeen) localStorage.setItem('introSeen', 'true');
-        }
-      }, 0);
-    } else {
-      this.showIntro = false;
-    }
+  ngOnInit(): void {
+    // Initial visibility fixes
+    document.documentElement.style.opacity = '1';
+    document.body.style.opacity = '1';
   }
-
-  private announcementsFetched = false;
 
   private fetchProfileInfoIfNeeded() {
-    if (!this.userDesignation && this.userRole && !this.isLoginPage && this.routeGaurdService.isLoggedIn) {
+    if (!this.isLoginPage && this.routeGuardService.isLoggedIn && !this.userDesignation) {
       this.employeeService.getMyProfile().pipe(takeUntil(this.destroy$)).subscribe({
         next: (emp) => {
           if (emp) {
             this.userDesignation = (emp.designation_name || emp.designation || 'N/A').toLowerCase();
-            this.userDepartment = (emp.department_name || emp.department || 'N/A').toLowerCase();
+            this.cdr.detectChanges();
           }
         },
         error: (err) => {
-          // 401 means token is invalid/expired - force logout
           if (err.status === 401) {
-            console.warn('Token expired during profile fetch - logging out');
-            this.routeGaurdService.logout();
-            return;
-          }
-          console.error('Failed to load profile in AppComponent', err);
-          this.userDesignation = 'N/A'; // Prevent infinite retries
-        }
-      });
-    }
-
-    if (!this.announcementsFetched && !this.isLoginPage && this.routeGaurdService.isLoggedIn) {
-      this.announcementsFetched = true;
-      this.service.getAnnouncements().pipe(takeUntil(this.destroy$)).subscribe({
-        next: (r: any) => console.log('📢 Announcements:', r),
-        error: (err) => {
-          // 401 means token is invalid/expired - force logout silently
-          if (err.status === 401) {
-            console.warn('Token expired during announcements fetch - logging out');
-            this.routeGaurdService.logout();
+            this.logout();
           }
         }
       });
     }
   }
 
-  ngOnInit(): void {
-    this.updateRoleInfo();
-    
-    // ✅ FIX: Ensure pages are visible after initialization
-    // Remove ion-page-invisible class that Ionic applies during initialization
-    setTimeout(() => {
-      const pages = document.querySelectorAll('.ion-page-invisible');
-      pages.forEach(page => {
-        page.classList.remove('ion-page-invisible');
-      });
-      
-      // Also check ion-app and app-root
-      const appRoot = document.querySelector('app-root') as HTMLElement;
-      const ionApp = document.querySelector('ion-app') as HTMLElement;
-      if (appRoot) {
-        appRoot.style.opacity = '1';
-        appRoot.style.visibility = 'visible';
-      }
-      if (ionApp) {
-        ionApp.style.opacity = '1';
-        ionApp.style.visibility = 'visible';
-      }
-      
-      // ✅ CRITICAL: Ensure stylesheets with media="print" are loaded
-      const printSheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
-      printSheets.forEach((link: any) => {
-        if (link.media === 'print') {
-          link.media = 'all';
-          link.onload = null; // Remove onload handler
-        }
-      });
-    }, 50);
-    
-    // ✅ CONTINUOUS FIX: Watch for any new ion-page-invisible classes being added
-    const observer = new MutationObserver(() => {
-      const pages = document.querySelectorAll('.ion-page-invisible');
-      if (pages.length > 0) {
-        pages.forEach(page => {
-          page.classList.remove('ion-page-invisible');
-          (page as HTMLElement).style.opacity = '1';
-          (page as HTMLElement).style.visibility = 'visible';
-        });
-      }
-      
-      // Also watch for print media sheets
-      const printSheets = document.querySelectorAll('link[rel="stylesheet"][media="print"]');
-      printSheets.forEach((link: any) => {
-        if (link.media === 'print') {
-          link.media = 'all';
-        }
-      });
-    });
-    
-    const config = { 
-      attributes: true, 
-      attributeFilter: ['class', 'media'], 
-      subtree: true,
-      childList: true 
-    };
-    
-    const rootElement = document.querySelector('ion-app') || document.querySelector('app-root');
-    if (rootElement) {
-      observer.observe(rootElement, config);
-    }
-  }
+  shouldShowPage(page: any): boolean {
+    if (!page.roles) return true;
+    const role = this.userRole?.toLowerCase() || '';
 
-  private updateRoleInfo(): void {
-    this.userRole = this.routeGaurdService.userRole?.toLowerCase() || null;
-    const role = this.userRole?.trim() || '';
-    this.isAdmin = (role === 'admin' || role === 'hr');
-  }
-
-  dismissIntro() {
-    this.showIntro = false;
-    // Force layout recalculation and change detection
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-      this.cdr.detectChanges();
-    }, 100);
-  }
-
-  shouldShowWorkTrack(): boolean {
-    if (!this.isEmployeeOrManagerOrHr()) return false;
-    if (this.userDepartment && this.userDepartment.trim().toLowerCase() === 'management') {
+    // Custom logic for CEO if needed (preserving existing app logic)
+    if (page.title === 'Leave' && this.userDesignation?.includes('ceo')) {
       return false;
     }
-    return true;
+
+    if (page.title === 'Work Track' && (this.userDesignation?.includes('management'))) {
+      return false;
+    }
+
+    return page.roles.includes(role);
   }
 
-  shouldShowLeave(): boolean {
-    // Hide leave for CEO
-    return !(this.userDesignation && this.userDesignation.trim().toLowerCase() === 'ceo');
+  /**
+   * Get custom SVG icon path for a menu item
+   */
+  getCustomIconPath(iconName: string): string {
+    return this.customIconService.getIconPath(iconName);
   }
 
-  isAdminOnly(): boolean {
-    return this.userRole === 'admin';
-  }
-  isHROnly(): boolean {
-    return this.userRole === 'hr';
-  }
-  isAdminOrHR(): boolean {
-    return this.userRole === 'admin' || this.userRole === 'hr';
-  }
-  isManager(): boolean {
-    return this.userRole === 'manager';
-  }
-  isManagerOrAbove(): boolean {
-    return this.userRole === 'manager' || this.userRole === 'hr';
-  }
-  isEmployeeOrManagerOrHr(): boolean {
-    return this.userRole === 'employee' || this.userRole === 'manager' || this.userRole === 'hr';
-  }
-  isEmployee(): boolean {
-    return this.userRole === 'employee';
-  }
-  preonboard() {
-    this.router.navigate(['/pre-onboarding-cards']);
-  }
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        // Additional cleanup if necessary (RouteGuardService already clears most things)
         sessionStorage.clear();
-        localStorage.removeItem('introSeen');
       },
-      error: (err) => console.error('Logout failed in app component', err)
+      error: (err) => console.error('Logout failed', err)
     });
-  }
-  handlePageRefresh(url: string) {
-    // Check if user is logged in and navigating to main pages
-    const isLoggedIn =
-      this.routeGaurdService.token && this.routeGaurdService.refreshToken;
-    const mainPages = ['/Me', '/Home', '/MyTeam', '/admin', '/profile-page'];
-    const isMainPage = mainPages.some((page) => url.includes(page));
-    // ...existing logic if needed
   }
 
   ngOnDestroy() {

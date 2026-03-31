@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar color="primary" class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/administration"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Manage Leave Plans</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCreateForm()" [disabled]="showCreateForm">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-containerOn">
+  <ion-card class="form-card" *ngIf="showCreateForm">
+    <ion-card-header>
+      <ion-card-title>{{isEditMode ? 'Edit' : 'Create'}} Leave Plan</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="leavePlanForm" (ngSubmit)="submit()">
+        <div class="form-grid">
+          <ion-item lines="outline">
+            <ion-label position="floating">Plan Name</ion-label>
+            <ion-input formControlName="name"></ion-input>
+          </ion-item>
+          <ion-item lines="outline">
+            <ion-label>Start Month</ion-label>
+            <ion-select formControlName="leave_year_start_month" interface="popover">
+              <ion-select-option *ngFor="let m of months; let i = index" [value]="i + 1">{{m}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="outline" class="full-width">
+            <ion-label position="floating">Description</ion-label>
+            <ion-textarea formControlName="description"></ion-textarea>
+          </ion-item>
+        </div>
+
+        <div class="allocations-section mt-20">
+          <h6>Leave Allocations</h6>
+          <div class="add-allocation-bar">
+            <ion-item lines="outline">
+              <ion-label>Select Leave Type</ion-label>
+              <ion-select [(ngModel)]="selectedNewLeaveTypeId" [ngModelOptions]="{standalone: true}">
+                <ion-select-option *ngFor="let lt of allLeaveTypes" [value]="lt.id">{{lt.type_name}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-button (click)="addAllocation()" fill="solid">Add</ion-button>
+          </div>
+
+          <div class="allocation-list mt-10">
+            <ion-grid>
+              <ion-row class="allocation-header">
+                <ion-col size="5">Leave Type</ion-col>
+                <ion-col size="2">Days</ion-col>
+                <ion-col size="3">Prorate</ion-col>
+                <ion-col size="2"></ion-col>
+              </ion-row>
+              <ion-row *ngFor="let a of editingPlanAllocations; let i = index" class="allocation-row">
+                <ion-col size="5">{{a.type_name}}</ion-col>
+                <ion-col size="2">
+                  <ion-input type="number" [(ngModel)]="a.days_allocated" [ngModelOptions]="{standalone: true}"></ion-input>
+                </ion-col>
+                <ion-col size="3">
+                  <ion-checkbox [(ngModel)]="a.prorate_on_joining" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+                </ion-col>
+                <ion-col size="2">
+                  <ion-button fill="clear" color="danger" (click)="removeAllocation(i)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </div>
+
+        <div class="actions mt-20">
+          <ion-button expand="block" type="submit" [disabled]="loading">{{loading ? 'Please Wait...' : (isEditMode ? 'Update Plan' : 'Create Plan')}}</ion-button>
+          <ion-button expand="block" fill="clear" color="medium" (click)="cancelCreate()">Cancel</ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Plans List -->
+  <div class="plans-list" *ngIf="!showCreateForm">
+    <div *ngIf="loadingPlans" class="ion-text-center ion-padding"><ion-spinner name="crescent"></ion-spinner></div>
+    <ion-grid *ngIf="!loadingPlans">
+      <ion-row>
+        <ion-col size="12" size-md="6" *ngFor="let p of leavePlans">
+          <ion-card class="plan-card">
+            <ion-card-header>
+              <ion-card-title>{{p.name}}</ion-card-title>
+              <ion-card-subtitle>Starts: {{getMonthName(p.leave_year_start_month)}} (Total Employees: {{p.employees_count || 0}})</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{p.description || 'No description provided.'}}</p>
+              <div class="plan-actions mt-10">
+                <ion-button size="small" (click)="editPlan(p)">Edit</ion-button>
+                <ion-button size="small" color="danger" (click)="deletePlan(p.id)">Delete</ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="leavePlans.length === 0" class="ion-text-center ion-padding">No leave plans found.</div>
+    </ion-grid>
+  </div>
+</ion-content>

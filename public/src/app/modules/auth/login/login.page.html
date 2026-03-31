@@ -1,0 +1,118 @@
+<ion-content class="ion-no-border login-content" [fullscreen]="true">
+  <div class="login-bg-overlay"></div>
+
+  <div class="login-page-container animate__animated animate__fadeIn">
+    <div class="brand-section">
+      <div class="brand-content animate__animated animate__fadeInLeft">
+        <img src="https://techtammina.com/wp-content/uploads/2025/05/techlogo.png" alt="Company Logo"
+          class="brand-logo" />
+        <h1 class="brand-title">Master HRMS</h1>
+        <p class="brand-subtitle">Experience the future of HR Management.</p>
+      </div>
+    </div>
+
+    <div class="login-form-section animate__animated animate__fadeInRight">
+      <!-- GLASS CARD -->
+      <ion-card class="login-glass-card" [class.is-flipped]="showForgotPassword">
+        <div class="card-faces">
+          <!-- LOGIN FACE -->
+          <div class="face front-face" *ngIf="!showForgotPassword">
+            <div class="card-header">
+              <div class="user-icon-circle animate__animated animate__zoomIn">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                <div class="status-dot"></div>
+              </div>
+              <h2 class="form-title accent-text">Welcome Back</h2>
+              <p class="form-subtitle">Enter your credentials to continue</p>
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-body">
+              <ion-list lines="none" class="input-list">
+                <!-- EMAIL / USERNAME -->
+                <ion-item class="custom-input-item">
+                  <ion-icon name="person-outline" slot="start"></ion-icon>
+                  <ion-label position="floating">Username / Employee ID</ion-label>
+                  <ion-input type="text" formControlName="email" [readonly]="emailChecked"
+                    (keydown)="onKeyPress($event)">
+                  </ion-input>
+                </ion-item>
+
+                <!-- PASSWORD -->
+                <ion-item class="custom-input-item animate__animated animate__fadeIn" *ngIf="showPassword">
+                  <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                  <ion-label position="floating">Password</ion-label>
+                  <ion-input type="password" formControlName="password" placeholder="Enter password"></ion-input>
+                </ion-item>
+
+                <!-- CREATE PASSWORD -->
+                <ion-item class="custom-input-item animate__animated animate__fadeIn" *ngIf="showCreatePassword">
+                  <ion-icon name="key-outline" slot="start"></ion-icon>
+                  <ion-label position="floating">Create Password</ion-label>
+                  <ion-input type="password" formControlName="password" placeholder="Create a new password"></ion-input>
+                </ion-item>
+              </ion-list>
+
+              <div class="form-actions ion-padding-top">
+                <ion-button expand="block" class="login-button" type="button" *ngIf="!emailChecked" (click)="onNext()"
+                  [disabled]="loginForm.get('email')?.invalid">
+                  Next
+                  <ion-icon slot="end" name="arrow-forward"></ion-icon>
+                </ion-button>
+
+                <ion-button expand="block" class="login-button" type="submit" *ngIf="showPassword" [disabled]="loading">
+                  Login
+                </ion-button>
+
+                <ion-button expand="block" fill="outline" class="create-button" type="submit" *ngIf="showCreatePassword"
+                  [disabled]="loading">
+                  Create & Login
+                </ion-button>
+              </div>
+
+              <div class="form-footer">
+                <ion-button fill="clear" size="small" (click)="toggleForgotPassword()" color="medium">
+                  Forgot Password?
+                </ion-button>
+              </div>
+            </form>
+          </div>
+
+          <!-- FORGOT PASSWORD FACE -->
+          <div class="face back-face" *ngIf="showForgotPassword">
+            <div class="card-header">
+              <h2 class="form-title">Reset Password</h2>
+              <p class="form-subtitle">Enter your employee ID</p>
+            </div>
+
+            <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPasswordSubmit()" class="form-body">
+              <ion-list lines="none" class="input-list">
+                <ion-item class="custom-input-item">
+                  <ion-icon name="person-outline" slot="start"></ion-icon>
+                  <ion-label position="floating">Employee ID</ion-label>
+                  <ion-input type="text" formControlName="employee_id" placeholder="Enter ID"></ion-input>
+                </ion-item>
+
+                <ion-item class="custom-input-item">
+                  <ion-icon name="key-outline" slot="start"></ion-icon>
+                  <ion-label position="floating">New Password</ion-label>
+                  <ion-input type="password" formControlName="password" placeholder="Enter new password"></ion-input>
+                </ion-item>
+              </ion-list>
+
+              <div class="form-actions ion-padding-top">
+                <ion-button expand="block" class="login-button" type="submit" [disabled]="forgotPasswordForm.invalid">
+                  Reset Password
+                </ion-button>
+
+                <ion-button expand="block" fill="clear" color="medium" (click)="toggleForgotPassword()">
+                  Back to Login
+                </ion-button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ion-card>
+    </div>
+  </div>
+  <div class="login-bg-overlay"></div>
+</ion-content>

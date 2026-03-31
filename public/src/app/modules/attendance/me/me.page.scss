@@ -1,0 +1,396 @@
+.dashboard {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+
+  .attendance-block {
+    margin-bottom: 30px;
+
+    ion-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: -10px;
+    }
+
+    ion-col {
+      // display: flex;
+    }
+
+    ion-card {
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: #ffffff;
+      margin: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 330px;
+      overflow: hidden;
+      width: 95%;
+      margin: auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      }
+
+      ion-card-header {
+        padding: 20px 24px 15px;
+        background: #fdfdfd;
+        border-bottom: 1px solid #f1f5f9;
+
+        ion-card-title {
+          font-size: 16px;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.02em;
+          text-align: left;
+        }
+      }
+
+      ion-card-content {
+        padding: 20px 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .days-grid {
+    padding: 10px;
+  }
+
+  .day-container {
+    position: relative;
+
+    &::before {
+      content: "";
+      transition: background-color 0.3s ease;
+      width: 40px;
+      position: absolute;
+      background: linear-gradient(180deg, #3498DB 0%, #7FCAFD 100%);
+      top: -8px;
+      height: 12px;
+      left: 5px;
+      border-radius: 12px;
+    }
+
+    .day-of-week {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 0;
+      text-overflow: initial;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 4px;
+    }
+  }
+
+  .highlight-today {
+    &::before {
+      background: linear-gradient(180deg, #FF4B4B 0%, #FFCCCC 100%);
+    }
+  }
+
+  .highlight-weekoff {
+    font-weight: 600;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -6px;
+    margin-left: 6px;
+
+    &::before {
+      background: linear-gradient(180deg, #D4D4D4 0%, #EFEFEF 100%);
+    }
+  }
+}
+
+ion-progress-bar {
+  height: 6px;
+  border-radius: 6px;
+  --background: #E4E4E4 !important;
+  --progress-background: #3498db !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.attendance-status {
+  padding-bottom: 0;
+
+  .today-status {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+    ion-badge {
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+      margin-left: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .monthly-stats {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    margin-bottom: auto;
+
+    .stat-label {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0;
+      color: #1e293b;
+    }
+
+    .text-success {
+      color: #10b981;
+    }
+
+    .text-danger {
+      color: #ef4444;
+    }
+
+    .text-info {
+      color: #3b82f6;
+    }
+
+    .text-warning {
+      color: #f59e0b;
+    }
+  }
+
+  .today-summary {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 0 0;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 15px;
+
+    .label-box {
+      text-align: center;
+      flex: 1;
+
+      .l-l {
+        font-size: 11px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .l-v {
+        font-size: 16px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid #f1f5f9;
+      }
+    }
+  }
+}
+
+/* Actions Card & Chart Styling */
+.actions {
+  flex: 1;
+
+  .today-logs-status {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+
+    .chart-wrapper {
+      position: relative;
+      height: 150px;
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+
+  .actions-buttons-row {
+    margin-top: auto;
+    padding: 12px 0 4px;
+    border-top: 1px dashed #e2e8f0;
+    align-items: center;
+
+    .action-grid-buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 2px;
+      justify-content: flex-end;
+
+      .clear-action {
+        --padding-start: 4px;
+        --padding-end: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        height: 32px;
+        margin: 0;
+        text-transform: none;
+
+        ion-icon {
+          font-size: 16px;
+          margin-right: 2px;
+        }
+
+        &[disabled] {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+
+.timings-card {
+  .shift-info {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 20px;
+    text-align: center;
+    background: #f1f5f9;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .days-grid-wrapper {
+    margin: 15px 0 20px;
+  }
+
+  .today-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+      color: #3b82f6;
+    }
+  }
+
+  .duration-info {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #475569;
+    font-weight: 600;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+  }
+}
+
+/* Custom tabs */
+.custom-tabs {
+  width: fit-content;
+
+  button {
+    &:first-child {
+      border-bottom-left-radius: 8px;
+      border-top-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    padding: 12px 24px;
+    background: #fff;
+    border: 0.5px solid #DEDEDE;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+
+    &.active {
+      background: #3498DB;
+      color: #fff;
+    }
+  }
+}
+
+.attendance-log-card {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 12px;
+  }
+}
+
+/* Utility */
+.row-left {
+  display: flex;
+  align-items: center;
+}
+
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+ion-modal {
+  --height: 70%;
+  --border-radius: 16px;
+}

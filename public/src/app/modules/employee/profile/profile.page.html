@@ -1,0 +1,117 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>My Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="loadProfile()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="header-segment-toolbar">
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)" mode="md" class="profile-segment">
+      <ion-segment-button value="about">
+        <ion-label>ABOUT</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="profile">
+        <ion-label>PROFILE</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="job">
+        <ion-label>JOB</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="documents">
+        <ion-label>Documents</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="assets">
+        <ion-label>Assets</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-page-content">
+  <div class="header-banner"></div>
+
+  <div class="profile-top-section ion-padding animate__animated animate__fadeIn">
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-align-items-center">
+        <!-- LEFT: Profile Picture -->
+        <ion-col size="12" size-md="4" class="ion-text-center">
+          <div class="avatar-block">
+            <img class="profile-pic"
+              [src]="currentEmployee?.profile_image ? (env + currentEmployee.profile_image) : '../../assets/Profile_Picture.png'"
+              alt="Profile Picture" />
+          </div>
+        </ion-col>
+
+        <!-- RIGHT: Employee Basic Info -->
+        <ion-col size="12" size-md="8">
+          <div class="content-block">
+            <h1 class="employee-name">{{currentEmployee?.FullName}}</h1>
+            <p class="employee-designation">
+              {{currentEmployee?.designation_name}}
+              <span class="employee-id">({{currentEmployee?.EmployeeNumber}})</span>
+            </p>
+
+            <div class="basic-info">
+              <div class="info-row">
+                <ion-icon name="location-outline"></ion-icon>
+                <span>{{currentEmployee?.location_name || 'Global HQ'}}</span>
+              </div>
+              <div class="info-row">
+                <ion-icon name="mail-outline"></ion-icon>
+                <span>{{currentEmployee?.WorkEmail}}</span>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <ion-button fill="outline" color="primary" id="image-upload-trigger" class="upload-btn">
+                <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                Upload Image
+              </ion-button>
+            </div>
+          </div>
+
+          <!-- Image Upload Popover -->
+          <ion-popover trigger="image-upload-trigger" class="upload-popover">
+            <ng-template>
+              <div class="ion-padding popover-content">
+                <p class="popover-title">Choose profile photo</p>
+                <div class="preview-box">
+                  <img
+                    [src]="previewImageUrl || (currentEmployee?.profile_image ? (env + currentEmployee.profile_image) : 'assets/user.svg')"
+                    class="preview-img" />
+                  <p *ngIf="previewImageUrl" class="preview-text">Preview</p>
+                </div>
+
+                <label class="file-upload-label">
+                  <input type="file" accept="image/*" (change)="onFileSelected($event)">
+                  <span>Browse files</span>
+                </label>
+
+                <ion-button expand="block" (click)="uploadProfilePic()" [disabled]="!selectedFile || isUploading"
+                  class="upload-submit">
+                  {{ isUploading ? 'Uploading...' : 'Upload Profile' }}
+                </ion-button>
+              </div>
+            </ng-template>
+          </ion-popover>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- TAB CONTENT -->
+  <div class="tab-content-container ion-padding animate__animated animate__fadeIn">
+    <div [ngSwitch]="selectedSegment">
+      <app-about-tab *ngSwitchCase="'about'" [currentEmployee]="currentEmployee"></app-about-tab>
+      <app-profile-tab *ngSwitchCase="'profile'" [currentEmployee]="currentEmployee"></app-profile-tab>
+      <app-job-tab *ngSwitchCase="'job'" [currentEmployee]="currentEmployee"></app-job-tab>
+      <app-document-tab *ngSwitchCase="'documents'" [currentEmployee]="currentEmployee"></app-document-tab>
+      <app-assets-tab *ngSwitchCase="'assets'" [currentEmployee]="currentEmployee"></app-assets-tab>
+    </div>
+  </div>
+</ion-content>

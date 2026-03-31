@@ -1,0 +1,118 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/onboarding" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pre-onboarding Pipeline</ion-title>
+  </ion-toolbar>
+
+  <!-- Search and Filter Bar -->
+  <ion-toolbar class="search-filter-sub">
+    <div class="search-section">
+      <ion-searchbar placeholder="Search candidate..." 
+        (ionChange)="onSearchChange($event)"
+        class="custom-search"
+        mode="md">
+      </ion-searchbar>
+      <div class="filter-pill">
+        <ion-icon name="funnel-outline"></ion-icon>
+        <ion-select [compareWith]="compareSelect" [(ngModel)]="selectedStatus" (ionChange)="onStatusChange($event)"
+          interface="popover">
+          <ion-select-option *ngFor="let status of statusOptions" [value]="status.value">
+            {{ status.label }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Retrieving candidate pipeline...</p>
+  </div>
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content 
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="dots">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && filteredCandidates.length === 0" class="empty-wrap">
+    <div class="empty-icon">
+      <ion-icon name="search-outline"></ion-icon>
+    </div>
+    <h2>No Candidates Found</h2>
+    <p>We couldn't find any candidates matching your criteria</p>
+    <ion-button fill="outline" color="primary" (click)="selectedStatus = 'all'; filterCandidates()">
+      Clear All Filters
+    </ion-button>
+  </div>
+
+  <!-- Pipeline List -->
+  <div *ngIf="!isLoading && filteredCandidates.length > 0" class="candidates-list">
+    <div *ngFor="let candidate of filteredCandidates" class="candidate-card" (click)="onCandidateClick(candidate)">
+      
+      <div class="card-header">
+        <div class="header-main">
+          <div class="avatar-circle" [style.background-color]="getStatusColor(candidate.status)">
+            {{ candidate.full_name | slice:0:1 }}
+          </div>
+          <div class="name-block">
+            <h2>{{ candidate.full_name }}</h2>
+            <p class="position">{{ candidate.position }}</p>
+          </div>
+        </div>
+        <div class="status-badge" [attr.data-status]="candidate.status">
+          <span class="dot"></span>
+          {{ getStatusLabel(candidate.status) }}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-cell">
+            <span class="label">Department</span>
+            <span class="value">{{ candidate.department_name || candidate.department || 'Non-assigned' }}</span>
+          </div>
+          <div class="info-cell">
+            <span class="label">Date of joining</span>
+            <span class="value">{{ candidate.joining_date | date: 'dd MMM, yyyy' }}</span>
+          </div>
+          <div class="info-cell">
+            <span class="label">Contact Email</span>
+            <span class="value email-link">{{ candidate.email }}</span>
+          </div>
+          <div class="info-cell">
+            <span class="label">Offered package</span>
+            <span class="value">₹{{ candidate.offered_ctc | number }}</span>
+          </div>
+        </div>
+
+        <div class="progress-box">
+          <div class="progress-details">
+            <span class="p-label">Workflow progress</span>
+            <span class="p-value">{{ candidate.progress || 0 }}%</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-fill" [style.width.%]="candidate.progress || 0"
+              [style.background-color]="getStatusColor(candidate.status)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <ion-button fill="clear" size="small" color="primary">
+          View Detail Profile
+          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

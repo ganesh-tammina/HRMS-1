@@ -1,0 +1,96 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Finance & Payroll</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary">  
+        <ion-icon name="download-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="header-segment-toolbar">
+    <ion-segment [(ngModel)]="currentTab" class="custom-segment">
+      <ion-segment-button value="payslips">
+        <ion-label>Payslips</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="taxation">
+        <ion-label>Taxation</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="payroll-content">
+  <div class="header-accent-bg"></div>
+
+  <div class="content-wrapper ion-padding" *ngIf="!loading">
+    <!-- NET SALARY SUMMARY -->
+    <ion-card class="net-salary-card animate__animated animate__zoomIn">
+      <ion-card-content>
+        <p class="summary-label">Net Monthly Salary</p>
+        <h1 class="net-value">₹{{ netSalary | number:'1.2-2' }}</h1>
+        <p class="summary-words">{{ netSalaryInWords }}</p>
+
+        <div class="summary-breakdown">
+          <div class="summary-item">
+            <span class="label">Gross Earnings</span>
+            <h4 class="value success">₹{{ totalEarnings | number:'1.2-2' }}</h4>
+          </div>
+          <div class="divider"></div>
+          <div class="summary-item">
+            <span class="label">Total Deductions</span>
+            <h4 class="value danger">₹{{ totalDeductions | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- EARNINGS SECTION -->
+    <div class="section-container animate__animated animate__fadeInUp">
+      <h3 class="section-title">Earnings (A)</h3>
+      <ion-card class="payslip-detail-card">
+        <ion-list lines="none" class="transparent-list">
+          <ion-item *ngFor="let e of earnings" class="detail-item">
+            <ion-label>
+              <h3>{{ e.name }}</h3>
+            </ion-label>
+            <div class="amount-value">₹{{ e.amount | number:'1.2-2' }}</div>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+    </div>
+
+    <!-- DEDUCTIONS SECTION -->
+    <div class="section-container animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+      <h3 class="section-title">Deductions (B)</h3>
+      <ion-card class="payslip-detail-card">
+        <ion-list lines="none" class="transparent-list">
+          <ion-item *ngFor="let c of contributions" class="detail-item">
+            <ion-label>
+              <h3>{{ c.name }}</h3>
+            </ion-label>
+            <div class="amount-value danger">₹{{ c.amount | number:'1.2-2' }}</div>
+          </ion-item>
+          <ion-item *ngFor="let t of taxes" class="detail-item">
+            <ion-label>
+              <h3>{{ t.name }}</h3>
+            </ion-label>
+            <div class="amount-value danger">₹{{ t.amount | number:'1.2-2' }}</div>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+    </div>
+
+    <div class="info-footer">
+       <p>* Net Pay = Gross Earnings (A) - Total Deductions (B)</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loader-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Loading payslip details...</p>
+  </div>
+</ion-content>

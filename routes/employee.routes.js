@@ -51,7 +51,7 @@ const uploadProfileImage = multer({
 router.get("/", auth, async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();
@@ -467,7 +467,7 @@ router.get("/reporting/:managerId", auth, async (req, res) => {
     }
 
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();
@@ -519,7 +519,7 @@ router.get("/search/query", auth, async (req, res) => {
       return res.status(400).json({ error: "Search query too long (max 100 characters)" });
     }
 
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
 
     const c = await db();
     const [r] = await c.query(
@@ -717,7 +717,7 @@ router.get("/my-team/reporting", auth, async (req, res) => {
     if (!emp) return res.status(404).json({ error: "Employee not found" });
 
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();
@@ -770,7 +770,7 @@ router.get("/my-team/co-team", auth, async (req, res) => {
       return res.json({ team: [], message: "No co-team members found" });
 
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();
@@ -829,7 +829,7 @@ router.get("/my-team/reporting/:employeeId", auth, async (req, res) => {
     }
 
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();
@@ -890,7 +890,7 @@ router.get("/my-team/co-team/:employeeId", auth, async (req, res) => {
     }
 
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(5000, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     const c = await db();

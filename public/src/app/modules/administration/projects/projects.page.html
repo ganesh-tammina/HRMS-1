@@ -1,0 +1,138 @@
+<ion-header>
+  <ion-toolbar color="primary" class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/administration"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Project Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showCreateForm = !showCreateForm" class="primary-outline-btn">
+        <ion-icon slot="start" [name]="showCreateForm ? 'close-outline' : 'add-outline'"></ion-icon>
+        {{showCreateForm ? 'Cancel' : 'New Project'}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-containerOn">
+  <!-- Create/Edit Form (Collapsible) -->
+  <div class="create-form-container" *ngIf="showCreateForm" [@slideIn]>
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>{{isEditMode ? 'Edit' : 'Create'}} Project</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="projectForm" (ngSubmit)="submit()">
+          <div class="form-grid">
+            <ion-item lines="outline">
+              <ion-label position="floating">Project Code*</ion-label>
+              <ion-input formControlName="project_code"></ion-input>
+            </ion-item>
+            <ion-item lines="outline">
+              <ion-label position="floating">Project Name*</ion-label>
+              <ion-input formControlName="project_name"></ion-input>
+            </ion-item>
+            <ion-item lines="outline">
+              <ion-label position="floating">Client Name*</ion-label>
+              <ion-input formControlName="client_name"></ion-input>
+            </ion-item>
+            <ion-item lines="outline">
+              <ion-label position="floating">Start Date*</ion-label>
+              <ion-input type="date" formControlName="start_date"></ion-input>
+            </ion-item>
+            <ion-item lines="outline">
+              <ion-label position="floating">End Date*</ion-label>
+              <ion-input type="date" formControlName="end_date"></ion-input>
+            </ion-item>
+            <ion-item lines="outline">
+              <ion-label>Status</ion-label>
+              <ion-select formControlName="status" interface="popover">
+                <ion-select-option value="active">Active</ion-select-option>
+                <ion-select-option value="on_hold">On Hold</ion-select-option>
+                <ion-select-option value="completed">Completed</ion-select-option>
+                <ion-select-option value="cancelled">Cancelled</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <!-- Manager Search -->
+            <div class="manager-search-group">
+                <ion-item lines="outline">
+                   <ion-label position="floating">Project Manager*</ion-label>
+                   <ion-input [(ngModel)]="managerSearchTerm" [ngModelOptions]="{standalone: true}" (ionInput)="onManagerSearch($event)" placeholder="Search by name..."></ion-input>
+                   <ion-button slot="end" fill="clear" color="medium" (click)="clearManagerSelection()" *ngIf="selectedManager">
+                       <ion-icon name="close-circle-outline"></ion-icon>
+                   </ion-button>
+                </ion-item>
+                <div class="search-results" *ngIf="filteredManagers.length > 0">
+                    <ion-list>
+                        <ion-item *ngFor="let emp of filteredManagers" button (click)="selectManager(emp)">
+                           <ion-label>
+                               <h2>{{emp.FullName}}</h2>
+                               <p>ID: {{emp.id}} | {{emp.WorkEmail}}</p>
+                           </ion-label>
+                        </ion-item>
+                    </ion-list>
+                </div>
+            </div>
+
+            <ion-item lines="outline" class="full-width">
+              <ion-label position="floating">Description</ion-label>
+              <ion-textarea formControlName="description" rows="3"></ion-textarea>
+            </ion-item>
+          </div>
+
+          <div class="actions mt-20">
+            <ion-button expand="block" type="submit" [disabled]="submitting || projectForm.invalid" class="primary-btn">
+              {{submitting ? 'Processing...' : (isEditMode ? 'Update Project' : 'Create Project')}}
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Project List Table -->
+  <div class="table-block mt-20">
+    <div class="table-header">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">Code</ion-col>
+          <ion-col size="4">Project Name</ion-col>
+          <ion-col size="3">Client</ion-col>
+          <ion-col size="2">Status</ion-col>
+          <ion-col size="1">Edit</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    
+    <div class="table-list-container">
+      <div class="loading-state" *ngIf="loadingProjects">
+          <ion-spinner name="crescent"></ion-spinner>
+      </div>
+
+      <ion-grid *ngIf="!loadingProjects">
+        <ion-row *ngFor="let proj of projects" class="table-list-row">
+          <ion-col size="2">{{proj.project_code}}</ion-col>
+          <ion-col size="4" class="proj-name-cell clickable-name" (click)="navigateToDetails(proj)">
+            {{proj.project_name}}
+          </ion-col>
+          <ion-col size="3">{{proj.client_name}}</ion-col>
+          <ion-col size="2">
+            <ion-badge [color]="proj.status === 'active' ? 'success' : proj.status === 'on_hold' ? 'warning' : proj.status === 'completed' ? 'primary' : 'danger'">
+              {{proj.status | uppercase}}
+            </ion-badge>
+          </ion-col>
+          <ion-col size="1">
+            <ion-button fill="clear" (click)="openEditForm(proj)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div class="empty-state" *ngIf="!loadingProjects && projects.length === 0">
+        <ion-icon name="folder-open-outline"></ion-icon>
+        <p>No projects configured</p>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,349 @@
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-block {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-secondry {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #DEDEDE;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.active {
+    background: #3498DB;
+    color: #fff;
+    border-color: #3498DB;
+  }
+
+  &:hover:not(.active) {
+    background: #f1f5f9;
+  }
+}
+
+.outline-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.attendance-table {
+  margin-top: 16px;
+
+  .table-header {
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
+    border-radius: 8px 8px 0 0;
+
+    ion-col {
+      padding: 10px 8px;
+    }
+  }
+
+  .table-row {
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #334155;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    ion-col {
+      padding: 10px 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    &.weekoff-row {
+      background: #fafafa;
+      color: #999;
+    }
+
+    &.leave-row {
+      background: #f5f0ff;
+    }
+  }
+}
+
+.badge-leave {
+  background: #b39ddb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.badge-woff {
+  background: #d7ccc8;
+  color: #795548;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.no-log {
+  display: flex;
+  align-items: center;
+}
+
+.clockin-out {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+
+  h4 {
+    margin: 4px 0 0 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: #334155;
+  }
+}
+
+.clockin-img,
+.clockout-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-modal.side-custom-popup {
+  --height: 90%;
+  --width: 400px;
+  --border-radius: 20px 0 0 20px;
+  --box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  --backdrop-opacity: 0.4;
+  position: fixed;
+  right: 0;
+
+  &::part(content) {
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+  }
+}
+
+.log-modal-header {
+  --background: #f8fafc;
+  --border-style: none;
+  padding: 8px 0;
+
+  ion-toolbar {
+    --background: transparent;
+    padding: 0 8px;
+
+    ion-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .modal-date {
+      font-size: 12px;
+      color: #64748b;
+      margin: -2px 0 10px 20px;
+      font-weight: 500;
+    }
+  }
+}
+
+.modal-content-wrapper {
+  padding: 10px 20px;
+}
+
+.daily-summary-card {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+
+  .summary-header {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    opacity: 0.8;
+    margin-bottom: 12px;
+  }
+
+  .summary-grid {
+    display: flex;
+    justify-content: space-between;
+
+    .summary-item {
+      .s-label {
+        font-size: 10px;
+        opacity: 0.7;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .s-value {
+        font-size: 18px;
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+.timeline-container {
+  position: relative;
+  padding-left: 10px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #f1f5f9;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 30px 40px;
+
+  .timeline-dot {
+    position: absolute;
+    left: 17px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background: #cbd5e1;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px #f1f5f9;
+    z-index: 1;
+
+    &.active {
+      background: #3b82f6;
+      box-shadow: 0 0 0 3px #dbeafe;
+    }
+  }
+
+  .timeline-content {
+    .punch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+
+      .time-box {
+        .time {
+          font-size: 15px;
+          font-weight: 700;
+          color: #0f172a;
+          margin: 0;
+        }
+        .type-tag {
+          font-size: 9px;
+          font-weight: 700;
+          padding: 2px 6px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          margin-left: 8px;
+
+          &.in { background: #dcfce7; color: #15803d; }
+          &.out { background: #fee2e2; color: #b91c1c; }
+        }
+      }
+
+      .mode-badge {
+        font-size: 10px;
+        font-weight: 600;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+    }
+
+    .record-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 12px;
+      padding: 12px;
+      
+      .location-info {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: #475569;
+        margin-bottom: 6px;
+        
+        ion-icon {
+          font-size: 16px;
+          margin-right: 6px;
+          color: #94a3b8;
+        }
+      }
+
+      .note-text {
+        font-size: 11px;
+        color: #64748b;
+        font-style: italic;
+        padding-left: 22px;
+      }
+    }
+    
+    .duration-indicator {
+      margin: 15px 0 -15px -40px;
+      padding-left: 40px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '';
+        width: 15px;
+        height: 1px;
+        background: #f1f5f9;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.card-title {
+  font-size: 13px;
+  color: #64748B;
+  margin: 4px 0;
+}
+
+.log-btn {
+  --ion-color-base: transparent !important;
+  --box-shadow: transparent;
+  --width: 30px;
+  --height: 30px;
+}

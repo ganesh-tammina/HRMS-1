@@ -1,0 +1,97 @@
+<div class="job-container" *ngIf="currentEmployee">
+  <div class="detail-row">
+    <!-- Job Information Card -->
+    <div class="details-card">
+      <div class="card-header">Job Information</div>
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-group">
+            <span class="label">Job Title</span>
+            <span class="value">{{currentEmployee?.designation_name || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Department</span>
+            <span class="value">{{currentEmployee?.department_name || '-'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employment Details Card -->
+    <div class="details-card">
+      <div class="card-header">Employment Details</div>
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-group">
+            <span class="label">Employment Status</span>
+            <span class="value">{{currentEmployee?.EmploymentStatus || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Worker Type</span>
+            <span class="value">{{currentEmployee?.worker_type || '-'}}</span>
+          </div>
+          <div class="info-group border-separator">
+            <span class="label">Contract Type</span>
+            <span class="value">{{currentEmployee?.time_type || '-'}}</span>
+          </div>
+          <div class="info-group border-separator">
+            <span class="label">Status</span>
+            <span class="value">Default Notice period - 3 months</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-row">
+    <!-- Work Schedule Card -->
+    <div class="details-card">
+      <div class="card-header">Work Schedule</div>
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-group">
+            <span class="label">Work Shift</span>
+            <span class="value">{{currentEmployee?.business_unit || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Weekly Hours</span>
+            <span class="value">-</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Work Days</span>
+            <span class="value">{{currentEmployee?.job_title || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Time Zone</span>
+            <span class="value">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Location Card -->
+    <div class="details-card">
+      <div class="card-header">Work Location</div>
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-group">
+            <span class="label">Primary Location</span>
+            <span class="value">{{currentEmployee?.location_name || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Work Mode</span>
+            <span class="value">{{currentEmployee?.worker_type || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Office Address</span>
+            <span class="value">{{currentEmployee?.worker_type || '-'}}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Desk Number</span>
+            <span class="value">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

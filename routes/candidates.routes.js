@@ -67,7 +67,9 @@ router.get("/", auth, hr, async (req, res) => {
                    d.name as department_name, 
                    des.name as designation_name,
                    l.name as location_name,
-                   CONCAT(m.FirstName, ' ', m.LastName) as manager_name
+                   CONCAT(m.FirstName, ' ', m.LastName) as manager_name,
+                   (SELECT COUNT(*) FROM candidate_task_progress WHERE candidate_id = c.id) as total_tasks,
+                   (SELECT COUNT(*) FROM candidate_task_progress WHERE candidate_id = c.id AND status = 'completed') as completed_tasks
             FROM candidates c
             LEFT JOIN departments d ON c.department_id = d.id
             LEFT JOIN designations des ON c.designation_id = des.id

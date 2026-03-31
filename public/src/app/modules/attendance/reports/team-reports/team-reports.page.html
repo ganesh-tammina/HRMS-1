@@ -1,0 +1,118 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="goBack()" defaultHref="/MyTeam"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Team Attendance Report</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding page-container">
+  <!-- FLITERS SECTION -->
+  <div class="filters-card">
+    <div class="section-title">
+      <ion-icon name="options-outline"></ion-icon>
+      <h3>Configure Report</h3>
+    </div>
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="4">
+          <div class="select-wrapper">
+            <ion-list lines="none">
+              <ion-item class="custom-select">
+                <ion-label position="stacked">Employee</ion-label>
+                <ion-select [interface]="'popover'" [(ngModel)]="selectedEmployeeId" (ionChange)="onEmployeeChange($event)" placeholder="Select Member">
+                  <ion-select-option *ngFor="let member of teamMembers" [value]="member.id">
+                    {{ member.FirstName }} {{ member.LastName }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-col>
+        <ion-col size="6" size-md="3">
+          <div class="date-wrapper">
+            <ion-item lines="none" class="custom-date">
+              <ion-label position="stacked">Start Date</ion-label>
+              <ion-input type="date" [(ngModel)]="startDate"></ion-input>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col size="6" size-md="3">
+          <div class="date-wrapper">
+            <ion-item lines="none" class="custom-date">
+              <ion-label position="stacked">End Date</ion-label>
+              <ion-input type="date" [(ngModel)]="endDate"></ion-input>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="2" class="ion-align-self-center">
+          <ion-button expand="block" class="generate-btn" (click)="generateReport()" [disabled]="!selectedEmployeeId || isLoading">
+            <ion-spinner name="crescent" *ngIf="isLoading" slot="start"></ion-spinner>
+            Generate
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- REPORT RESULTS -->
+  <div class="results-section" *ngIf="hasSearched && !isLoading">
+    <div class="results-header">
+      <h4>Attendance Summary for: <strong>{{ selectedEmployeeName }}</strong></h4>
+    </div>
+
+    <div class="report-table-container">
+      <table class="premium-report-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Total Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let day of reportData">
+            <td>
+              <div class="date-cell">
+                <span class="day">{{ day.date | date:'EEE' }}</span>
+                <span class="full-date">{{ day.date | date:'MMM d, y' }}</span>
+              </div>
+            </td>
+            <td>
+              <ion-badge [color]="getStatusColor(day.status)" class="status-badge">
+                {{ day.status | uppercase }}
+              </ion-badge>
+            </td>
+            <td><span class="time">{{ day.check_in || '--' }}</span></td>
+            <td><span class="time">{{ day.check_out || '--' }}</span></td>
+            <td><span class="hours">{{ day.total_hours || '0:00' }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-results" *ngIf="reportData.length === 0">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <p>No attendance records found for this period.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIAL STATE -->
+  <div class="initial-state" *ngIf="!hasSearched && !isLoading">
+    <div class="illustration">
+      <ion-icon name="analytics-outline"></ion-icon>
+    </div>
+    <h2>Select an employee and date range</h2>
+    <p>Get insights into your team's attendance and working hours</p>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div class="loading-state" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Fetching report data...</p>
+  </div>
+</ion-content>
