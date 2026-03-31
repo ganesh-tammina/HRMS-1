@@ -21,7 +21,7 @@
             <ion-card-content>
               <div class="today-status">
                 Status today:
-                <ion-badge [color]="status === 'Present' ? 'success' : 'danger'">
+                <ion-badge [color]="['present', 'office', 'wfh'].includes(status.toLowerCase()) ? 'success' : 'danger'">
                   {{ status }}
                 </ion-badge>
               </div>

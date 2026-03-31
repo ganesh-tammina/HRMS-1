@@ -104,44 +104,48 @@
 <!-- Right Side Timeline Modal -->
 <ion-modal [isOpen]="showSlider" class="side-custom-popup" (didDismiss)="closeSlider()">
   <ng-template>
-    <ion-header class="log-modal-header">
-      <ion-toolbar>
+    <ion-header class="ion-no-border">
+      <ion-toolbar class="log-modal-header">
         <ion-title>Daily Activity Log</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeSlider()" color="medium" size="small">
-            <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+          <ion-button (click)="closeSlider()" class="close-btn">
+            <ion-icon name="close-circle-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <p class="modal-date">
-          {{ selectedLog?.attendance_date | date:'fullDate' }}
-        </p>
       </ion-toolbar>
-    </ion-header>
 
-    <ion-content>
-      <div class="modal-content-wrapper" *ngIf="selectedLog?.prepared; else loadingDetails">
-        <div *ngIf="selectedLog?.timeline?.length; else noRecords">
-          <!-- Daily Performance Summary Card -->
-          <div class="daily-summary-card">
-            <div class="summary-header">Today's Summary</div>
-            <div class="summary-grid">
-              <div class="summary-item">
-                <span class="s-label">EFFECTIVE</span>
-                <span class="s-value">{{ formatHours(selectedLog.total_work_hours, selectedLog.attendance_date) }}</span>
-              </div>
-              <div class="summary-item" style="text-align: right;">
-                <span class="s-label">GROSS TIME</span>
-                <span class="s-value">{{ formatHours(selectedLog.gross_hours, selectedLog.attendance_date) }}</span>
-              </div>
+      <div class="summary-banner">
+        <div class="banner-content">
+          <div class="date-info">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ selectedLog?.attendance_date | date:'fullDate' }}</span>
+          </div>
+          <div class="stats-row" *ngIf="selectedLog?.prepared">
+            <div class="stat-pill effective">
+              <ion-label>EFFECTIVE</ion-label>
+              <span>{{ formatHours(selectedLog.total_work_hours, selectedLog.attendance_date) }}</span>
+            </div>
+            <div class="stat-pill gross">
+              <ion-label>GROSS TIME</ion-label>
+              <span>{{ formatHours(selectedLog.gross_hours, selectedLog.attendance_date) }}</span>
             </div>
           </div>
+        </div>
+      </div>
+    </ion-header>
 
-          <!-- Vertical Timeline -->
-          <div class="timeline-container">
-            <div *ngFor="let ev of selectedLog.timeline; let last = last" class="timeline-item">
-              <div class="timeline-dot" [class.active]="ev.type === 'IN'"></div>
-              
-              <div class="timeline-content">
+    <ion-content class="log-content">
+      <div class="modal-content-wrapper" *ngIf="selectedLog?.prepared; else loadingDetails">
+        <div class="timeline-container" *ngIf="selectedLog?.timeline?.length; else noRecords">
+          <div class="timeline-line"></div>
+          
+          <div *ngFor="let ev of selectedLog.timeline; let last = last; let i = index" class="timeline-item">
+            <div class="timeline-marker">
+              <div class="dot shadow-pulse" [class.in]="ev.type === 'IN'" [class.out]="ev.type === 'OUT'"></div>
+            </div>
+
+            <div class="timeline-content animate-slide-in" [style.animation-delay]="i * 0.1 + 's'">
+              <div class="punch-card" [class.in-card]="ev.type === 'IN'" [class.out-card]="ev.type === 'OUT'">
                 <div class="punch-header">
                   <div class="time-box">
                     <span class="time">{{ ev.time | date:'h:mm a' }}</span>
@@ -150,23 +154,25 @@
                   <span class="mode-badge">{{ ev.mode }}</span>
                 </div>
 
-                <div class="record-card">
-                  <div class="location-info" *ngIf="ev.location">
+                <div class="record-details">
+                  <div class="info-line" *ngIf="ev.location">
                     <ion-icon name="location-outline"></ion-icon>
                     <span>{{ ev.location }}</span>
                   </div>
-                  <div class="note-text" *ngIf="ev.notes">
-                    "{{ ev.notes }}"
+                  <div class="info-line note" *ngIf="ev.notes">
+                    <ion-icon name="reader-outline"></ion-icon>
+                    <span>"{{ ev.notes }}"</span>
                   </div>
-                  <div class="location-info" *ngIf="!ev.location && !ev.notes">
+                  <div class="info-line verified" *ngIf="!ev.location && !ev.notes">
                     <ion-icon name="shield-checkmark-outline"></ion-icon>
-                    <span>Verified Active Log</span>
+                    <span>System Verified Log</span>
                   </div>
                 </div>
 
-                <!-- Session Separation Line (Visual only) -->
-                <div class="duration-indicator" *ngIf="ev.type === 'OUT' && !last">
-                  Next break segment...
+                <!-- Duration break indicator -->
+                <div class="break-indicator" *ngIf="ev.type === 'OUT' && !last">
+                  <div class="break-line"></div>
+                  <span>Break Segment</span>
                 </div>
               </div>
             </div>
@@ -174,17 +180,17 @@
         </div>
 
         <ng-template #noRecords>
-          <div class="ion-text-center" style="padding: 60px 20px;">
-            <ion-icon name="calendar-clear-outline" style="font-size: 48px; color: #cbd5e1;"></ion-icon>
-            <p style="color: #64748b; font-size: 14px; margin-top: 16px;">No activity logs found for this date.</p>
+          <div class="empty-state">
+            <ion-icon name="calendar-clear-outline"></ion-icon>
+            <p>No activity logs found for this date.</p>
           </div>
         </ng-template>
       </div>
 
       <ng-template #loadingDetails>
-        <div class="ion-text-center" style="padding: 100px 0;">
-          <ion-spinner name="crescent" color="primary"></ion-spinner>
-          <p style="color: #64748b; font-size: 14px; margin-top: 16px; font-weight: 500;">Retrieving logs...</p>
+        <div class="loading-state">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Retrieving activity logs...</p>
         </div>
       </ng-template>
     </ion-content>

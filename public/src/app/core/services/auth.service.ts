@@ -88,8 +88,9 @@ export class AuthService {
         Authorization: `Bearer ${token}`,
       },
     }).pipe(
-      tap(() => {
-        this.routeGuardService.logout();
+      tap({
+        next: () => this.routeGuardService.logout(),
+        error: () => this.routeGuardService.logout()
       })
     );
   }

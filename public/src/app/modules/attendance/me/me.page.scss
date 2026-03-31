@@ -12,9 +12,6 @@
       margin: -10px;
     }
 
-    ion-col {
-      // display: flex;
-    }
 
     ion-card {
       border-radius: 20px;
@@ -138,7 +135,7 @@ ion-progress-bar {
       border-radius: 8px;
       margin-left: 10px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      text-transform: capitalize;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   }
