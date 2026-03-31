@@ -101,96 +101,115 @@
   </ion-row>
 </ion-grid>
 
-<!-- Right Side Timeline Modal -->
-<ion-modal [isOpen]="showSlider" class="side-custom-popup" (didDismiss)="closeSlider()">
+<!-- Right Side Slider Modal -->
+<ion-modal [isOpen]="showSlider" class="side-custom-popup checkinInfo-popup" backdropDismiss="true"
+  (didDismiss)="closeSlider()">
   <ng-template>
-    <ion-header class="ion-no-border">
-      <ion-toolbar class="log-modal-header">
-        <ion-title>Daily Activity Log</ion-title>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Attendance Log</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeSlider()" class="close-btn">
-            <ion-icon name="close-circle-outline"></ion-icon>
-          </ion-button>
+          <ion-button fill="clear" (click)="closeSlider()">Close</ion-button>
         </ion-buttons>
+        <p class="card-title" style="padding-left:16px;">
+          {{ selectedLog?.attendance_date | date:'fullDate' }}
+        </p>
       </ion-toolbar>
-
-      <div class="summary-banner">
-        <div class="banner-content">
-          <div class="date-info">
-            <ion-icon name="calendar-outline"></ion-icon>
-            <span>{{ selectedLog?.attendance_date | date:'fullDate' }}</span>
-          </div>
-          <div class="stats-row" *ngIf="selectedLog?.prepared">
-            <div class="stat-pill effective">
-              <ion-label>EFFECTIVE</ion-label>
-              <span>{{ formatHours(selectedLog.total_work_hours, selectedLog.attendance_date) }}</span>
-            </div>
-            <div class="stat-pill gross">
-              <ion-label>GROSS TIME</ion-label>
-              <span>{{ formatHours(selectedLog.gross_hours, selectedLog.attendance_date) }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </ion-header>
 
-    <ion-content class="log-content">
-      <div class="modal-content-wrapper" *ngIf="selectedLog?.prepared; else loadingDetails">
-        <div class="timeline-container" *ngIf="selectedLog?.timeline?.length; else noRecords">
-          <div class="timeline-line"></div>
-          
-          <div *ngFor="let ev of selectedLog.timeline; let last = last; let i = index" class="timeline-item">
-            <div class="timeline-marker">
-              <div class="dot shadow-pulse" [class.in]="ev.type === 'IN'" [class.out]="ev.type === 'OUT'"></div>
-            </div>
-
-            <div class="timeline-content animate-slide-in" [style.animation-delay]="i * 0.1 + 's'">
-              <div class="punch-card" [class.in-card]="ev.type === 'IN'" [class.out-card]="ev.type === 'OUT'">
-                <div class="punch-header">
-                  <div class="time-box">
-                    <span class="time">{{ ev.time | date:'h:mm a' }}</span>
-                    <span class="type-tag" [ngClass]="ev.type.toLowerCase()">{{ ev.type }}</span>
-                  </div>
-                  <span class="mode-badge">{{ ev.mode }}</span>
+    <ion-content class="ion-padding">
+      <div *ngIf="selectedLog?.prepared; else loadingDetails">
+        <div *ngIf="selectedLog?.records?.length; else noRecords">
+          <ion-grid style="padding: 0;">
+            <!-- Office Logs -->
+            <ion-row *ngIf="selectedLog.officeRecords?.length > 0">
+              <ion-col size="12">
+                <h2 style="font-weight:700;color:#334155;">On Office</h2>
+                <p>Web Clock In</p>
+                <div *ngFor="let rec of selectedLog.officeRecords">
+                  <ion-grid class="clockin-out" style="padding: 0;">
+                    <ion-row>
+                      <ion-col size="6" class="ion-text-center">
+                        <div class="clockin-img">
+                          <ion-icon name="log-in-outline" style="font-size:28px;color:#10B981;"></ion-icon>
+                          <h4 *ngIf="rec.check_in">{{ rec.check_in | date:'h:mm a' }}</h4>
+                          <p *ngIf="!rec.check_in">--:--</p>
+                        </div>
+                      </ion-col>
+                      <ion-col size="6" class="ion-text-center">
+                        <div class="clockout-img">
+                          <ion-icon name="log-out-outline" style="font-size:28px;color:#EF4444;"></ion-icon>
+                          <h4 *ngIf="rec.check_out">{{ rec.check_out | date:'h:mm a' }}</h4>
+                          <h4 *ngIf="!rec.check_out">Missing</h4>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </div>
+              </ion-col>
+            </ion-row>
 
-                <div class="record-details">
-                  <div class="info-line" *ngIf="ev.location">
-                    <ion-icon name="location-outline"></ion-icon>
-                    <span>{{ ev.location }}</span>
-                  </div>
-                  <div class="info-line note" *ngIf="ev.notes">
-                    <ion-icon name="reader-outline"></ion-icon>
-                    <span>"{{ ev.notes }}"</span>
-                  </div>
-                  <div class="info-line verified" *ngIf="!ev.location && !ev.notes">
-                    <ion-icon name="shield-checkmark-outline"></ion-icon>
-                    <span>System Verified Log</span>
+            <!-- WFH Logs -->
+            <ion-row *ngIf="selectedLog.wfhRecords?.length > 0">
+              <ion-col size="12">
+                <h2 style="font-weight:700;color:#334155;">Work From Home</h2>
+                <div *ngFor="let rec of selectedLog.wfhRecords">
+                  <ion-grid style="padding: 0;">
+                    <ion-row class="clockin-out">
+                      <ion-col size="6" class="ion-text-center">
+                        <ion-icon name="log-in-outline" style="font-size:28px;color:#10B981;"></ion-icon>
+                        <h4 *ngIf="rec.check_in">{{ rec.check_in | date:'h:mm a' }}</h4>
+                      </ion-col>
+                      <ion-col size="6" class="ion-text-center">
+                        <ion-icon name="log-out-outline" style="font-size:28px;color:#EF4444;"></ion-icon>
+                        <h4 *ngIf="rec.check_out">{{ rec.check_out | date:'h:mm a' }}</h4>
+                        <h4 *ngIf="!rec.check_out">Active</h4>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <!-- Remote Logs -->
+            <ion-row *ngIf="selectedLog.remoteRecords?.length > 0">
+              <ion-col size="12">
+                <h2 style="font-weight:700;color:#334155;">Remote</h2>
+                <div *ngFor="let rec of selectedLog.remoteRecords">
+                  <p style="font-weight:bold">Remote Clock In</p>
+                  <ion-grid class="clockin-out" style="padding: 0;">
+                    <ion-row>
+                      <ion-col size="6" class="ion-text-center">
+                        <ion-icon name="log-in-outline" style="font-size:28px;color:#10B981;"></ion-icon>
+                        <h4 *ngIf="rec.check_in">{{ rec.check_in | date:'h:mm a' }}</h4>
+                      </ion-col>
+                      <ion-col size="6" class="ion-text-center">
+                        <ion-icon name="log-out-outline" style="font-size:28px;color:#EF4444;"></ion-icon>
+                        <h4 *ngIf="rec.check_out">{{ rec.check_out | date:'h:mm a' }}</h4>
+                        <h4 *ngIf="!rec.check_out">Active</h4>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div *ngIf="rec.location || rec.notes"
+                    style="margin-top:8px;padding-top:6px;border-bottom:1px dashed #ccc;">
+                    <p *ngIf="rec.location">{{ rec.location }}</p>
+                    <p *ngIf="rec.notes">{{ rec.notes }}</p>
                   </div>
                 </div>
-
-                <!-- Duration break indicator -->
-                <div class="break-indicator" *ngIf="ev.type === 'OUT' && !last">
-                  <div class="break-line"></div>
-                  <span>Break Segment</span>
-                </div>
-              </div>
-            </div>
-          </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
 
         <ng-template #noRecords>
-          <div class="empty-state">
-            <ion-icon name="calendar-clear-outline"></ion-icon>
-            <p>No activity logs found for this date.</p>
-          </div>
+          <p>No check-in / check-out records found.</p>
         </ng-template>
       </div>
 
       <ng-template #loadingDetails>
-        <div class="loading-state">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Retrieving activity logs...</p>
+        <div class="ion-text-center" style="padding: 40px 0;">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+          <p style="color: #64748b; font-size: 14px; margin-top: 12px;">Loading attendance details...</p>
         </div>
       </ng-template>
     </ion-content>

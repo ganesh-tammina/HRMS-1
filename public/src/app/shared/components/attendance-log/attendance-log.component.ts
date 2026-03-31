@@ -318,36 +318,6 @@ export class AttendanceLogComponent implements OnInit, OnDestroy, OnChanges {
       r.work_mode === 'Remote'
     ).map((r: any) => ({ ...r, pendingApproval: r.approved !== true })).slice().reverse();
 
-    // Create a unified timeline for the redesign
-    const timeline: any[] = [];
-    records.forEach((r: any) => {
-      if (r.check_in) {
-        timeline.push({
-          type: 'IN',
-          time: r.check_in,
-          mode: r.work_mode || 'Office',
-          location: r.location,
-          notes: r.notes,
-          icon: 'log-in-outline'
-        });
-      }
-      if (r.check_out) {
-        timeline.push({
-          type: 'OUT',
-          time: r.check_out,
-          mode: r.work_mode || 'Office',
-          location: r.location,
-          notes: r.notes,
-          icon: 'log-out-outline'
-        });
-      }
-    });
-
-    // Sort timeline by time ascending
-    this.selectedLog.timeline = timeline.sort((a, b) => 
-      new Date(a.time).getTime() - new Date(b.time).getTime()
-    );
-
     this.selectedLog.prepared = true;
   }
 
