@@ -1,0 +1,159 @@
+ion-content {
+  --background: #ffffff;
+}
+
+ion-chip {
+  margin-left: 5px;
+  padding: 0 12px;
+}
+
+.filter-block {
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  ion-input {
+    border: 1px solid #ababab;
+    border-radius: 8px;
+    padding: 0 8px !important;
+    min-height: 36px;
+    height: 36px;
+    --highlight-height: 0;
+    margin-top: 8px;
+  }
+
+  ion-button {
+    margin-top: 8px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+    --color: var(--ion-color-primary);
+  }
+
+  p {
+    margin-top: 16px;
+    font-size: 0.95rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+.requests-container {
+  ion-card {
+    border-radius: 8px;
+    border: 0.74px solid #ABABAB;
+    box-shadow: none;
+    margin: 15px 0;
+
+    label {
+      color: #707070;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 13px;
+      color: #333333;
+      margin: 4px 0;
+    }
+
+    .info-row {
+      label {
+        color: #1F74BB;
+        font-size: 13px;
+      }
+
+      p {
+        font-size: 12px;
+      }
+
+      background: #E6F4FF;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 15px 0px;
+      width: 100%;
+    }
+
+    ion-button {
+      min-height: 30px;
+      height: 36px;
+      font-size: 13px;
+      text-transform: capitalize;
+    }
+  }
+}
+
+ion-searchbar {
+  --background: var(--ion-background-color, #fff);
+  border-radius: 8px;
+  --box-shadow: none;
+  border: 1px solid #ABABAB;
+  --min-height: 36px;
+  height: 42px;
+  margin-left: 8px;
+  width: 95%;
+}
+
+.row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+
+  ion-button[fill="clear"] {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+
+    ion-icon {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+.timesheet-card {
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+.employee-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.employee-info {
+  ion-card-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 12px !important;
+    color: #707070 !important;
+  }
+}
+
+.no-leaves {
+  p { color: #707070; font-weight: bold; font-size: 12px; }
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 0;
+}
+
+.no-data-text {
+  color: #94A3B8;
+  font-size: 14px;
+}
